@@ -1,0 +1,114 @@
+% Tesis ITAM CLASS -- version 0.1 (13 - Abr - 2015)
+% Clase para las tesis del ITAM
+% 
+% 13 - Abr - 2015 	Victor Martinez 	victor.martinez (at) itam.mx
+% LICENSE: Creative Commons SA-BY 3.0
+%
+%
+% Este documento presenta un ejemplo de uso de la plantilla
+% El estudiante es libre de modificar este archivo a su gusto
+% 
+\documentclass{tesisITAM}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+%\usepackage{algorithmx}
+\usepackage[spanish,onelanguage]{algorithm2e} 
+\RestyleAlgo{boxruled} % Para que los algoritmos los ponga en caja
+\usepackage[backend=bibtex]{biblatex}
+\usepackage[paperwidth=17cm, paperheight=22.5cm, bottom=2cm, left=2.5cm, right=2cm, headheight=13.08pt]{geometry}
+%\usepackage[group-separator={,}]{siunitx}
+\usepackage{numprint}
+\usepackage{csquotes}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{url}
+
+\addbibresource{bibliography.bib} %Imports bibliography file
+\bibliography{bibliography.bib}
+
+\title{Tesis de Mario}
+\author{Mario Humberto Becerra Contreras}
+\degree{Maestría en Ciencias de la Computación}
+\advisor{Alfredo Garbuno Iñigo}
+\year{2018}
+
+\begin{document}
+	\npthousandsep{,}
+	\pagenumbering{gobble}
+	\maketitle
+	\publicationrights
+	
+
+	\include{dedicatoria}
+	\include{agradecimientos}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% ABSTRACT
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\begin{abstract}{spanish}
+		Una tesis muy bonita.
+	\end{abstract}
+
+	\begin{abstract}{english}
+		A very nice thesis.
+	\end{abstract}
+
+	\selectlanguage{english}
+	\setcounter{page}{1}
+	\pagenumbering{roman}
+
+	\tableofcontents
+	\listoffigures
+	\listoftables
+	\newpage
+
+	\pagenumbering{arabic}
+	\setcounter{page}{1}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% CONTENT
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\include{Chapters/01_introduction}
+
+	\include{Chapters/02_related_work}
+
+	\include{Chapters/03_data_and_methodology}
+
+	\include{Chapters/04_results}
+
+	\include{Chapters/05_conclusions}
+
+        
+        
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% APPENDIX
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\appendix
+	% \include{Chapters/appendixA}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% BIBLIOGRAPHY
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\clearpage
+	\addcontentsline{toc}{chapter}{References} 
+
+
+
+\begingroup
+\raggedright
+\sloppy
+\printbibliography
+\endgroup
+
+\nocite{*}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
