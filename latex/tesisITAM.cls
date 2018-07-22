@@ -1,6 +1,6 @@
 % Tesis ITAM CLASS -- version 0.1 (13 - Abr - 2015)
 % Clase para las tesis del ITAM
-% 
+%
 % 13 - Abr - 2015 	Victor Martinez 	victor.martinez (at) itam.mx
 % LICENSE: Creative Commons SA-BY 3.0
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
@@ -48,7 +48,7 @@
             {-2.5ex\@plus -1ex \@minus -.25ex}%
             {1.25ex \@plus .25ex}%
             {\normalfont\normalsize\bfseries}}
-% \renewcommand\theparagraph{\Roman{paragraph}}            
+% \renewcommand\theparagraph{\Roman{paragraph}}
 % \makeatother
 % \setcounter{secnumdepth}{4} % how many sectioning levels to assign numbers to
 % \setcounter{tocdepth}{4}    % how many sectioning levels to show in ToC
@@ -86,12 +86,12 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Portada  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \renewcommand\maketitle{%
-	\InputIfFileExists {portada.tex} {\ClassInfo {tesisITAM} {Loaded portada.tex}} {\ClassError{tesisITAM}{No portada.tex found!}}
+	\InputIfFileExists {cover.tex} {\ClassInfo {tesisITAM} {Loaded cover.tex}} {\ClassError{tesisITAM}{No cover.tex found!}}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Permisos  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand\publicationrights{%
-	\InputIfFileExists {derechos.tex} {\ClassInfo {tesisITAM} {Loaded derechos.tex}} {\ClassError{tesisITAM} {No derechos.tex found!}}
+	\InputIfFileExists {rights.tex} {\ClassInfo {tesisITAM} {Loaded rights.tex}} {\ClassError{tesisITAM} {No rights.tex found!}}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Resumen(es) %%%%%%%%%%%%%%%%%%%%%%%%%%%%
