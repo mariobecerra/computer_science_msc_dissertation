@@ -1,5 +1,6 @@
 auto/*
 *.bak
+*.bcf
 *.log
 *.lot
 *.synctex.gz
