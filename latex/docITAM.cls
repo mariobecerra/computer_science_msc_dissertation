@@ -4,7 +4,7 @@
 % 13 - Abr - 2015 	Victor Martinez 	victor.martinez (at) itam.mx
 % LICENSE: Creative Commons SA-BY 3.0
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{tesisITAM}[2015/04/13 v0.01 Template para tesis ITAM]
+\ProvidesClass{docITAM}[2015/04/13 v0.01 Template para tesis ITAM]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Opcion para declarar tesina %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -65,17 +65,17 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Definiciones de carrera %%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand\@degree{\ClassWarningNoLine{tesisITAM}{No Degree specified}}
+\newcommand\@degree{\ClassWarningNoLine{docITAM}{No Degree specified}}
 \newcommand\degree[1]{\renewcommand\@degree{#1}}
 \newcommand\thedegree{\@degree}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Definiciones de asesor  %%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand\@advisor{\ClassWarningNoLine{tesisITAM}{No advisor specified}}
+\newcommand\@advisor{\ClassWarningNoLine{docITAM}{No advisor specified}}
 \newcommand\advisor[1]{\renewcommand\@advisor{#1}}
 \newcommand\theadvisor{\@advisor}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Definiciones del año  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand\@year{\ClassWarningNoLine{tesisITAM}{No year specified}}
+\newcommand\@year{\ClassWarningNoLine{docITAM}{No year specified}}
 \renewcommand\year[1]{\renewcommand\@year{#1}} %Report ya tiene un comando \year
 \newcommand\theyear{\@year}
 
@@ -86,12 +86,12 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Portada  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \renewcommand\maketitle{%
-	\InputIfFileExists {cover.tex} {\ClassInfo {tesisITAM} {Loaded cover.tex}} {\ClassError{tesisITAM}{No cover.tex found!}}
+	\InputIfFileExists {cover.tex} {\ClassInfo {docITAM} {Loaded cover.tex}} {\ClassError{docITAM}{No cover.tex found!}}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Permisos  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand\publicationrights{%
-	\InputIfFileExists {rights.tex} {\ClassInfo {tesisITAM} {Loaded rights.tex}} {\ClassError{tesisITAM} {No rights.tex found!}}
+	\InputIfFileExists {rights.tex} {\ClassInfo {docITAM} {Loaded rights.tex}} {\ClassError{docITAM} {No rights.tex found!}}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Resumen(es) %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -100,7 +100,7 @@
 		\thispagestyle{empty}\bigskip%
 		\begin{center}\begin{otherlanguage}{#1}\bf\abstractname\end{otherlanguage}\end{center}
 	}{\clearpage}
-}{\ClassWarning{tesisITAM} {Babel package was not loaded.}}}
+}{\ClassWarning{docITAM} {Babel package was not loaded.}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Env. para citas %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newenvironment{chapterquote}[2][2em]{%
