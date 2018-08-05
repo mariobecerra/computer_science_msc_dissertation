@@ -3,10 +3,9 @@
 \chapter{Introduction}
 \label{ch:intro}
 
-Wow.
 
-Such introduction.
+The main goal of this thesis project is to compare Bayesian methods in Deep Learning with traditional methods in the context of Active Learning. Traditional methods are based on the optimization of a loss function, which is rooted in maximum likelihood estimation and only offer a single point estimate with no measure of uncertainty in the prediction or the parameters, whereas the Bayesian approach gives a full posterior distribution for each of the parameters, thus giving as well as a posterior predictive distribution for the response variable. Bayesian methods avoid overfitting as they average over parameter values.
 
-Very thesis.
+Bayesian methods for Artificial Neural Networks date back to the beginning of the 90s with Radford Neal's PhD thesis \cite{neal1996bayesian}, some work by \citeauthor{denker1991transforming} \cite{denker1991transforming} and \citeauthor{mackay1992practical} \cite{mackay1992practical}. In particular, \citeauthor{neal1996bayesian} basically used Hamiltonian Monte Carlo for posterior inferences of the parameters \cite{neal1996bayesian}. These approaches are not usually used because they are slow to train and do not scale well to the big networks and dataset used nowadays.
 
-So cool.
+With the work of \citeauthor{gal2016uncertainty}, Bayesian approaches can be used for Deep Learning without making major changes to learning algorithms \cite{gal2016uncertainty}. In this work, this approach will be used and compared with traditional methods, particularly in the context of Active Learning, which aims to reduce the number of tagged examples for a supervised learning problem, as done in \cite{Gal2016Active}.
