@@ -4,18 +4,6 @@
 \label{ch:theory}
 
 
-\section{Introduction}
-
-The main goal of this thesis project is to compare Bayesian methods in Deep Learning with traditional methods in the context of Active Learning. Traditional methods are based on the optimization of a loss function, which is rooted in maximum likelihood estimation and only offer a single point estimate with no measure of uncertainty in the prediction or the parameters, whereas the Bayesian approach gives a full posterior distribution for each of the parameters, thus giving as well as a posterior predictive distribution for the response variable. Bayesian methods avoid overfitting as they average over parameter values.
-
-Bayesian methods for Artificial Neural Networks date back to the beginning of the 90s with Radford Neal's PhD thesis \cite{neal1996bayesian}, some work by \citeauthor{denker1991transforming} \cite{denker1991transforming} and \citeauthor{mackay1992practical} \cite{mackay1992practical}. In particular, \citeauthor{neal1996bayesian} basically used Hamiltonian Monte Carlo for posterior inferences of the parameters \cite{neal1996bayesian}. These approaches are not usually used because they are slow to train and do not scale well to the big networks and dataset used nowadays.
-
-With the work of \citeauthor{gal2016uncertainty}, Bayesian approaches can be used for Deep Learning without making major changes to learning algorithms \cite{gal2016uncertainty}. In this work, this approach will be used and compared with traditional methods, particularly in the context of Active Learning, which aims to reduce the number of tagged examples for a supervised learning problem, as done in \cite{Gal2016Active}.
-
-The reach and contributions of my thesis are to compare the Bayesian methods in Active Learning, such as extending the work of \cite{Gal2016Active} and do not retrain the whole model on each acquisition step, or try to find how many acquisition steps are necessary to get to the minimum error score gotten so far for a given architecture in the MNIST dataset. Or, as mentioned in \cite{gal2015bayesian}, it would be interesting to see if with less training examples from the ImageNet data and using Bayesian methods, we can achieve the same error rate that is achieved with the full dataset.
-
-
-
 \section{Related work}
 
 As mentioned before, Bayesian Artificial Neural Networks date back to late 1980s and early 1990s. These first approaches focused on Markov Chain Monte Carlo (MCMC) as the main method get samples of the posterior distribution of the parameters. Lately, there's been more work in the area, such as the Probabilistic Backpropagation algorithm developed by \citeauthor{hernandez2015probabilistic}, which relies on one-dimensional Gaussian distributions that approximate the marginal posterior distribution of the weights on each iteration of backpropagation \cite{hernandez2015probabilistic}. There is also the work by \citeauthor{graves2011practical}, based on variational inference to approximate the posterior distribution of the parameters \cite{graves2011practical}. These methods, however, do not scale well to very big network architectures and datasets; and they also have the disadvantage that they only work with multi-layer perceptron architectures, making them impossible to use with more recent architectures such as Convolutional Neural Networks (CNNs) or Recurrent Neural Networks (RNNs).
@@ -31,3 +19,19 @@ The dropout variational approach can also be used in Recurrent Neural Networks (
 An example of how the uncertainties provided by Bayesian Neural Networks can be used, is shown by \citeauthor{li2017dropout} in \cite{li2017dropout}. They use adversarial examples and check if they can be told apart by examining the uncertainty representation of the dropout models. The deterministic Neural Networks produce over-confident predictions on these adversarial samples (they predict the wrong label very confidently), while dropout models, though producing wrong labels, are very uncertain about their predictions. They finish by stating that their results suggest that assessing the uncertainty of classification models can be used to identify adversarial examples, but much more research is needed to solve the difficulties faced with adversarial inputs.
 
 The research on adversarial examples is continued by \citeauthor{rawat2017adversarial}, who study different Bayesian approaches (Bayes by Backprob (BBB), Probabilistic Backpropagation (PBP), Variational Matrix Gaussian (VMG) and MC-Dropout) and the uncertainty provided by the models, and prove that these models exhibit increased uncertainty when under attack \cite{rawat2017adversarial}. They state that all of the architectures in their study are Multi-Layer Perceptron, which do not scale for high dimensional colored images, with the exception of MC-Dropout, and therefore, a detailed study for MC-Dropout is required to demonstrate the applicability of model uncertainty for adversarial detection on various state-of-the-art attacks.
+
+\section{Artificial Neural Networks}
+
+The most basic type of Artificial Neural Network (ANN) is called a feedforward neural network or multilayer perceptron (MLP). These models are basically a composition of non-linear functions of the data, i.e., $f^{(1)}(f^{(2)}(f^{(3)}(x)))$, where $f^{(1)}$ is called the first layer, $f^{(2)}$ the second layer, and so on.
+
+To illustrate how these models work, let's consider a binary classification problem, so we consider a data matrix $X \in \mathbb{R}^{m \times n_x}$ and a response variable $y \in \{0,1\}^m$. Let $p_k$ be the probability of an observation $x_k \in \mathbb{R}^{n_x}$ of being 1. The single layer feedforward ANN models this quantity as
+$\hat{p_k} = \sigma(\beta_0 + \sum_{i = 1}^q \beta_i a_i^{(k)})$
+with
+$a_i^{(k)} = \sigma(\theta_0^{(i)} + \sum_{l = 1}^{n_x} \theta_l^{(i)} x_l^{(k)})$,
+and $\sigma(x)$ is a non-linear function.
+Common choices of $\sigma(x)$ are the logistic function, $\sigma(x) = (1 + e^{-x})^{-1}$, and $\sigma(x) = \mathrm{tanh}(x)$. The $x$ is called the input layer, the $a_i^{(k)}$ is called the hidden layer, and the $\hat{p_k}$ is called the output layer.
+
+
+\section{Convolutional Neural Networks}
+
+\section{Variational Inference}
