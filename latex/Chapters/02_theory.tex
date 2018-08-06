@@ -22,15 +22,58 @@ The research on adversarial examples is continued by \citeauthor{rawat2017advers
 
 \section{Artificial Neural Networks}
 
-The most basic type of Artificial Neural Network (ANN) is called a feedforward neural network or multilayer perceptron (MLP). These models are basically a composition of non-linear functions of the data, i.e., $f^{(1)}(f^{(2)}(f^{(3)}(x)))$, where $f^{(1)}$ is called the first layer, $f^{(2)}$ the second layer, and so on.
+The most basic, and perhaps the best known, type of Artificial Neural Network (ANN) is called a feedforward neural network or multilayer perceptron (MLP). These models are basically a composition of non-linear functions of the data. Let's illustrate this with a simple example.
 
-To illustrate how these models work, let's consider a binary classification problem, so we consider a data matrix $X \in \mathbb{R}^{m \times n_x}$ and a response variable $y \in \{0,1\}^m$. Let $p_k$ be the probability of an observation $x_k \in \mathbb{R}^{n_x}$ of being 1. The single layer feedforward ANN models this quantity as
-$\hat{p_k} = \sigma(\beta_0 + \sum_{i = 1}^q \beta_i a_i^{(k)})$
-with
-$a_i^{(k)} = \sigma(\theta_0^{(i)} + \sum_{l = 1}^{n_x} \theta_l^{(i)} x_l^{(k)})$,
-and $\sigma(x)$ is a non-linear function.
-Common choices of $\sigma(x)$ are the logistic function, $\sigma(x) = (1 + e^{-x})^{-1}$, and $\sigma(x) = \mathrm{tanh}(x)$. The $x$ is called the input layer, the $a_i^{(k)}$ is called the hidden layer, and the $\hat{p_k}$ is called the output layer.
+Consider that we want to model a continuous variable $y$ from a single covariate $x$. A very simple model would be a linear regression, which models each observation $i$ as $y_i = \beta_0 + \beta_1 x_i$, and chooses the values of $\beta_0$ and $\beta_1$ that minimize some error function. ANNs go further and take non-linear transformations of this linear predictor with some function $\sigma(\cdot)$, such that $y_i = \theta_0 +  \sum_{k = 1}^m \theta_k \sigma \left( \beta_0^{(k)} + \beta_1^{(k)} x_i \right)$, where $m$ is manually chosen beforehand. A common choice for $\sigma(\cdot)$
+is the logistic function $\sigma(x) = (1 + e^{-x})^{-1}$
+or the hyperbolic tangent $\tanh(\cdot)$. The values of parameters $\theta_k$ and $\beta_j^{(k)}$ for $k \in \left\{ 0, \ldots, m \right\}$ and $j \in \left\{ 0, 1 \right\}$ are also chosen to minimize certain error function. Figure \ref{fig:theory_ANN_diagram_01} shows these relationships in a graphic way for a model with $m = 3$ and where we define $a^{(k)} = \sigma \left( \beta_0^{(k)} + \beta_1^{(k)} x_i \right)$ for $k \in \left\{ 1, 2, 3 \right\}$.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{plot_ANN_01.pdf}
+    \caption{Diagram of a multilayer perceptron with $m = 3$.}
+    \label{fig:theory_ANN_diagram_01}
+\end{figure}
+
+If the response variable $y$ happened to be a categorical variable, let's say binary, then one last transformation would have to be applied to map the model to the $\left[0, 1\right]$ interval and model $y$ as a probability. Then we would have
+
+$$
+y_i =
+\sigma_2 \left( \theta_0 +  \sum_{k = 1}^p \theta_k \sigma \left( \beta_0^{(k)} + \beta_1^{(k)} x_i \right) \right) =
+\sigma_2 \left( \theta_0 +  \sum_{k = 1}^p \theta_k a^{(k)} \right),
+$$
+
+with $\sigma_2(\cdot)$ the logistic function to map from $\mathbb{R}$ to $\left[ 0, 1 \right]$.
+
+We can establish a more complex model by taking linear combinations of non-linear functions of the previous result. In this case, we must add one more index to the $\theta$ parameters to keep using the same notation. Let's define
+$$
+a_1^{(k)} = \sigma \left( \beta_0^{(k)} + \beta_1^{(k)} x_i \right)
+$$
+
+for $k \in \left\{ 1, \ldots, m \right\}$ and
+
+$$
+a_2^{(l)} = \theta_0^{(l)} +  \sum_{k = 1}^m \theta_k^{(l)} \sigma \left( \beta_0^{(k)} + \beta_1^{(k)} x_i \right) =
+\theta_0^{(l)} +  \sum_{k = 1}^m \theta_k^{(l)} a_1^{(k)}
+$$
+
+for $l \in \left\{ 1, \ldots, r \right\}$, then
+
+$$
+y_i = w_0 + \sum_{l = 1}^r w_l \sigma \left( a_2^{(l)} \right),
+$$
+
+where $r$, like $m$, is chosen beforehand. This is what is called a deeper model, because it has more layers. Figure \ref{fig:theory_ANN_diagram_02} shows this graphically with $m = 3$ and $r = 2$. Layers corresponding to $a_1^{(k)}$ and $a_2^{(l)}$ are called the hidden layers. So figure \ref{fig:theory_ANN_diagram_01} shows a multilayer perceptron with one hidden layer, and figure \ref{fig:theory_ANN_diagram_02} shows a multilayer perceptron with two hidden layers.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{plot_ANN_02.pdf}
+    \caption{Diagram of a multilayer perceptron with two hidden layers, $m = 3$ and $r = 2$.}
+    \label{fig:theory_ANN_diagram_02}
+\end{figure}
+
+Now that we have a grasp of how the MLP works, we can define it more generally. The notation used will be $y$ for the response variable $n$-dimensional vector, $y_i$ for the $i$-th element of $y$ and $X$ for the data matrix, such that $X \in \mathbb{R}^{n \times p}$ and $x_i \in \mathbb{R}^p$ denotes the $i$-th row in $X$ and it represents the values of the covariates for the $i$-th element in the data.
 
 \section{Convolutional Neural Networks}
 
