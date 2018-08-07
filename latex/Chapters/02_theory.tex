@@ -24,9 +24,9 @@ The research on adversarial examples is continued by \citeauthor{rawat2017advers
 
 The most basic, and perhaps the best known, type of Artificial Neural Network (ANN) is called a feedforward neural network or multilayer perceptron (MLP). These models are basically a composition of non-linear functions of the data. Let's illustrate this with a simple example.
 
-Consider that we want to model a continuous variable $y$ from a single covariate $x$. A very simple model would be a linear regression, which models each observation $i$ as $y_i = \beta_0 + \beta_1 x_i$, and chooses the values of $\beta_0$ and $\beta_1$ that minimize some error function. ANNs go further and take non-linear transformations of this linear predictor with some function $\sigma(\cdot)$, such that $y_i = \theta_0 +  \sum_{k = 1}^m \theta_k \sigma \left( \beta_0^{(k)} + \beta_1^{(k)} x_i \right)$, where $m$ is manually chosen beforehand. A common choice for $\sigma(\cdot)$
-is the logistic function $\sigma(x) = (1 + e^{-x})^{-1}$
-or the hyperbolic tangent $\tanh(\cdot)$. The values of parameters $\theta_k$ and $\beta_j^{(k)}$ for $k \in \left\{ 0, \ldots, m \right\}$ and $j \in \left\{ 0, 1 \right\}$ are also chosen to minimize certain error function. Figure \ref{fig:theory_ANN_diagram_01} shows these relationships in a graphic way for a model with $m = 3$ and where we define $a^{(k)} = \sigma \left( \beta_0^{(k)} + \beta_1^{(k)} x_i \right)$ for $k \in \left\{ 1, 2, 3 \right\}$.
+Consider that we want to model a continuous variable $y$ from a single covariate $x$. A very simple model would be a linear regression, which models each observation $i$ as $y_i = \beta_0 + \beta_1 x_i$, and chooses the values of $\beta_0$ and $\beta_1$ that minimize some error function. ANNs go further and take non-linear transformations of this linear predictor with some function $\sigma(\cdot)$, such that $y_i = \theta_0 +  \sum_{k = 1}^m \theta_k \sigma \left( \beta_0^{k} + \beta_1^{k} x_i \right)$, where $m$ is manually chosen beforehand. A common choice for $\sigma(\cdot)$, which is called the \textbf{activation function}, is the logistic function $\sigma(x) = (1 + e^{-x})^{-1}$
+or the hyperbolic tangent $\tanh(\cdot)$. The values of parameters $\theta_k$ and $\beta_j^{k}$ for $k \in \left\{ 0, \ldots, m \right\}$ and $j \in \left\{ 0, 1 \right\}$ are also chosen to minimize certain error function. Figure \ref{fig:theory_ANN_diagram_01} shows these relationships in a graphic way for a model with $m = 3$ and where we define $a_{k} = \sigma \left( \beta_0^{k} + \beta_1^{k} x_i \right)$ for $k \in \left\{ 1, 2, 3 \right\}$.
+This image doesn't explicitly show the parameters $\beta_0^{k}$ for $k \in \left\{ 0, \ldots, m \right\}$, which are usually called the \textbf{bias} parameters.
 
 \begin{figure}[H]
     \centering
@@ -39,41 +39,49 @@ If the response variable $y$ happened to be a categorical variable, let's say bi
 
 $$
 y_i =
-\sigma_2 \left( \theta_0 +  \sum_{k = 1}^p \theta_k \sigma \left( \beta_0^{(k)} + \beta_1^{(k)} x_i \right) \right) =
-\sigma_2 \left( \theta_0 +  \sum_{k = 1}^p \theta_k a^{(k)} \right),
+\phi \left( \theta_0 +  \sum_{k = 1}^p \theta_k \sigma \left( \beta_0^{k} + \beta_1^{k} x_i \right) \right) =
+\phi \left( \theta_0 +  \sum_{k = 1}^p \theta_k a_{k} \right),
 $$
 
-with $\sigma_2(\cdot)$ the logistic function to map from $\mathbb{R}$ to $\left[ 0, 1 \right]$.
+with $\phi(\cdot)$ the logistic function to map from $\mathbb{R}$ to $\left[ 0, 1 \right]$. The choice of function $\phi(\cdot)$ depends on the nature of the response variable. As we saw previously, in the case of a continuous response variable, $\phi(\cdot)$ is the identity function.
 
 We can establish a more complex model by taking linear combinations of non-linear functions of the previous result. In this case, we must add one more index to the $\theta$ parameters to keep using the same notation. Let's define
 $$
-a_1^{(k)} = \sigma \left( \beta_0^{(k)} + \beta_1^{(k)} x_i \right)
+a_k^{[1]} = \sigma^{[1]} \left( \beta_0^{k} + \beta_1^{k} x_i \right)
 $$
 
 for $k \in \left\{ 1, \ldots, m \right\}$ and
 
 $$
-a_2^{(l)} = \theta_0^{(l)} +  \sum_{k = 1}^m \theta_k^{(l)} \sigma \left( \beta_0^{(k)} + \beta_1^{(k)} x_i \right) =
-\theta_0^{(l)} +  \sum_{k = 1}^m \theta_k^{(l)} a_1^{(k)}
+a_k^{[2]} = \theta_0^{j} +  \sum_{k = 1}^m \theta_k^{j} \sigma^{[2)} \left( \beta_0^{k} + \beta_1^{k} x_i \right) =
+\theta_0^{j} +  \sum_{k = 1}^m \theta_k^{j} a_k^{[1]}
 $$
 
-for $l \in \left\{ 1, \ldots, r \right\}$, then
+for $j \in \left\{ 1, \ldots, r \right\}$, then
 
 $$
-y_i = w_0 + \sum_{l = 1}^r w_l \sigma \left( a_2^{(l)} \right),
+y_i = w_0 + \sum_{l = 1}^r w_j \sigma^{[2]} \left( a_j^{[2]} \right),
 $$
 
-where $r$, like $m$, is chosen beforehand. This is what is called a deeper model, because it has more layers. Figure \ref{fig:theory_ANN_diagram_02} shows this graphically with $m = 3$ and $r = 2$. Layers corresponding to $a_1^{(k)}$ and $a_2^{(l)}$ are called the hidden layers. So figure \ref{fig:theory_ANN_diagram_01} shows a multilayer perceptron with one hidden layer, and figure \ref{fig:theory_ANN_diagram_02} shows a multilayer perceptron with two hidden layers.
+where $r$, like $m$, is chosen beforehand. The values $m$ and $r$ are usually called the number of nodes or units of each layer. This is what is called a deeper model, because it has more layers. Notice that we have two different activation functions $\sigma^{[1]}(\cdot)$ and $\sigma^{[2]}(\cdot)$. Each layer can have a different function. The first one could be a sigmoid function and the second one a hyperbolic tangent, or vice versa, or they could both be the same function.
+
+Figure \ref{fig:theory_ANN_diagram_02} shows this graphically with $m = 3$ and $r = 2$. Layers corresponding to $a_k^{[1]}$ and $a_j^{[2]}$ are called the \textbf{hidden layers}. So figure \ref{fig:theory_ANN_diagram_01} shows a multilayer perceptron with one hidden layer, and figure \ref{fig:theory_ANN_diagram_02} shows a multilayer perceptron with two hidden layers.
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{plot_ANN_02.pdf}
+    \includegraphics[width=0.6\textwidth]{plot_ANN_02.pdf}
     \caption{Diagram of a multilayer perceptron with two hidden layers, $m = 3$ and $r = 2$.}
     \label{fig:theory_ANN_diagram_02}
 \end{figure}
 
-Now that we have a grasp of how the MLP works, we can define it more generally. The notation used will be $y$ for the response variable $n$-dimensional vector, $y_i$ for the $i$-th element of $y$ and $X$ for the data matrix, such that $X \in \mathbb{R}^{n \times p}$ and $x_i \in \mathbb{R}^p$ denotes the $i$-th row in $X$ and it represents the values of the covariates for the $i$-th element in the data.
+Now that we have a grasp of how the MLP works, we can define it more generally. The notation used will be $y$ for the response variable $n$-dimensional vector, $y_i$ for the $i$-th element of $y$ and $X$ for the data matrix, such that $X \in \mathbb{R}^{n \times p}$, $x_i \in \mathbb{R}^p$ denotes the $i$-th row in $X$ and it represents the values of the covariates for the $i$-th element in the data and $x^{(k)} \in \mathbb{R}^n$ denotes the $k$-th column in $X$. Since a multilayer perceptron can have any integer number of hidden layers, we will denote the number of layers by $L$, the number of nodes of each layer $l$ by $n^{[l]}$ and the activation function for each layer $l$ by $\sigma^{[l]}(\cdot)$, for $l \in \left\{ 1, \ldots, L \right\}$. The activation function for the last layer will be denoted by $\phi(\cdot)$, as in the binary classification example.
+The parameter, or weight, for the $k$-th node in the $l$-th layer that connects the $j$-th node from the $(l-1)$-th layer is denoted by $\theta_{j,k}^{[l]}$ and, as before, $a_k^{[l]}$ denotes the result of the activation function corresponding to the $l$-th layer for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$; where $\theta_0^{[l]}$ is the bias term of the $l$-th layer. That is,
+$$
+  a_k^{[l]} = \sigma^{[l]} \left( \theta_0^{[l]} + \sum_{j = 1}^{n^{[l-1]}} \theta_{j,k}^{[l]} a_j^{(l-1)} \right)
+$$
+
+for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$, $j \in \left\{ 1, \ldots, n^{[l-1]} \right\}$ and $l \in \left\{ 1, \ldots, L \right\}$. The value of $a_k^{[0]}$ is the value of the covariate $x^{[k]}$, $a_0^{[0]}$ is a vector of ones of dimension $n$ and $n^{[0]}$ is the number of covariates plus 1, i.e., $n^{[0]} = p + 1$.
 
 \section{Convolutional Neural Networks}
 
