@@ -81,7 +81,14 @@ $$
   a_k^{[l]} = \sigma^{[l]} \left( \theta_0^{[l]} + \sum_{j = 1}^{n^{[l-1]}} \theta_{j,k}^{[l]} a_j^{(l-1)} \right)
 $$
 
-for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$, $j \in \left\{ 1, \ldots, n^{[l-1]} \right\}$ and $l \in \left\{ 1, \ldots, L \right\}$. The value of $a_k^{[0]}$ is the value of the covariate $x^{[k]}$, $a_0^{[0]}$ is a vector of ones of dimension $n$ and $n^{[0]}$ is the number of covariates plus 1, i.e., $n^{[0]} = p + 1$.
+for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$, $j \in \left\{ 1, \ldots, n^{[l-1]} \right\}$ and $l \in \left\{ 1, \ldots, L \right\}$. The value of $a_k^{[0]}$ is the value of the covariate $x^{[k]}$, $a_0^{[0]}$ is a vector of ones of dimension $n$ and $n^{[0]}$ is the number of covariates plus 1, i.e., $n^{[0]} = p + 1$. Figure \ref{fig:theory_ANN_diagram_03} shows an example of an architecture with $p = 4$ and $L = 2$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{plot_ANN_03.pdf}
+    \caption{Diagram of a multilayer perceptron with two hidden layers using the general notation.}
+    \label{fig:theory_ANN_diagram_03}
+\end{figure}
 
 \section{Convolutional Neural Networks}
 
