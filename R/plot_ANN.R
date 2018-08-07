@@ -36,6 +36,7 @@ plot(gr_1,
                     expression(theta[2]),
                     expression(theta[3])
      ),
+     edge.label.color = 'black',
      vertex.size = 25, 
      vertex.color='white',
      vertex.label.cex = 1,
@@ -104,6 +105,7 @@ plot(gr_2,
                     expression(w[1]),
                     expression(w[2])
      ),
+     edge.label.color = 'black',
      vertex.size = 30, 
      vertex.color='white',
      vertex.label.cex = 1,
@@ -157,25 +159,25 @@ gr_3 <- graph(
 )
 
 pdf("plot_ANN_03.pdf", 
-    width = 9,
-    height = 9) 
+    width = 18,
+    height = 18) 
 
 par(mai = c(0.0, 0.0, 0.0, 0.0))
 
 plot(gr_3, 
      layout = 
        matrix(c(
-         -2, 3, 
-         -2, 1,
-         -2, -1,
-         -2, -3,
-         0, 2,
+         -2, 8, 
+         -2, 2,
+         -2, -2,
+         -2, -8,
+         0, 6,
          0, 0, 
-         0, -2,
-         2, 3,
-         2, 1,
-         2, -1,
-         2, -3,
+         0, -6,
+         2, 8,
+         2, 2,
+         2, -2,
+         2, -8,
          4, 0), 
          byrow = T, 
          ncol = 2),
@@ -224,10 +226,12 @@ plot(gr_3,
        expression(paste(theta["3,1"]^"[3]")),
        expression(paste(theta["4,1"]^"[3]"))
      ),
-     vertex.size = 17, 
+     vertex.size = 15, 
      vertex.color='white',
-     vertex.label.cex = 1,
+     vertex.label.cex = 3.1,
      vertex.label.color = 'black',
-     vertex.frame.color = "black")
+     vertex.frame.color = "black",
+     edge.label.color = 'black',
+     edge.label.cex = 2)
 
 dev.off()
