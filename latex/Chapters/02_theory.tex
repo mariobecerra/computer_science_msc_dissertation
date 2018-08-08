@@ -3,6 +3,11 @@
 \chapter{Theoretical Framework}
 \label{ch:theory}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Related work
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Related work}
 
@@ -20,13 +25,19 @@ An example of how the uncertainties provided by Bayesian Neural Networks can be 
 
 The research on adversarial examples is continued by \citeauthor{rawat2017adversarial}, who study different Bayesian approaches (Bayes by Backprob (BBB), Probabilistic Backpropagation (PBP), Variational Matrix Gaussian (VMG) and MC-Dropout) and the uncertainty provided by the models, and prove that these models exhibit increased uncertainty when under attack \cite{rawat2017adversarial}. They state that all of the architectures in their study are Multi-Layer Perceptron, which do not scale for high dimensional colored images, with the exception of MC-Dropout, and therefore, a detailed study for MC-Dropout is required to demonstrate the applicability of model uncertainty for adversarial detection on various state-of-the-art attacks.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% ANNs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Artificial Neural Networks}
 
 The most basic, and perhaps the best known, type of Artificial Neural Network (ANN) is called a feedforward neural network or multilayer perceptron (MLP). These models are basically a composition of non-linear functions of the data. Let's illustrate this with a simple example.
 
-Consider that we want to model a continuous variable $y$ from a single covariate $x$. A very simple model would be a linear regression, which models each observation $i$ as $y_i = \beta_0 + \beta_1 x_i$, and chooses the values of $\beta_0$ and $\beta_1$ that minimize some error function. ANNs go further and take non-linear transformations of this linear predictor with some function $\sigma(\cdot)$, such that $y_i = \theta_0 +  \sum_{k = 1}^m \theta_k \sigma \left( \beta_0^{k} + \beta_1^{k} x_i \right)$, where $m$ is manually chosen beforehand. A common choice for $\sigma(\cdot)$, which is called the \textbf{activation function}, is the logistic function $\sigma(x) = (1 + e^{-x})^{-1}$
-or the hyperbolic tangent $\tanh(\cdot)$. The values of parameters $\theta_k$ and $\beta_j^{k}$ for $k \in \left\{ 0, \ldots, m \right\}$ and $j \in \left\{ 0, 1 \right\}$ are also chosen to minimize certain error function. Figure \ref{fig:theory_ANN_diagram_01} shows these relationships in a graphic way for a model with $m = 3$ and where we define $a_{k} = \sigma \left( \beta_0^{k} + \beta_1^{k} x_i \right)$ for $k \in \left\{ 1, 2, 3 \right\}$.
-This image doesn't explicitly show the parameters $\beta_0^{k}$ for $k \in \left\{ 0, \ldots, m \right\}$, which are usually called the \textbf{bias} parameters.
+Consider that we want to model a continuous variable $y$ from a single covariate $x$. A very simple model would be a linear regression, which models each observation $i$ as $y_i = \theta_0 + \theta_1 x_i$, and chooses the values of $\theta_0$ and $\theta_1$ that minimize some error function. ANNs go further and take non-linear transformations of this linear predictor with some function $\sigma(\cdot)$, such that $y_i = \theta_0^{[1]} +  \sum_{j = 1}^m \theta_j^{[1]} \sigma \left( \theta_0^{[0]} + \theta_j^{[0]} x_i \right)$, where $m$ is manually chosen beforehand. A common choice for $\sigma(\cdot)$, which is called the \textbf{activation function}, is the logistic function $\sigma(x) = (1 + e^{-x})^{-1}$
+or the hyperbolic tangent $\tanh(\cdot)$. The values of parameters $\theta_k^{[0]}$ and $\theta_k^{[1]}$ for $k \in \left\{ 0, \ldots, m \right\}$ are also chosen to minimize certain error function. Figure \ref{fig:theory_ANN_diagram_01} shows these relationships in a graphic way for a model with $m = 3$ and where we define $a_{k, i} = \sigma \left( \theta_0^{[0]} + \theta_k^{[0]} x_i \right)$ for $k \in \left\{ 1, 2, 3 \right\}$.
+This image doesn't explicitly show the parameters $\theta_0^{[0]}$ and $\theta_0^{[1]}$, which are usually called the \textbf{bias} parameters.
 
 \begin{figure}[H]
     \centering
@@ -38,34 +49,38 @@ This image doesn't explicitly show the parameters $\beta_0^{k}$ for $k \in \left
 If the response variable $y$ happened to be a categorical variable, let's say binary, then one last transformation would have to be applied to map the model to the $\left[0, 1\right]$ interval and model $y$ as a probability. Then we would have
 
 $$
-y_i =
-\phi \left( \theta_0 +  \sum_{k = 1}^p \theta_k \sigma \left( \beta_0^{k} + \beta_1^{k} x_i \right) \right) =
-\phi \left( \theta_0 +  \sum_{k = 1}^p \theta_k a_{k} \right),
+  y_i =
+  \phi \left( \theta_0^{[1]} +  \sum_{j = 1}^m \theta_j^{[1]} \sigma \left( \theta_0^{[0]} + \theta_j^{[0]} x_i \right) \right) =
+  \phi \left( \theta_0^{[1]} +  \sum_{j = 1}^m \theta_j^{[1]} a_{j,i} \right),
 $$
 
 with $\phi(\cdot)$ the logistic function to map from $\mathbb{R}$ to $\left[ 0, 1 \right]$. The choice of function $\phi(\cdot)$ depends on the nature of the response variable. As we saw previously, in the case of a continuous response variable, $\phi(\cdot)$ is the identity function.
 
-We can establish a more complex model by taking linear combinations of non-linear functions of the previous result. In this case, we must add one more index to the $\theta$ parameters to keep using the same notation. Let's define
+We can establish a more complex model by taking linear combinations of non-linear functions of the previous result. Let's define
 $$
-a_k^{[1]} = \sigma^{[1]} \left( \beta_0^{k} + \beta_1^{k} x_i \right)
+a_{k,i}^{[1]} = \sigma^{[1]} \left( \theta_{0}^{[1]} + \theta_k^{[0]} x_i \right)
 $$
 
 for $k \in \left\{ 1, \ldots, m \right\}$ and
 
 $$
-a_k^{[2]} = \theta_0^{j} +  \sum_{k = 1}^m \theta_k^{j} \sigma^{[2)} \left( \beta_0^{k} + \beta_1^{k} x_i \right) =
-\theta_0^{j} +  \sum_{k = 1}^m \theta_k^{j} a_k^{[1]}
+  a_{k,i}^{[2]} = \sigma^{[2]} \left(  \theta_{0,k}^{[1]} + \sum_{j = 1}^m \theta_{j,k}^{[1]} a_{j,1}^{[0]}  \right)
 $$
 
-for $j \in \left\{ 1, \ldots, r \right\}$, then
+% $$
+% a_{k,i}^{[2]} = \theta_0^{j} +  \sum_{k = 1}^m \theta_k^{j} \sigma^{[2)} \left( \theta_0^{k} + \theta_1^{k} x_i \right) =
+% \theta_0^{j} +  \sum_{k = 1}^m \theta_k^{j} a_{k,i}^{[1]}
+% $$
+
+for $k \in \left\{ 1, \ldots, r \right\}$, then
 
 $$
-y_i = w_0 + \sum_{l = 1}^r w_j \sigma^{[2]} \left( a_j^{[2]} \right),
+  y_i = \theta_0^{[2]} + \sum_{j = 1}^r \theta_j^{[2]} a_{j,i}^{[2]}
 $$
 
 where $r$, like $m$, is chosen beforehand. The values $m$ and $r$ are usually called the number of nodes or units of each layer. This is what is called a deeper model, because it has more layers. Notice that we have two different activation functions $\sigma^{[1]}(\cdot)$ and $\sigma^{[2]}(\cdot)$. Each layer can have a different function. The first one could be a sigmoid function and the second one a hyperbolic tangent, or vice versa, or they could both be the same function.
 
-Figure \ref{fig:theory_ANN_diagram_02} shows this graphically with $m = 3$ and $r = 2$. Layers corresponding to $a_k^{[1]}$ and $a_j^{[2]}$ are called the \textbf{hidden layers}. So figure \ref{fig:theory_ANN_diagram_01} shows a multilayer perceptron with one hidden layer, and figure \ref{fig:theory_ANN_diagram_02} shows a multilayer perceptron with two hidden layers.
+Figure \ref{fig:theory_ANN_diagram_02} shows this graphically with $m = 3$ and $r = 2$. Layers corresponding to $a_{k,i}^{[1]}$ for $k \in \left\{ 1, \ldots, m \right\}$ and $a_{k,i}^{[2]}$ for $k \in \left\{ 1, \ldots, r \right\}$ are called the \textbf{hidden layers}. So figure \ref{fig:theory_ANN_diagram_01} shows a multilayer perceptron with one hidden layer, and figure \ref{fig:theory_ANN_diagram_02} shows a multilayer perceptron with two hidden layers.
 
 
 \begin{figure}[H]
@@ -75,23 +90,58 @@ Figure \ref{fig:theory_ANN_diagram_02} shows this graphically with $m = 3$ and $
     \label{fig:theory_ANN_diagram_02}
 \end{figure}
 
-Now that we have a grasp of how the MLP works, we can define it more generally. The notation used will be $y$ for the response variable $n$-dimensional vector, $y_i$ for the $i$-th element of $y$ and $X$ for the data matrix, such that $X \in \mathbb{R}^{n \times p}$, $x_i \in \mathbb{R}^p$ denotes the $i$-th row in $X$ and it represents the values of the covariates for the $i$-th element in the data and $x^{(k)} \in \mathbb{R}^n$ denotes the $k$-th column in $X$. Since a multilayer perceptron can have any integer number of hidden layers, we will denote the number of layers by $L$, the number of nodes of each layer $l$ by $n^{[l]}$ and the activation function for each layer $l$ by $\sigma^{[l]}(\cdot)$, for $l \in \left\{ 1, \ldots, L \right\}$. The activation function for the last layer will be denoted by $\phi(\cdot)$, as in the binary classification example.
-The parameter, or weight, for the $k$-th node in the $l$-th layer that connects the $j$-th node from the $(l-1)$-th layer is denoted by $\theta_{j,k}^{[l]}$ and, as before, $a_k^{[l]}$ denotes the result of the activation function corresponding to the $l$-th layer for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$; where $\theta_0^{[l]}$ is the bias term of the $l$-th layer. That is,
+Now that we have a grasp of how the MLP works, we can define it more generally. The notation used will be $y$ for the response variable $n$-dimensional vector, $y_i$ for the $i$-th element of $y$ and $X$ for the data matrix, such that $X \in \mathbb{R}^{n \times p}$, $x_i \in \mathbb{R}^p$ denotes the $i$-th row in $X$ and it represents the values of the covariates for the $i$-th element in the data and $x^{(k)} \in \mathbb{R}^n$ denotes the $k$-th column in $X$ and $x_i^{(k)}$ denotes the $k$-th column-wise element and the $i$-th row-wise element.
+
+Since a multilayer perceptron can have any integer number of hidden layers, we will denote the number of layers by $L$, the number of nodes of each layer $l$ by $n^{[l]}$ and the activation function for each layer $l$ by $\sigma^{[l]}(\cdot)$, for $l \in \left\{ 1, \ldots, L \right\}$. The activation function for the last layer will be denoted by $\phi(\cdot)$, as in the binary classification example.
+
+The parameter, or weight, that connects the $j$-th node from the $(l-1)$-th layer with the $k$-th node in the $l$-th layer is denoted by $\theta_{j,k}^{[l]}$ and, as before, $a_{k,i}^{[l]}$ denotes the result of the activation function corresponding to the $l$-th layer and the $i$-th observation, for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$; where $\theta_{0,k}^{[l]}$ is the bias term of the $k$-th node in the $l$-th layer. That is,
+
+\begin{equation}
+  \label{eq:ann_act_funct_def}
+  a_{k,i}^{[l]} = \sigma^{[l]} \left( \theta_{0,k}^{[l-1]} + \sum_{j = 1}^{n^{[l-1]}} \theta_{j,k}^{[l-1]} a_{j,i}^{[l-1]} \right)
+\end{equation}
+
+for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$, $j \in \left\{ 1, \ldots, n^{[l-1]} \right\}$, $l \in \left\{ 1, \ldots, L \right\}$ and $i \in \left\{ 1, \ldots, n \right\}$.
+
+To be consistent, $a_{k,i}^{[0]}$ is defined as $x_i^{[k]}$, and so, $a_{k}^{[0]} = x^{(k)} \in \mathbb{R}^n$; and $a_{0,i}^{[0]} = 1$ for all $i \in \left\{ 1, \ldots, n \right\}$, so $a_{0}^{[0]}$ is a vector of ones of dimension $n$ and $n^{[0]}$ is the number of covariates, i.e., $n^{[0]} = p$.
+
+So, in general, a feedforward neural network or multilayer perceptron with $L$ hidden layers is such that
+
 $$
-  a_k^{[l]} = \sigma^{[l]} \left( \theta_0^{[l]} + \sum_{j = 1}^{n^{[l-1]}} \theta_{j,k}^{[l]} a_j^{(l-1)} \right)
+  y_i = \phi \left( \theta_{0,1}^{[L]} +  \sum_{j = 1}^{n^{[L]}} \theta_{j,1}^{[L]} a_{k,i}^{[L]} \right),
 $$
 
-for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$, $j \in \left\{ 1, \ldots, n^{[l-1]} \right\}$ and $l \in \left\{ 1, \ldots, L \right\}$. The value of $a_k^{[0]}$ is the value of the covariate $x^{[k]}$, $a_0^{[0]}$ is a vector of ones of dimension $n$ and $n^{[0]}$ is the number of covariates plus 1, i.e., $n^{[0]} = p + 1$. Figure \ref{fig:theory_ANN_diagram_03} shows an example of an architecture with $p = 4$ and $L = 2$.
+and where equation \ref{eq:ann_act_funct_def} holds. Figure \ref{fig:theory_ANN_diagram_03} shows an example of an architecture with $p = 4$, $L = 2$, $n^{[0]} = p = 4$, $n^{[1]} = 3$ and $n^{[2]} = 3$.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{plot_ANN_03.pdf}
-    \caption{Diagram of a multilayer perceptron with two hidden layers using the general notation.}
+    \caption{Diagram of a multilayer perceptron with two hidden layers using the general notation with $p = 4$, $L = 2$, $n^{[0]} = p = 4$, $n^{[1]} = 3$ and $n^{[2]} = 3$.}
     \label{fig:theory_ANN_diagram_03}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% CNNs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Convolutional Neural Networks}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% VI
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Variational Inference}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% AL
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Active Learning}
