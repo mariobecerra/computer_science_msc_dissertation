@@ -27,18 +27,98 @@ The research on adversarial examples is continued by \citeauthor{rawat2017advers
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Frequentist and Bayesian statistics
+%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Frequentist and Bayesian statistics}
+\section{Machine learning}
 
-\begin{enumerate}
-  \item Likelihood
-  \item MLE
-  \item Decision theory
-  \item Linear regression
-\end{enumerate}
+Machine learning is a set of methods used to learn patterns in data, and then use these patterns to make predictions about new unseen data, or to take other decisions \cite{murphy2012machine}. With the amount of data available nowadays, it has become a fruitful and demanded field in many areas. Machine learning has exploded lately mainly thanks to the advanced in computing power, without which most of modern techniques wouldn't be feasible.
+
+Machine learning is usually divided in two areas: supervised learning and unsupervised learning. The former involves building a model to predict a response variable from certain explanatory variables (or covariates); while the latter involves a set of variables without a response: one wishes to learn relationships and structure of the data.
+
+An example of supervised learning is to estimate the income of a home from a set of variables such as zip code, size of home, number of cars they own, etc; and an example of unsupervised learning is to find groups of homes that naturally come up in the data, such that there is high similarity within each group and little between groups. In this work, only supervised learning is presented and studied.
+
+As previously mentioned, in supervised learning we have a response variable denoted as vector $y$ with $n$ elements, and each covariate is denoted by $x^{(k)} \in \mathbb{R}^n$ for $k$ from 1 to $p$. All covariates can be summarized in notation in a single data matrix $X \in \mathbb{R}^{n \times p}$. It is assumed that there exists a relationship between $y$ and $X$, which can be written as
+
+\begin{equation}
+  \label{eq:general_learning_model}
+  Y = f(X) + \varepsilon
+\end{equation}
+
+where $f$ is a fixed but unknown function and $\varepsilon$ is a random error term, independent from $X$ and with zero mean \cite[p.~16]{james2013introduction}. We usually want to estimate function $f$, either prediction or inference, and we do it with an estimate $\hat{f}$ \cite[p.~17]{james2013introduction}.
+In this work, we will focus on the prediction goal.
+The estimate $\hat{f}$ can be chosen from a wide family of models, such as a linear regression model, a general additive model, a neural network, etc., and the goal is for $\hat{f}$ have as little generalization error as possible. This is done using a training set of data, denoted $\mathcal{L} = \left\{ (x_1, y_1), ..., (x_n, y_n) \right\}$, and an error or loss function that we wish to minimize.
+
+For example, in the linear regression case, it is common to minimize the squared error function
+
+$$
+  \hat{f} = \argmin_{f \in \mathcal{F}} \frac{1}{n} \sum_{i = 1}^n{ ( y_i - f(x_i) ) ^ 2},
+$$
+
+where $\mathcal{F}$ is the family of functions of the form $f(X) = X\beta$ with $\beta \in \mathbb{R}^p$. Thus, $\hat{f}(X) = X \hat{\beta}$, where $\hat{\beta}$ minimizes the error function.
+
+The linear regression model belongs to a type of methods called \textbf{parametric methods}, in which we first make an assumption about the functional form of $f$, and then train the model by choosing the parameters that minimize a previously selected error function \cite[p.~21]{james2013introduction}. In the case of linear regression, the form of $f$ is assumed to be $f(X) = X\beta$, and the parameters chosen are the elements of the $\hat{\beta}$ vector that minimize the squared error function of the model.
+
+An approach to the estimation of parameters that is different to the concept of error function minimization, and one that is also more general, is the one of \textbf{maximum likelihood estimation}.
+This is a probabilistic approach in which we assume certain probability distribution for the data.
+In the case of linear regression, if we assume that the error term in \ref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{X \beta}{\sigma^2}$; and if we also assume that the observations $y_i$ for $i$ from 1 to $n$ come from a random sample and are, thus, independent of each other, then the log-probability of the sample is
+
+\begin{equation}
+  \label{eq:gaussian_likelihood}
+  L(\beta) = \sum_{i = 1}^n \log \normalfunc{y_i}{X \beta}{\sigma^2},
+\end{equation}
+
+where $\normalfunc{x_i}{\mu}{\sigma^2}$ denotes the density function of a Gaussian random variable with mean $\mu$ and variance $\sigma^2$. The \textbf{principle of maximum likelihood} states that the values for $\beta$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \ref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements}.
+With some algebra, it is fairly easy to see that maximizing equation \ref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
+
+In the case of a binary classification problem, assuming that $y_i$ follows a Bernoulli distribution, such that the probability of $y_i$ of being 1 is $p_i(\theta)$, where $\theta$ is the parameter that indexes the probability, then the likelihood function in this case is $\prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i}$ and thus, the log-likelihood is
+
+$$
+  L(\theta) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\theta) \right) + (1 - y_i) \log \left( 1 - p_i(\theta) \right) \right].
+$$
+
+Another approach to the learning problem is the \textbf{Bayesian approach}, in which we first assume a prior distribution on the parameters $\theta$ and we update our knowledge about them with data $X$. That is, we first quantify the knowledge that we may have about $\theta$ using a prior distribution $\prob{\theta}$ and then compute the posterior distribution of $\theta$ given $X$ using Bayes' theorem as such
+
+$$
+  \prob{\theta | X} = \frac{\prob{X | \theta} \prob{\theta}}{\prob{X}} = \frac{\prob{X | \theta} \prob{\theta}}{\int \prob{X | \theta} \prob{\theta} d\theta}.
+$$
+
+The posterior distribution represents the knowledge that we have about $\theta$ after we have seen the data. This posterior distribution is also used to predict the values of unseen data. Let $x^*$ be a vector of covariates for which we want to make a prediction $\hat{y}^*$, then we use the \textbf{posterior predictive distribution}, defined as
+
+$$
+  \prob{x^* | X} = \int \prob{x^* | \theta} \prob{\theta | X} d\theta.
+$$
+
+Note that this posterior distribution is, as it name implies, a distribution; i.e., it is not a single prediction but a whole bunch of predictions, quantified by how likely each value is to be. If we wanted a point prediction $\hat{y}^*$ for $x^*$ then we could take the expected value of the posterior predictive distribution such that
+
+$$
+  \hat{y}^* = \mathbb{E}_{x^* | X} \left[ \prob{x^* | X} \right].
+$$
+
+There are other possible point estimates such as the median, or the maximum a posteriori (MAP) estimate, but we will not study them in detail.
+
+
+% En general, cuando uno entrena un modelo para predecir, no se desea minimizar el error de entrenamiento, sino el error de predicción, esto es, el error de cualquier observación futura $(X^0, Y^0)$. Esto quiere decir que se quiere minimizar el error esperado de predicción, definido como $\mathbb{E} \left[ L(\hat{f}(X^0), Y^0 ) \right]$.
+%
+% Debido a que se quiere minimizar el error esperado de predicción, es común separar el conjunto de datos $(X, Y)$ en dos, el conjunto de entrenamiento, presentado anteriormente como $\mathcal{L}$, y un \textit{conjunto de validación} o \textit{conjunto de prueba} denotado como $\mathcal{T}$. Para hacer esto, del conjunto original de datos, se toma una muestra aleatoria para entrenar (este es el conjunto de entrenamiento $\mathcal{L}$) y el resto es el conjunto de validación $\mathcal{T}$, con el cual se prueba el poder predictivo del modelo. Para estimar $\mathbb{E} \left[ L(\hat{f}(X^0), Y^0 ) \right]$, donde $L$ es la pérdida cuadrática y $\mathcal{T} = \left\{ (x_1^0, y_1^0), \hdots, (x_m^0, y_m^0) \right\}$, se utiliza la función
+%
+% \[
+%   \hat{Err} = \frac{1}{m} \sum_{i = 1}^m \left( f(x_i^0) - y_i^0 \right)^2.
+% \]
+%
+% A $\hat{Err}$ se le conoce como el error de validación o error de prueba. Notar que si $m$ es grande, entonces el error de prueba se aproxima al error esperado de predicción.
+%
+% Notar que el error de entrenamiento no aproxima el error de predicción porque el error de entrenamiento depende de $\mathcal{L}$. De hecho la estimación del error de predicción utilizando el error de entrenamiento está sesgada hacia abajo, especialmente para modelos complejos.
+
+
+
+% \begin{enumerate}
+%   \item Likelihood
+%   \item MLE
+%   \item Decision theory
+%   \item Linear regression
+% \end{enumerate}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -176,7 +256,16 @@ $$
   \prob{\Theta | X} = \frac{\prob{X | \Theta} \prob{\Theta}}{\prob{X}}.
 $$
 
-In our example, $p$
+%In our example, $\prob{X | \Theta} = \normalfunc{X}{\mathrm{MLP}(X, \Theta)}{\sigma^2}$ and $\prob{\Theta} = \normalfunc{\Theta}{[]}$
+In our example, $\prob{X | \Theta}$ and $\prob{\Theta}$ are the joint density functions of Gaussian random variables with their corresponding parameter values.
+
+To make predictions in the Bayesian case, we use the \textbf{posterior predictive distribution}, defined as
+
+$$
+  \prob{x^* | X} = \int \prob{x^* | \Theta} \prob{\Theta | X} \mathrm{d}\Theta
+$$
+
+for a new vector of covariates $x^*$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
