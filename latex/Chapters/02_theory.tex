@@ -139,6 +139,18 @@ where $p_i(\beta) = \sigma(\beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)})$.
 
 So, the maximum likelihood estimator of $\beta = \left[ \beta_0, \beta_1, \beta_2 \right]^T$ is the vector $\hat{\beta}$ that maximizes $L(\beta)$ in equation \ref{eq:log_likelihood_logistic_example}; that is $\hat{\beta} = \argmax L(\beta)$.
 
+Another way to see the problem of binary classification, is to simply see it as a learning problem in which we want to minimize a certain loss function. We now know that maximizing equation \ref{eq:log_likelihood_logistic_example} gives us the maximum likelihood estimate, but if we change the sign, then we have a loss function that we can minimize, and it's the exact same problem as before. But first, let's write the new loss function and try to understand the logic behind it. The new objective function, that we wish to minimize is
+
+\begin{equation}
+  \label{eq:logistic_example_loss_functon}
+  L(\beta) = - \sum_{i = 1}^n \left[ y_i \log\left( p_i(\beta) \right) + (1 - y_i) \log \left( 1 - p_i(\beta) \right) \right].
+\end{equation}
+
+Now, why is this an error function? If $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and we have remaining $\log\left( p_i(\beta) \right)$. Now, if we assign a high value to $p_i(\beta)$, that is, close to 1, then $\log\left( p_i(\beta) \right) \approx 0$; but if we assign a low value to $p_i(\beta)$, that is, close to 0, then $\log\left( p_i(\beta) \right) \approx -\infty$, and so the overall loss function (don't forget that there's a minus sign at the beginning) tends to infinity. This means that when the real value of $y_i$ is 1 and we assign a low probability to it, the loss function is large, but if we assign a high probability to it, the loss function is small. The same reasoning works for when $y_i = 0$: if we assign a low probability, then the loss function is small, but if we assign a high probability, then the loss function is large. Hence, minimizing the loss function leads to choosing values of $\beta$ such that they yield a high probability to the cases when $y_i = 1$ and a low one when $y_i = 0$.
+
+% There are other possible los functions for this problem, such as the \textbf{hinge loss}
+
+
 
 % En general, cuando uno entrena un modelo para predecir, no se desea minimizar el error de entrenamiento, sino el error de predicción, esto es, el error de cualquier observación futura $(X^0, Y^0)$. Esto quiere decir que se quiere minimizar el error esperado de predicción, definido como $\mathbb{E} \left[ L(\hat{f}(X^0), Y^0 ) \right]$.
 %
