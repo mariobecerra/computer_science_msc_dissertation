@@ -98,6 +98,47 @@ $$
 
 There are other possible point estimates such as the median, or the maximum a posteriori (MAP) estimate, but we will not study them in detail.
 
+We can illustrate all these concepts in the context of logistic regression. Suppose that we have $n$ observations of a binary response variable $y \in \left\{0, 1\right\}^n$ and two continuous covariates $x^{(1)}, x^{(2)} \in \mathbb{R}^n$. First, we will a build a linear classifier with the frequentist approach, that is, with the maximum likelihood approach; then, we will transform this into a simple learning problem in which we try to minimize a loss function; and finally, we will see how the Bayesian approach works here.
+
+If we wanted to build a linear classifier from our two covariates, we would run into a problem because the response variable only takes the values $0$ and $1$, and a linear model of the form $\mu(x_i) = \beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)}$ is not bounded, so it is a better idea to model the probability of a feature vector of belonging to each class.
+This way, $y_i$ is a random variable that follows a Bernoulli distribution with parameter $p_i$, where $p_i$ is the probability of $y_i$ being 1.
+The range of $f$ as a linear model is $\mathbb{R}$, so we must map it to the $\left[ 0,1 \right]$ space in which probabilities live, and it can be done with the \textbf{logistic sigmoid function} $\sigma \left( \cdot \right)$ defined as \cite[p.~114]{christopher2006pattern}
+
+$$
+  \sigma(w) = \frac{e^w}{1 + e^w} = \frac{1}{1 + e^{-w}}.
+$$
+
+It is easy to see that $\lim_{w \to -\infty} \sigma(w) = 0$ and $\lim_{w \to \infty} \sigma(w) = 1$. There is more reasoning behind the logistic sigmoid function, and some of it has to be that it belongs to the exponential family of functions. To see more details about this, see \cite{christopher2006pattern}.
+
+So, we know that $\sigma \left( \cdot \right)$ maps from $\mathbb{R}$ to $\left[ 0,1 \right]$, but we don't know exactly how to relate this to our original problem which is to build a linear classifier using the vectors $x^{(1)}$ and $x^{(2)}$. Using  $\sigma \left( \cdot \right)$, we can define the probability of $y_i$ of belonging to class $1$ given features $x_i^{(1)}$ and $x_i^{(2)}$, summarized as $x_i$, as
+
+$$
+  \prob{y_i = 1 | x_i, \beta} = \sigma(\beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)}) = \frac{1}{1 + e^{-\left( \beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)} \right)}},
+$$
+
+and thus
+
+$$
+  \prob{y_i = 0 | x_i, \beta} = 1 - \prob{y_i = 1 | x_i} = \frac{1}{1 + e^{\beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)}}}.
+$$
+
+So, $y_i$ is fully described as a Bernoulli distribution with parameter $p_i =\prob{y_i = 1 | x_i, \beta}$. As we previously mentioned, the likelihood of $n$ observations is
+
+$$
+  \prod_{i = 1}^n  p_i(\beta)^{y_i}\left(1 - p_i(\beta) \right)^{1 - y_i}
+$$
+
+and, in consequence, the log-likelihood of $n$ observations is
+
+\begin{equation}
+  \label{eq:log_likelihood_logistic_example}
+  L(\beta) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\beta) \right) + (1 - y_i) \log \left( 1 - p_i(\beta) \right) \right],
+\end{equation}
+
+where $p_i(\beta) = \sigma(\beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)})$.
+
+So, the maximum likelihood estimator of $\beta = \left[ \beta_0, \beta_1, \beta_2 \right]^T$ is the vector $\hat{\beta}$ that maximizes $L(\beta)$ in equation \ref{eq:log_likelihood_logistic_example}; that is $\hat{\beta} = \argmax L(\beta)$.
+
 
 % En general, cuando uno entrena un modelo para predecir, no se desea minimizar el error de entrenamiento, sino el error de predicción, esto es, el error de cualquier observación futura $(X^0, Y^0)$. Esto quiere decir que se quiere minimizar el error esperado de predicción, definido como $\mathbb{E} \left[ L(\hat{f}(X^0), Y^0 ) \right]$.
 %
