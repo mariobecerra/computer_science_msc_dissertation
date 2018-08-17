@@ -56,20 +56,20 @@ $$
   \hat{f} = \argmin_{f \in \mathcal{F}} \frac{1}{n} \sum_{i = 1}^n{ ( y_i - f(x_i) ) ^ 2},
 $$
 
-where $\mathcal{F}$ is the family of functions of the form $f(X) = X\beta$ with $\beta \in \mathbb{R}^p$. Thus, $\hat{f}(X) = X \hat{\beta}$, where $\hat{\beta}$ minimizes the error function.
+where $\mathcal{F}$ is the family of functions of the form $f(X) = X\theta$ with $\theta \in \mathbb{R}^p$. Thus, $\hat{f}(X) = X \hat{\theta}$, where $\hat{\theta}$ minimizes the error function.
 
-The linear regression model belongs to a type of methods called \textbf{parametric methods}, in which we first make an assumption about the functional form of $f$, and then train the model by choosing the parameters that minimize a previously selected error function \cite[p.~21]{james2013introduction}. In the case of linear regression, the form of $f$ is assumed to be $f(X) = X\beta$, and the parameters chosen are the elements of the $\hat{\beta}$ vector that minimize the squared error function of the model.
+The linear regression model belongs to a type of methods called \textbf{parametric methods}, in which we first make an assumption about the functional form of $f$, and then train the model by choosing the parameters that minimize a previously selected error function \cite[p.~21]{james2013introduction}. In the case of linear regression, the form of $f$ is assumed to be $f(X) = X\theta$, and the parameters chosen are the elements of the $\hat{\theta}$ vector that minimize the squared error function of the model.
 
 An approach to the estimation of parameters that is different to the concept of error function minimization, and one that is also more general, is the one of \textbf{maximum likelihood estimation}.
 This is a probabilistic approach in which we assume certain probability distribution for the data.
-In the case of linear regression, if we assume that the error term in \ref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{X \beta}{\sigma^2}$; and if we also assume that the observations $y_i$ for $i$ from 1 to $n$ come from a random sample and are, thus, independent of each other, then the log-probability of the sample is
+In the case of linear regression, if we assume that the error term in \ref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{X \theta}{\sigma^2}$; and if we also assume that the observations $y_i$ for $i$ from 1 to $n$ come from a random sample and are, thus, independent of each other, then the log-probability of the sample is
 
 \begin{equation}
   \label{eq:gaussian_likelihood}
-  L(\beta) = \sum_{i = 1}^n \log \normalfunc{y_i}{X \beta}{\sigma^2},
+  L(\theta) = \sum_{i = 1}^n \log \normalfunc{y_i}{X \theta}{\sigma^2},
 \end{equation}
 
-where $\normalfunc{x_i}{\mu}{\sigma^2}$ denotes the density function of a Gaussian random variable with mean $\mu$ and variance $\sigma^2$. The \textbf{principle of maximum likelihood} states that the values for $\beta$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \ref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements}.
+where $\normalfunc{x_i}{\mu}{\sigma^2}$ denotes the density function of a Gaussian random variable with mean $\mu$ and variance $\sigma^2$. The \textbf{principle of maximum likelihood} states that the values for $\theta$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \ref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements}.
 With some algebra, it is fairly easy to see that maximizing equation \ref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
 
 In the case of a binary classification problem, assuming that $y_i$ follows a Bernoulli distribution, such that the probability of $y_i$ of being 1 is $p_i(\theta)$, where $\theta$ is the parameter that indexes the probability, then the likelihood function in this case is $\prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i}$ and thus, the log-likelihood is
@@ -80,11 +80,21 @@ $$
 
 Another approach to the learning problem is the \textbf{Bayesian approach}, in which we first assume a prior distribution on the parameters $\theta$ and we update our knowledge about them with data $X$. That is, we first quantify the knowledge that we may have about $\theta$ using a prior distribution $\prob{\theta}$ and then compute the posterior distribution of $\theta$ given $X$ using Bayes' theorem as such
 
-$$
+\begin{equation}
+  \label{eq:bayes_theorem}
   \prob{\theta | X} = \frac{\prob{X | \theta} \prob{\theta}}{\prob{X}} = \frac{\prob{X | \theta} \prob{\theta}}{\int \prob{X | \theta} \prob{\theta} d\theta}.
-$$
+\end{equation}
 
-The posterior distribution represents the knowledge that we have about $\theta$ after we have seen the data. This posterior distribution is also used to predict the values of unseen data. Let $x^*$ be a vector of covariates for which we want to make a prediction $\hat{y}^*$, then we use the \textbf{posterior predictive distribution}, defined as
+The posterior distribution represents the knowledge that we have about $\theta$ after we have seen the data and is a compromise between our prior beliefs and the data. The multiplier $\prob{X | \theta}$ is called the likelihood, and is the probability of the data given the parameters.
+
+Since the denominator of equation \ref{eq:bayes_theorem} does not depend on $\theta$ because it is only a normalizing constant, it is just usually described as a proportion
+
+\begin{equation}
+  \label{eq:bayes_theorem_prop}
+    \prob{\theta | X} \propto \prob{X | \theta} \prob{\theta}.
+\end{equation}
+
+This posterior distribution is also used to predict the values of unseen data. Let $x^*$ be a vector of covariates for which we want to make a prediction $\hat{y}^*$, then we use the \textbf{posterior predictive distribution}, defined as
 
 $$
   \prob{x^* | X} = \int \prob{x^* | \theta} \prob{\theta | X} d\theta.
@@ -100,7 +110,7 @@ There are other possible point estimates such as the median, or the maximum a po
 
 We can illustrate all these concepts in the context of logistic regression. Suppose that we have $n$ observations of a binary response variable $y \in \left\{0, 1\right\}^n$ and two continuous covariates $x^{(1)}, x^{(2)} \in \mathbb{R}^n$. First, we will a build a linear classifier with the frequentist approach, that is, with the maximum likelihood approach; then, we will transform this into a simple learning problem in which we try to minimize a loss function; and finally, we will see how the Bayesian approach works here.
 
-If we wanted to build a linear classifier from our two covariates, we would run into a problem because the response variable only takes the values $0$ and $1$, and a linear model of the form $\mu(x_i) = \beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)}$ is not bounded, so it is a better idea to model the probability of a feature vector of belonging to each class.
+If we wanted to build a linear classifier from our two covariates, we would run into a problem because the response variable only takes the values $0$ and $1$, and a linear model of the form $\mu(x_i) = \theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}$ is not bounded, so it is a better idea to model the probability of a feature vector of belonging to each class.
 This way, $y_i$ is a random variable that follows a Bernoulli distribution with parameter $p_i$, where $p_i$ is the probability of $y_i$ being 1.
 The range of $f$ as a linear model is $\mathbb{R}$, so we must map it to the $\left[ 0,1 \right]$ space in which probabilities live, and it can be done with what is called a \textbf{link function}. The \textbf{logistic sigmoid function} $\sigma \left( \cdot \right)$ is a widely used link function for this type of problems \cite[p.~114]{christopher2006pattern}. It is defined as
 
@@ -122,43 +132,84 @@ is the Gaussian cumulative distribution function. There are some differences in 
 So, we know that $\sigma \left( \cdot \right)$ maps from $\mathbb{R}$ to $\left[ 0,1 \right]$, but we don't know exactly how to relate this to our original problem which is to build a linear classifier using the vectors $x^{(1)}$ and $x^{(2)}$. Using  $\sigma \left( \cdot \right)$, we can define the probability of $y_i$ of belonging to class $1$ given features $x_i^{(1)}$ and $x_i^{(2)}$, summarized as $x_i$, as
 
 $$
-  \prob{y_i = 1 | x_i, \beta} = \sigma(\beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)}) = \frac{1}{1 + e^{-\left( \beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)} \right)}},
+  \prob{y_i = 1 | x_i, \theta} = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}) = \frac{1}{1 + e^{-\left( \theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)} \right)}},
 $$
 
 and thus
 
 $$
-  \prob{y_i = 0 | x_i, \beta} = 1 - \prob{y_i = 1 | x_i} = \frac{1}{1 + e^{\beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)}}}.
+  \prob{y_i = 0 | x_i, \theta} = 1 - \prob{y_i = 1 | x_i} = \frac{1}{1 + e^{\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}}}.
 $$
 
-So, $y_i$ is fully described as a Bernoulli distribution with parameter $p_i =\prob{y_i = 1 | x_i, \beta}$. As we previously mentioned, the likelihood of $n$ observations is
+So, $y_i$ is fully described as a Bernoulli distribution with parameter $p_i =\prob{y_i = 1 | x_i, \theta}$. As we previously mentioned, the likelihood of $n$ observations is
 
 $$
-  \prod_{i = 1}^n  p_i(\beta)^{y_i}\left(1 - p_i(\beta) \right)^{1 - y_i}
+  \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i}
 $$
 
 and, in consequence, the log-likelihood of $n$ observations is
 
 \begin{equation}
   \label{eq:log_likelihood_logistic_example}
-  L(\beta) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\beta) \right) + (1 - y_i) \log \left( 1 - p_i(\beta) \right) \right],
+  L(\theta) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\theta) \right) + (1 - y_i) \log \left( 1 - p_i(\theta) \right) \right],
 \end{equation}
 
-where $p_i(\beta) = \sigma(\beta_0 + \beta_1 x_i^{(1)} + \beta_2 x_i^{(2)})$.
+where $p_i(\theta) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$.
 
-So, the maximum likelihood estimator of $\beta = \left[ \beta_0, \beta_1, \beta_2 \right]^T$ is the vector $\hat{\beta}$ that maximizes $L(\beta)$ in equation \ref{eq:log_likelihood_logistic_example}; that is $\hat{\beta} = \argmax L(\beta)$.
+So, the maximum likelihood estimator of $\theta = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ is the vector $\hat{\theta}$ that maximizes $L(\theta)$ in equation \ref{eq:log_likelihood_logistic_example}; that is $\hat{\theta} = \argmax L(\theta)$.
 
 Another way to see the problem of binary classification, is to simply see it as a learning problem in which we want to minimize a certain loss function. We now know that maximizing equation \ref{eq:log_likelihood_logistic_example} gives us the maximum likelihood estimate, but if we change the sign, then we have a loss function that we can minimize, and it's the exact same problem as before. But first, let's write the new loss function and try to understand the logic behind it. The new objective function, that we wish to minimize is
 
 \begin{equation}
-  \label{eq:logistic_example_loss_functon}
-  L(\beta) = - \sum_{i = 1}^n \left[ y_i \log\left( p_i(\beta) \right) + (1 - y_i) \log \left( 1 - p_i(\beta) \right) \right].
+  \label{eq:logistic_example_loss_function}
+  L(\theta) = - \sum_{i = 1}^n \left[ y_i \log\left( p_i(\theta) \right) + (1 - y_i) \log \left( 1 - p_i(\theta) \right) \right].
 \end{equation}
 
-Now, why is this an error function? If $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and we have remaining $\log\left( p_i(\beta) \right)$. Now, if we assign a high value to $p_i(\beta)$, that is, close to 1, then $\log\left( p_i(\beta) \right) \approx 0$; but if we assign a low value to $p_i(\beta)$, that is, close to 0, then $\log\left( p_i(\beta) \right) \approx -\infty$, and so the overall loss function (don't forget that there's a minus sign at the beginning) tends to infinity. This means that when the real value of $y_i$ is 1 and we assign a low probability to it, the loss function is large, but if we assign a high probability to it, the loss function is small. The same reasoning works for when $y_i = 0$: if we assign a low probability, then the loss function is small, but if we assign a high probability, then the loss function is large. Hence, minimizing the loss function leads to choosing values of $\beta$ such that they yield a high probability to the cases when $y_i = 1$ and a low one when $y_i = 0$.
+Now, why is this an error function? If $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and we have remaining $\log\left( p_i(\theta) \right)$. Now, if we assign a high value to $p_i(\theta)$, that is, close to 1, then $\log\left( p_i(\theta) \right) \approx 0$; but if we assign a low value to $p_i(\theta)$, that is, close to 0, then $\log\left( p_i(\theta) \right) \approx -\infty$, and so the overall loss function (don't forget that there's a minus sign at the beginning) tends to infinity. This means that when the real value of $y_i$ is 1 and we assign a low probability to it, the loss function is large, but if we assign a high probability to it, the loss function is small. The same reasoning works for when $y_i = 0$: if we assign a low probability, then the loss function is small, but if we assign a high probability, then the loss function is large. Hence, minimizing the loss function leads to choosing values of $\theta$ such that they yield a high probability to the cases when $y_i = 1$ and a low one when $y_i = 0$.
 
-% There are other possible los functions for this problem, such as the \textbf{hinge loss}
+% There are other possible loss functions for this problem, such as the \textbf{hinge loss}
 
+Now, let's move to the Bayesian approach to logistic regression. As before, we will assume that $y_i$ follows a Bernoulli distribution such that the probability of being 1 is $p_i(\theta) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$, with $\sigma \left( \cdot \right)$ the logistic sigmoid function. In the Bayesian paradigm, parameter vector $\theta = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ must have a joint prior distribution. As mentioned before, a good idea is to place a Gaussian distribution to it and, in this case, assume independence between the parameters, such that
+
+$$
+  \theta \sim \normaldist{\mu}{\frac{1}{\tau} I}
+$$
+
+where $\mu \in \mathbb{R}^3$, $\tau \in \mathbb{R}^+$ and $I$ is a $3 \times 3$ identity matrix. In this context, $\tau$ is the inverse of the variance, and is called the \textbf{precision}. Assuming $\mu = \left[ \mu_0, \mu_1, \mu_2 \right]^T$, then the prior distribution takes the following form
+
+$$
+  \prob(\theta) = \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}}.
+$$
+
+And, the likelihood is
+
+$$
+  \prob{X | \theta} = \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i},
+$$
+
+so, following Bayes' theorem in equation \ref{eq:bayes_theorem_prop}, the posterior distribution is
+
+$$
+  \prob{\theta | X} =
+    \frac
+    {
+      \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
+      \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right]
+    }{
+      \int \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
+      \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right] d\theta
+    }.
+$$
+
+Unfortunately, the integral is not directly solvable, and that is the reason numerical methods are used. Most of them rely on the fact that the denominator is only a normalizing constant and only use the equation as a proportion
+
+$$
+  \prob{\theta | X} \propto
+  \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
+  \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right].
+$$
+
+Methods to estimate the posterior include Markov Chain Monte Carlo (MCMC) methods such as Metropolis-Hastings or Hamiltonian Monte Carlo, and Variational Inference, discussed later in this document.
 
 
 % En general, cuando uno entrena un modelo para predecir, no se desea minimizar el error de entrenamiento, sino el error de predicción, esto es, el error de cualquier observación futura $(X^0, Y^0)$. Esto quiere decir que se quiere minimizar el error esperado de predicción, definido como $\mathbb{E} \left[ L(\hat{f}(X^0), Y^0 ) \right]$.
