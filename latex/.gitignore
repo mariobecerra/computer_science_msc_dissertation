@@ -12,6 +12,7 @@ auto/*
 *.lof
 *.run.xml
 *.toc
+*.out
 *blx.bib
 *.sublime-workspace
 msc_thesis.pdf
