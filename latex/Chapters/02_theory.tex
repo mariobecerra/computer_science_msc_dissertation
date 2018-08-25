@@ -397,6 +397,8 @@ Convolutional Neural Networks (CNNs) are neural networks with a quite particular
   \item Equivariant representations: The architecture of CNNs provides equivariance in translations, meaning that if the input is changed, the output is changed in the same fashion. For example: in an image, if an object is moved in the input, its representation will be moved in the same way in the output.
 \end{itemize}
 
+\subsection{Convolution operation}
+
 The base of CNNs is the convolution operation, which will be described assuming an image. Let's assume that we have an image represented as a $m \times n$ matrix $I$, with $I_{i,j}$ represents the pixel in the $i$-th row and $j$-th column as such
 
 $$
@@ -444,6 +446,8 @@ An example of this is shown in figure \ref{fig:conv_example}, in which $I$ is a 
   \end{split}
 \end{equation}
 
+The rest of the elements are computed in a similar way. Note that the resulting matrix is smaller than the original image matrix. Also note, that the convolution kernel in the example only has 9 parameters which are used by the whole image matrix, and these parameters are usually estimated with data.
+
 % $$
 %   S_{1,4} = \sum_{k=1}^3 \sum_{l=1}^3 I_{1+k-1,4+l-1} K_{k, l} = I_{1,4}K_{1,1} + I_{1,5}K_{1,2} + I_{1,6}K_{1,3} + I_{2,4}K_{2,1} + I_{2,5}K_{2,2} + I_{2,6}K_{2,3} + I_{3,4}K_{3,1} + I_{3,5}K_{3,2} + I_{3,6}K_{3,3}
 % $$
@@ -454,6 +458,18 @@ An example of this is shown in figure \ref{fig:conv_example}, in which $I$ is a 
     \caption{Example of a convolution operation. Source: \url{https://github.com/PetarV-/TikZ}}
     \label{fig:conv_example}
 \end{figure}
+
+\subsection{Pooling}
+
+When using CNNs, a pooling layer is also usually added after each convolutional layer. This pooling layer summarizes adjacent pixels, and it is used because it helps to achieve invariance and reduce the image of the output so that there are fewer parameters in the next layers \cite{bengio2015deep}. A very commonly used pooling function is \textbf{max pooling}, which returns the maximum value of a neighborhood of pixels. An example of max pooling is shown in figure \ref{fig:max_pool_example} for a $4 \times 4$ matrix, resulting in a $2 \times 2$ matrix after the function is applied.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{max_pool_example.png}
+    \caption{Example of max pooling function. Source: \url{https://computersciencewiki.org/index.php/File:MaxpoolSample2.png}}
+    \label{fig:max_pool_example}
+\end{figure}
+
 
 
 
