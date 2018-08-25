@@ -389,13 +389,72 @@ for a new vector of covariates $x^*$.
 
 \section{Convolutional Neural Networks}
 
-Convolutional Neural Networks (CNNs) are neural networks with a quite particular architecture. They were introduced by \citeauthor{lecun1989generalization} in \citeyear{lecun1989generalization} as a way to constrain the number of parameters needed to perform automatic image classification \cite{lecun1989generalization}. The main idea is that in images, pixels close to each other tend to be similar, whereas pixels far away from each other tend to be different. This notion of proximity is used by CNN's architecture, and leverages three concepts: sparse interactions, parameter sharing and equivariant representations \cite[p.~335]{bengio2015deep}.
+Convolutional Neural Networks (CNNs) are neural networks with a quite particular architecture and are widely used in computer vision problems, such as image classification or object detection in a video. They were introduced by \citeauthor{lecun1989generalization} in \citeyear{lecun1989generalization} as a way to constrain the number of parameters needed to perform automatic image classification \cite{lecun1989generalization}. The main idea is that in images, pixels close to each other tend to be similar, whereas pixels far away from each other tend to be different. This notion of proximity is used by CNN's architecture, and leverages three concepts: sparse interactions, parameter sharing and equivariant representations \cite[p.~335]{bengio2015deep}.
 
 \begin{itemize}
   \item Sparse interactions: In MLPs, every unit is connected to all other units in the next layer, but in CNNs, only a small number of units is connected to another small number of units. This means fewer parameters and, hence, less memory usage and faster computation.
   \item Parameter sharing: Different units share the same set of parameters. The same convolution is used many times in the image and, thus, the number of parameters is further reduced.
   \item Equivariant representations: The architecture of CNNs provides equivariance in translations, meaning that if the input is changed, the output is changed in the same fashion. For example: in an image, if an object is moved in the input, its representation will be moved in the same way in the output.
 \end{itemize}
+
+The base of CNNs is the convolution operation, which will be described assuming an image. Let's assume that we have an image represented as a $m \times n$ matrix $I$, with $I_{i,j}$ represents the pixel in the $i$-th row and $j$-th column as such
+
+$$
+  I = 
+    \begin{bmatrix}
+      I_{1,1} & I_{1,2} & I_{1,3} & \dots  & I_{1,n} \\
+      I_{2,1} & I_{2,2} & I_{2,3} & \dots  & I_{2,n} \\
+      \vdots & \vdots & \vdots & \ddots & \vdots \\
+      I_{m,1} & I_{m,2} & I_{m,3} & \dots  & I_{m,n}
+    \end{bmatrix}.
+$$
+
+The convolution operation uses another matrix called a \textbf{filter} or a \textbf{kernel}, with dimensions $p \times r$. This matrix must be of a lower dimension than the image, that is, $p < m$ and $r < n$. Let's denote the filter as matrix $K$ as such
+
+$$
+  K = 
+    \begin{bmatrix}
+      \theta_{1,1} & \theta_{1,2} & \theta_{1,3} & \dots  & \theta_{1,q} \\
+      \theta_{2,1} & \theta_{2,2} & \theta_{2,3} & \dots  & \theta_{2,q} \\
+      \vdots & \vdots & \vdots & \ddots & \vdots \\
+      \theta_{p,1} & \theta_{p,2} & \theta_{p,3} & \dots  & \theta_{p,q}
+    \end{bmatrix}.
+$$
+
+The convolution operation between $I$ and $K$ is denoted as $I * K$, and its result is another matrix $S$, for which each element is defined as
+
+\begin{equation}
+  \label{eq:2d_conv_def}
+  S_{i,j} = (I * K)_{i,j} = \sum_{k} \sum_{l} I_{i+k-1,j+l-1} K_{k, l}.
+\end{equation}
+
+An example of this is shown in figure \ref{fig:conv_example}, in which $I$ is a $7 \times 7$ image matrix and the kernel is a $3 \times 3$ matrix. The result is a $5 \times 5$ matrix in which element is computed using equation \ref{eq:2d_conv_def}. For instance, the element on the first row and fourth column of the result matrix, that is, $S_{1,4}$ is computed as 
+
+\begin{equation}
+  \begin{split}
+      S_{1,4} & = 
+      \sum_{k=1}^3 \sum_{l=1}^3 I_{1+k-1,4+l-1} K_{k, l} \\
+      & = I_{1,4}K_{1,1} + I_{1,5}K_{1,2} + I_{1,6}K_{1,3} \\
+      & + I_{2,4}K_{2,1} + I_{2,5}K_{2,2} + I_{2,6}K_{2,3} \\
+      & + I_{3,4}K_{3,1} + I_{3,5}K_{3,2} + I_{3,6}K_{3,3} \\
+      & = ( 1 \times 1 ) + ( 0 \times 0 ) + ( 0 \times 1 ) \\
+      & + ( 1 \times 0 ) + ( 1 \times 1 ) + ( 0 \times 0 ) \\
+      & + ( 1 \times 1 ) + ( 1 \times 0 ) + ( 1 \times 1 ) \\
+      & = 4.
+  \end{split}
+\end{equation}
+
+% $$
+%   S_{1,4} = \sum_{k=1}^3 \sum_{l=1}^3 I_{1+k-1,4+l-1} K_{k, l} = I_{1,4}K_{1,1} + I_{1,5}K_{1,2} + I_{1,6}K_{1,3} + I_{2,4}K_{2,1} + I_{2,5}K_{2,2} + I_{2,6}K_{2,3} + I_{3,4}K_{3,1} + I_{3,5}K_{3,2} + I_{3,6}K_{3,3}
+% $$
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{convolution_example.png}
+    \caption{Example of a convolution operation. Source: \url{https://github.com/PetarV-/TikZ}}
+    \label{fig:conv_example}
+\end{figure}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
