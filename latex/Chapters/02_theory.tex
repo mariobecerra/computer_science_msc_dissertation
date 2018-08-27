@@ -446,7 +446,9 @@ An example of this is shown in figure \ref{fig:conv_example}, in which $I$ is a 
   \end{split}
 \end{equation}
 
-The rest of the elements are computed in a similar way. Note that the resulting matrix is smaller than the original image matrix. Also note, that the convolution kernel in the example only has 9 parameters which are used by the whole image matrix, and these parameters are usually estimated with data.
+The rest of the elements are computed in a similar way. Note that the resulting matrix is smaller than the original image matrix. Also note, that the convolution kernel in the example only has 9 parameters which are used by the whole image matrix, and these parameters are usually estimated with data. 
+
+Note that an image classification problem could be solved by turning the input image into a long vector, but then this would be fed to a fully connected layer, which would mean that a large number of parameters would have to be fit. This is one of the reason convolutions are used: instead of estimating a large number of parameters, the convolution operation needs a small number of parameters (9 in the case of the example) to be fit. Additionally, the convolution operation takes into account the topology of the image input, which have a very local structure \cite{lecun1998gradient}.
 
 % $$
 %   S_{1,4} = \sum_{k=1}^3 \sum_{l=1}^3 I_{1+k-1,4+l-1} K_{k, l} = I_{1,4}K_{1,1} + I_{1,5}K_{1,2} + I_{1,6}K_{1,3} + I_{2,4}K_{2,1} + I_{2,5}K_{2,2} + I_{2,6}K_{2,3} + I_{3,4}K_{3,1} + I_{3,5}K_{3,2} + I_{3,6}K_{3,3}
@@ -470,6 +472,17 @@ When using CNNs, a pooling layer is also usually added after each convolutional 
     \label{fig:max_pool_example}
 \end{figure}
 
+
+\subsection{Architecture example}
+
+To illustrate how all these concepts are put together, we will show an example of an architecture that is very commonly used in image classification problems, called \textbf{LeNet architecure}, introduced by \citeauthor{lecun1998gradient} in \citeyear{lecun1998gradient} for a digit classification problem \cite{lecun1998gradient}. The architecture assumes a grayscale input image of $32 \times 32$ pixels, which is then fed to 6 convolutional filters of size $5 \times 5$, each followed by an activation function and a $2 \times 2$ max pooling layer, then 16 convolutional filters of size $5 \times 5$, each with their corresponding activation functions and then the $2 \times 2$ max pooling layer, followed by two fully connected layers of sizes 120 and 84, and finally a softmax transformation to map to the 10 digit classification problem probabilities. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{lenet.png}
+    \caption{LeNet architecture (picture taken from \cite{lecun1998gradient}). The feature maps correspond to the convolutional filters and the subsampling refers to max pooling.}
+    \label{fig:lenet_architecture}
+\end{figure}
 
 
 
