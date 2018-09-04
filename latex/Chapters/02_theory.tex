@@ -494,6 +494,14 @@ To illustrate how all these concepts are put together, we will show an example o
 
 \section{Variational Inference}
 
+As mentioned before, when doing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\theta | X}$, which is very often intractable, so one must resort to numerical approximations. In this section, we'll give a brief overview of one possible numerical approximation, called variational inference. The idea is to use optimization to approximate the target distribution $\prob{\theta | X}$ with some other approximate distribution $q(\theta)$ that minimizes the Kullback-Leibler (KL) divergence to the real posterior \cite{blei2017variational}. We will define such divergence as 
+\begin{equation}
+  \label{eq:kl_divergence}
+  \kl{q}{p} = \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X}} \right) \right] = \int_{-\infty}^{\infty} q(\theta) \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X}} \right) \right] d\theta.
+\end{equation}
+
+Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$, and that we usually try to minimize $\kl{q}{p}$ instead of $\kl{p}{q}$ because the latter requires knowing $\prob{\theta | X}$, which is what we are trying to approximate in the first place.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
