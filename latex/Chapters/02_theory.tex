@@ -546,6 +546,8 @@ $$
 
 which as we see, is the negative of the ELBO, so minimizing the KL divergence is equivalent to maximizing the ELBO.
 
+Let $\lambda$ be the parameters of the variational distribution $q(\theta)$. The objective is to approximate $p(\theta | X)$ by finding the values of the $\lambda$ vector that maximize equation \ref{eq:elbo_def}, which could be done with gradient ascent to find a local maximum. In order to do this, we need to compute the gradient of the objective function with respect to the parameters, that is, we need $\nabla_{\lambda} \mathcal{L}(q, \lambda)$. There are situations in which this gradient can be computed analytically, but for many other models, this cannot be done, hence some approximation must be made. The details of this are beyond the scope of this work, but for more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
