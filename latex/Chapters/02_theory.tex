@@ -494,13 +494,57 @@ To illustrate how all these concepts are put together, we will show an example o
 
 \section{Variational Inference}
 
-As mentioned before, when doing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\theta | X}$, which is very often intractable, so one must resort to numerical approximations. In this section, we'll give a brief overview of one possible numerical approximation, called variational inference. The idea is to use optimization to approximate the target distribution $\prob{\theta | X}$ with some other approximate distribution $q(\theta)$ that minimizes the Kullback-Leibler (KL) divergence to the real posterior \cite{blei2017variational}. We will define such divergence as 
+As mentioned before, when doing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\theta | X}$, which is very often intractable, so one must resort to numerical approximations. In this section, we'll give a brief overview of one possible numerical approximation, called variational inference (VI). The idea of VI is to use optimization to approximate the target distribution $\prob{\theta | X}$ with some other approximate distribution $q(\theta)$ that minimizes the Kullback-Leibler (KL) divergence to the real posterior \cite{blei2017variational}. We will define such divergence as 
 \begin{equation}
   \label{eq:kl_divergence}
   \kl{q}{p} = \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X}} \right) \right] = \int_{-\infty}^{\infty} q(\theta) \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X}} \right) \right] d\theta.
 \end{equation}
 
 Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$, and that we usually try to minimize $\kl{q}{p}$ instead of $\kl{p}{q}$ because the latter requires knowing $\prob{\theta | X}$, which is what we are trying to approximate in the first place.
+
+Although the main goal of VI methods is tho minimize the KL divergence in \ref{eq:kl_divergence}, in practice what is usually done is to maximize a related quantity called the ELBO (Evidence Lower BOund), defined as
+
+\begin{equation}
+  \label{eq:elbo_def}
+  \mathcal{L}(q) = \mathbb{E}_q\left[ \log p(X, \theta) \right] - \mathbb{E}_q\left[ \log q(\theta) \right].
+\end{equation}
+
+The relationship between ELBO and KL divergence is easy to see. Starting from the KL divergence definition, using the logarithm quotient rule, and by the fact that the expected value is a linear operator, we have
+
+$$
+    \kl{q}{p} = 
+    \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X}} \right) \right] =
+    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log {\prob{\theta | X}}  \right].
+$$
+
+Then, using the definition of conditional probability, we have
+
+$$
+    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta | X)  \right] =
+    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, X)}{p(X)}  \right].
+$$
+
+Using the logarithm quotient rule one more time
+
+$$
+  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, X)}{p(X)}  \right] =
+  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) - \log p(X)  \right].
+$$
+
+But since $p(X)$ does not depend on $q$, the expected value of $p(X)$ is a constant; so we have
+
+$$
+ \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) - \log p(X)  \right] = 
+ \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) \right] + \log p(X).
+$$
+
+And since we are trying to find the optimal $q$, then $ļog p(X)$ is just a constant in the optimization process, and we can disregard it and just minimize equation
+
+$$
+  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) \right] 
+$$
+
+which as we see, is the negative of the ELBO, so minimizing the KL divergence is equivalent to maximizing the ELBO.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
