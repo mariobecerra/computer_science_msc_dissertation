@@ -549,6 +549,14 @@ which as we see, is the negative of the ELBO, so minimizing the KL divergence is
 Let $\lambda$ be the parameters of the variational distribution $q(\theta)$. The objective is to approximate $p(\theta | X)$ by finding the values of the $\lambda$ vector that maximize equation \ref{eq:elbo_def}, which could be done in several ways, for example, coordinate ascent, or gradient ascent. In order to perform gradient ascent, we need to compute the gradient of the objective function with respect to the parameters, that is, we need $\nabla_{\lambda} \mathcal{L}(q, \lambda)$. There are situations in which this gradient can be computed analytically, but for many other models, this cannot be done, hence some approximation must be made. The details of this are beyond the scope of this work, but for more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
 
 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{BBVI_plots.pdf}
+    \caption{Example of variational inference for Bayesian logistic regression.}
+    \label{fig:BBVI_plots}
+\end{figure}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% AL
