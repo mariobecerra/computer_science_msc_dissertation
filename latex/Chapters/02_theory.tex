@@ -78,11 +78,11 @@ $$
   L(\theta) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\theta) \right) + (1 - y_i) \log \left( 1 - p_i(\theta) \right) \right].
 $$
 
-Another approach to the learning problem is the \textbf{Bayesian approach}, in which we first assume a prior distribution on the parameters $\theta$ and we update our knowledge about them with data $X$. That is, we first quantify the knowledge that we may have about $\theta$ using a prior distribution $\prob{\theta}$ and then compute the posterior distribution of $\theta$ given $X$ using Bayes' theorem as such
+Another approach to the learning problem is the \textbf{Bayesian approach}, in which we first assume a prior distribution on the parameters $\theta$ and we update our knowledge about them with data $X$. That is, we first quantify the knowledge that we may have about $\theta$ using a prior distribution $\prob{\theta}$ and then compute the posterior distribution of $\theta$ given $X$ and $y$ using Bayes' theorem as such
 
 \begin{equation}
   \label{eq:bayes_theorem}
-  \prob{\theta | X} = \frac{\prob{X | \theta} \prob{\theta}}{\prob{X}} = \frac{\prob{X | \theta} \prob{\theta}}{\int \prob{X | \theta} \prob{\theta} d\theta}.
+  \prob{\theta | X, y} = \frac{\prob{y | \theta, X} \prob{\theta | X}}{\prob{y | X}} = \frac{\prob{y | X, \theta} \prob{\theta | X}}{\int \prob{y | X, \theta} \prob{\theta | X} d\theta}.
 \end{equation}
 
 The posterior distribution represents the knowledge that we have about $\theta$ after we have seen the data and is a compromise between our prior beliefs and the data. The multiplier $\prob{X | \theta}$ is called the likelihood, and is the probability of the data given the parameters.
@@ -91,19 +91,19 @@ Since the denominator of equation \ref{eq:bayes_theorem} does not depend on $\th
 
 \begin{equation}
   \label{eq:bayes_theorem_prop}
-    \prob{\theta | X} \propto \prob{X | \theta} \prob{\theta}.
+    \prob{\theta | X, y} \propto \prob{y | X, \theta} \prob{\theta | X}.
 \end{equation}
 
 This posterior distribution is also used to predict the values of unseen data. Let $x^*$ be a vector of covariates for which we want to make a prediction $\hat{y}^*$, then we use the \textbf{posterior predictive distribution}, defined as
 
 $$
-  \prob{x^* | X} = \int \prob{x^* | \theta} \prob{\theta | X} d\theta.
+  \prob{y^* | X, y, x^*} = \int \prob{y^* | \theta, x^*} \prob{\theta | X, y} d\theta.
 $$
 
 Note that this posterior distribution is, as it name implies, a distribution; i.e., it is not a single prediction but a whole bunch of predictions, quantified by how likely each value is to be. If we wanted a point prediction $\hat{y}^*$ for $x^*$ then we could take the expected value of the posterior predictive distribution such that
 
 $$
-  \hat{y}^* = \mathbb{E}_{x^* | X} \left[ \prob{x^* | X} \right].
+  \hat{y}^* = \mathbb{E}_{y^* | X, y, x^*} \left[ \prob{y^* | X, y, x^*} \right].
 $$
 
 There are other possible point estimates such as the median, or the maximum a posteriori (MAP) estimate, but we will not study them in detail.
@@ -190,7 +190,7 @@ $$
 so, following Bayes' theorem in equation \ref{eq:bayes_theorem_prop}, the posterior distribution is
 
 $$
-  \prob{\theta | X} =
+  \prob{\theta | X, y} =
     \frac
     {
       \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
@@ -204,7 +204,7 @@ $$
 Unfortunately, the integral is not directly solvable, and that is the reason numerical methods are used. Most of them rely on the fact that the denominator is only a normalizing constant and only use the equation as a proportion
 
 $$
-  \prob{\theta | X} \propto
+  \prob{\theta | X, y} \propto
   \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
   \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right].
 $$
@@ -366,19 +366,13 @@ Parameters $\mu_{i,k}^{[l]}$ and $\sigma_{i,k}^{[l]}$ are chosen to reflect the 
 In contrast to classical neural networks where parameters $\Theta$ are chosen so that they minimize an error function, in Bayesian neural networks we wish to update our knowledge on the parameters $\Theta$ given the data $X$. This is achieved with Bayes' theorem in the following way
 
 $$
-  \prob{\Theta | X} = \frac{\prob{X | \Theta} \prob{\Theta}}{\prob{X}}.
+  \prob{\Theta | X, y} = \frac{\prob{X | \Theta} \prob{\Theta}}{\prob{X}}.
 $$
 
 %In our example, $\prob{X | \Theta} = \normalfunc{X}{\mathrm{MLP}(X, \Theta)}{\sigma^2}$ and $\prob{\Theta} = \normalfunc{\Theta}{[]}$
 In our example, $\prob{X | \Theta}$ and $\prob{\Theta}$ are the joint density functions of Gaussian random variables with their corresponding parameter values.
 
-To make predictions in the Bayesian case, we use the \textbf{posterior predictive distribution}, defined as
-
-$$
-  \prob{x^* | X} = \int \prob{x^* | \Theta} \prob{\Theta | X} \mathrm{d}\Theta
-$$
-
-for a new vector of covariates $x^*$.
+To make predictions in the Bayesian case, we use the posterior predictive distribution.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -494,64 +488,67 @@ To illustrate how all these concepts are put together, we will show an example o
 
 \section{Variational Inference}
 
-As mentioned before, when doing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\theta | X}$, which is very often intractable, so one must resort to numerical approximations. In this section, we'll give a brief overview of one possible numerical approximation, called variational inference (VI). The idea of VI is to use optimization to approximate the target distribution $\prob{\theta | X}$ with some other approximate distribution $q(\theta)$ that minimizes the Kullback-Leibler (KL) divergence to the real posterior \cite{blei2017variational}. We will define such divergence as
+As mentioned before, when doing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\theta | X, y}$, which is very often intractable, so one must resort to numerical approximations. In this section, we'll give a brief overview of one possible numerical approximation, called variational inference (VI). The idea of VI is to use optimization to approximate the target distribution $\prob{\theta | X, y}$ with some other approximate distribution $q(\theta)$ that minimizes the Kullback-Leibler (KL) divergence to the real posterior \cite{blei2017variational}. We will define such divergence as
 \begin{equation}
   \label{eq:kl_divergence}
-  \kl{q}{p} = \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X}} \right) \right] = \int_{-\infty}^{\infty} q(\theta) \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X}} \right) \right] d\theta.
+  \kl{q}{p} = \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X, y}} \right) \right] = \int_{-\infty}^{\infty} q(\theta) \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X, y}} \right) \right] d\theta.
 \end{equation}
 
-Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$, and that we usually try to minimize $\kl{q}{p}$ instead of $\kl{p}{q}$ because the latter requires averaging with respect to $\prob{\theta | X}$, which is what we are trying to approximate in the first place. Methods to deal with this type of KL divergence exist and are called expectation propagation, but they are not of concern in this work.
+Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$, and that we usually try to minimize $\kl{q}{p}$ instead of $\kl{p}{q}$ because the latter requires averaging with respect to $\prob{\theta | X, y}$, which is what we are trying to approximate in the first place. Methods to deal with this type of KL divergence exist and are called expectation propagation, but they are not of concern in this work.
 
 Although the main goal of VI methods is tho minimize the KL divergence in \ref{eq:kl_divergence}, in practice what is usually done is to maximize a related quantity called the ELBO (Evidence Lower BOund), defined as
 
 \begin{equation}
   \label{eq:elbo_def}
-  \mathcal{L}(q) = \mathbb{E}_q\left[ \log p(X, \theta) \right] - \mathbb{E}_q\left[ \log q(\theta) \right].
+  \mathcal{L}(q) = \mathbb{E}_q\left[ \log p(X, y, \theta) \right] - \mathbb{E}_q\left[ \log q(\theta) \right].
 \end{equation}
 
 The relationship between ELBO and KL divergence is easy to see. Starting from the KL divergence definition, using the logarithm quotient rule, and by the fact that the expected value is a linear operator, we have
 
 $$
     \kl{q}{p} =
-    \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X}} \right) \right] =
-    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log {\prob{\theta | X}}  \right].
+    \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X, y}} \right) \right] =
+    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log {\prob{\theta | X, y}}  \right].
 $$
 
 Then, using the definition of conditional probability, we have
 
 $$
-    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta | X)  \right] =
-    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, X)}{p(X)}  \right].
+    %\mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta | X, y)  \right] =
+    \kl{q}{p} =
+    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, X, y)}{p(y | X) p(X)}  \right].
 $$
 
 Using the logarithm quotient rule one more time
 
 $$
-  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, X)}{p(X)}  \right] =
-  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) - \log p(X)  \right].
+  % \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, X, y)}{p(y | X) p(X)}  \right] =
+  \kl{q}{p} =
+  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X, y) - \log p(y | X) - \log p(X)  \right].
 $$
 
 But since $p(X)$ does not depend on $q$, the expected value of $p(X)$ is a constant; so we have
 
 $$
- \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) - \log p(X)  \right] =
- \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) \right] + \log p(X).
+ %\mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) - \log p(X)  \right] =
+ \kl{q}{p} =
+ \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X, y) \right] + \log p(y | X) + \log p(X)
 $$
 
 And since we are trying to find the optimal $q$, then $\log p(X)$ is just a constant in the optimization process, and we can disregard it and just minimize equation
 
 $$
-  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) \right]
+  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X, y) \right]
 $$
 
 which as we see, is the negative of the ELBO, so minimizing the KL divergence is equivalent to maximizing the ELBO.
 
-Let $\lambda$ be the parameters of the variational distribution $q(\theta)$. The objective is to approximate $p(\theta | X)$ by finding the values of the $\lambda$ vector that maximize equation \ref{eq:elbo_def}, which could be done in several ways, for example, coordinate ascent, or gradient ascent. In order to perform gradient ascent, we need to compute the gradient of the objective function with respect to the parameters, that is, we need $\nabla_{\lambda} \mathcal{L}(q, \lambda)$. It is not very hard to prove that
+Let $\lambda$ be the parameters of the variational distribution $q(\theta)$. The objective is to approximate $p(\theta | X, y)$ by finding the values of the $\lambda$ vector that maximize equation \ref{eq:elbo_def}, which could be done in several ways, for example, coordinate ascent, or gradient ascent. In order to perform gradient ascent, we need to compute the gradient of the objective function with respect to the parameters, that is, we need $\nabla_{\lambda} \mathcal{L}(q, \lambda)$. It is not very hard to prove that
 
 \begin{equation}
   \label{eq:ELBO_gradient}
   \nabla_{\lambda} \mathcal{L}(q, \lambda) =
-  \mathbb{E}_q \left[ \left( \nabla_{\lambda} \log q(\theta | \lambda) \right) \left( \log p(X, \theta) - \log q(\theta | \lambda) \right) \right].
+  \mathbb{E}_q \left[ \left( \nabla_{\lambda} \log q(\theta | \lambda) \right) \left( \log p(X, y, \theta) - \log q(\theta | \lambda) \right) \right].
 \end{equation}
 
 There are situations in which this gradient can be computed analytically, but for many other models, this cannot be done, hence some approximation must be made. For more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
