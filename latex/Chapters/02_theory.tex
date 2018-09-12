@@ -580,7 +580,7 @@ with $\lambda = \left[ \mu_1, \hdots, \mu_p, \sigma_1^2, \hdots, \sigma_p^2 \rig
 
 According to equation \ref{eq:ELBO_gradient}, to compute the gradient of the ELBO, we need to be able to compute $\nabla_{\lambda} \log q(\theta | \lambda)$, so we need that partial derivative of $\log q(\theta | \lambda)$ with respect to each $\mu_j$ and $\sigma_j^2$, $j \in \left\{ 1, \hdots, p \right\}$. Let's start with $\mu_j$.
 
-\begin{equation}
+\begin{equation*}
   \begin{split}
       \nabla_{\mu_j} \log q(\theta | \lambda) & =
       \nabla_{\mu_j} \log \left( \prod_{ k = 1}^p \mathrm{N} \left( \theta_k | \mu_k, \sigma_k^2 \right) \right) \\
@@ -589,7 +589,24 @@ According to equation \ref{eq:ELBO_gradient}, to compute the gradient of the ELB
       &= \nabla_{\mu_j} \log \left( \frac{1}{\sqrt{2 \pi \sigma_j^2}} \exp \left( -\frac{(\theta_j - \mu_j)^2}{2 \sigma_j^2} \right) \right) \\
       &= \frac{\theta_j - \mu_j}{\sigma_j^2}.
   \end{split}
-\end{equation}
+\end{equation*}
+
+Now for $\sigma_j^2$. It is easier to work with the logarithm, so let $\alpha_j = \log \sigma_j^2$, and instead of computing $\nabla_{\sigma_j^2}$, we will compute $\nabla_{\alpha_j}$.
+
+\begin{equation*}
+  \begin{split}
+      \nabla_{\alpha_j} \log q(\theta | \lambda) & =
+      \nabla_{\alpha_j} \log \left( \prod_{ k = 1}^p \mathrm{N} \left( \theta_k | \mu_k, \sigma_k^2 \right) \right) \\
+      &= \nabla_{\alpha_j} \sum_{ k = 1}^p \log \left( \mathrm{N} \left( \theta_k | \mu_k, \sigma_k^2 \right) \right) \\
+      &= \nabla_{\alpha_j} \log \left( \mathrm{N} \left( \theta_j | \mu_j, \sigma_j^2 \right) \right) \\
+      &= \nabla_{\alpha_j} \log \left( \frac{1}{\sqrt{2 \pi \sigma_j^2}} \exp \left( -\frac{(\theta_j - \mu_j)^2}{2 \sigma_j^2} \right) \right) \\
+      &= \nabla_{\alpha_j} \log \left( \frac{1}{\sqrt{2 \pi \mathrm{e}^{\alpha_j}}} \exp \left( -\frac{(\theta_j - \mu_j)^2}{2 \mathrm{e}^{\alpha_j}} \right) \right) \\
+      &= - \nabla_{\alpha_j} \log \left( \sqrt{2 \pi \mathrm{e}^{\alpha_j}} \right) - \frac{(\theta_j - \mu_j)^2}{2} \nabla_{\alpha_j} \mathrm{e}^{-\alpha_j}\\
+      &= - \frac{1}{2} + \frac{(\theta_j - \mu_j)^2}{2} \mathrm{e}^{-\alpha_j} =
+      - \frac{1}{2} + \frac{(\theta_j - \mu_j)^2}{2 \sigma_j^2}.
+  \end{split}
+\end{equation*}
+
 
 
 
