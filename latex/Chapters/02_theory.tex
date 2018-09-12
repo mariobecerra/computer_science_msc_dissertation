@@ -604,8 +604,46 @@ Now for $\sigma_j^2$. It is easier to work with the logarithm, so let $\alpha_j 
   \end{split}
 \end{equation*}
 
+To compute the gradient in equation \ref{eq:ELBO_gradient}, we also need to compute the data log-likelihood $p(X, y, \theta)$. Using the chain rule of probability, this can be written as $\log p(y | X, \theta) + \log p(X | \theta) + \log p(\theta)$. Note that in order to compute the gradient, $\log p(X | \theta)$ is not needed, because of the following
+
+\begin{equation*}
+  \begin{split}
+      \nabla_{\lambda} \mathcal{L} &=
+      \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(X, y, \theta) - \log q(\theta | \lambda) \right) \right] \\
+      &= \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y | X, \theta) + \log p(X | \theta) + \log p(\theta) - \log q(\theta | \lambda) \right) \right] \\
+      &= \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y | X, \theta) + \log p(\theta) - \log q(\theta | \lambda) \right) \right] +  \log p(X | \theta) \mathbb{E}_q \left[ \nabla_{\lambda} q(\theta | \lambda) \right] \\
+      &= \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y | X, \theta) + \log p(\theta) - \log q(\theta | \lambda) \right) \right] +  c \mathbb{E}_q \left[ \nabla_{\lambda} q(\theta | \lambda) \right].
+  \end{split}
+\end{equation*}
+
+In the last line, we have reduced $\log p(X | \theta)$ as just a constant $c$. We can see that $\mathbb{E}_q \left[ \nabla_{\lambda} q(\theta | \lambda) \right] = 0$ by using the dominated convergence theorem \cite{ranganath2014black} like so:
+
+\begin{equation*}
+  \begin{split}
+      \mathbb{E}_q \left[ \nabla_{\lambda} q(\theta | \lambda) \right] &=
+      \int \nabla_{\lambda} q(\theta | \lambda) d\theta \\
+      &= \nabla_{\lambda} \int q(\theta | \lambda) d\theta \\
+      &= \nabla_{\lambda} 1 d\theta \\
+      &= 0.
+  \end{split}
+\end{equation*}
+
+So, we can write the derivative of the ELBO as
+
+$$
+  \nabla_{\lambda} \mathcal{L} = \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y | X, \theta) + \log p(\theta) - \log q(\theta | \lambda) \right) \right].
+$$
+
+Since $y$ is a Bernoulli random vector, then
 
 
+\begin{equation*}
+  \begin{split}
+      \log p(y | X, \theta) &=
+      \log \left( \prod_{i = 1}^n \sigma(\theta^T x_i)^{y_i} (1 - \sigma(\theta^T x_i))^{1-y_i} \right) \\
+      &= \sum_{i = 1}^n \left[ y_i \log \left( \sigma(\theta^T x_i \right) + (1 - y_i) (1 - \sigma(\theta^T x_i)) \right].
+  \end{split}
+\end{equation*}
 
 \begin{figure}[H]
     \centering
