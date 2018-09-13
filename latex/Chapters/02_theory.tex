@@ -562,7 +562,7 @@ There are situations in which this gradient can be computed analytically, but fo
 \end{equation*}
 
 
-A Monte Carlo approach can also be taken to compute the value of the ELBO. For more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
+This approach gives noisy but unbiased estimates of the expected value. A Monte Carlo approach can also be taken to compute the value of the ELBO. For more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
 
 To illustrate this, let's study a simple example in which we will use a family that is often used to approximate $p$, which is the \textbf{mean-field variational family}, where each parameter is independent of the rest, such that
 
@@ -663,11 +663,25 @@ $$
   \log p(\theta) = \log \prod_{j = 1}^p \phi(\theta_j) = \sum_{j = 1}^p \log \phi(\theta_j) = \frac{1}{\sqrt{2 \pi}} e^{\left( -\frac{\theta_j^2}{2} \right)}.
 $$
 
+With these derivations, we can now take a gradient ascent approach to optimize the ELBO. To do this, we would start with a random $\lambda$ vector, and in each step $t$ take $S$ samples $z_k$ from $q(\theta | \lambda)$ to compute the approximate gradient as
+
+$$
+  \nabla_{\lambda} \mathcal{L} \approx \Delta_{\lambda} \mathcal{L} = \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\lambda} \log q(z_k | \lambda) \right) \left( \log p(X, y, z_k) - \log q(z_k | \lambda) \right),
+$$
+
+and then update the $\lambda$ parameter as $\lambda_{t+1} = \lambda_{t} + \eta_t  \Delta_{\lambda_t} \mathcal{L}$, with each $eta_t$ chosen accordingly, until a certain stopping criteria is met.
+
+An implementation of this algorithm was made with a simulated data set of $n = 300$ data points and $p = 2$ covariates. The response vector was created with the logistic sigmoid function without an intercept as $y_i = \sigma(\theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$, with $\theta_1 = -10$ and $\theta_2 = 10$. The initial value for $\lambda = \left[ \mu_1, \mu_2, \alpha_1, \alpha_2 ]^T \right]$ is chosen at random from a standard Gaussian distribution, for each iteration $S = 30$ Monte Carlo samples are taken to compute the approximate gradient, and the step size $\eta_t$ is chosen using the AdaGrad method in which
+$\eta_t = \left( \mathrm{diag}(G_t) \right)^{\frac{1}{2}}$, where $\mathrm{diag}(G_t)$ refers to the diagonal of the matrix $G_t = \left( \Delta_{\lambda_t} \right) \left( \Delta_{\lambda_t} \right)^T$ \cite{duchi2011adaptive}. The stopping criterion is that
+$\frac{\norm{\mu_{t+1} - \mu_{t}}}{\norm{\mu_t}} < 0.00003$, with $\mu_t$ being the vector containing the values of $\mu_1$ and $\mu_2$ in the $t$-th iteration of the algorithm.
+
+
+Figure \ref{fig:BBVI_plots} shows the results of the implementation. The top-left image shows the value of the objective function, i.e., the ELBO, in each iteration, the top-right image shows the real values of $\theta$ (-10 and 10) with dotted lines and the approximated values of the variational distribution $q(\theta | \lambda)$; the bottom-left image shows the values of $\mu_1$ and $\mu_2$ in each iteration, where we can see how they slowly approach their real values; and the bottom-right image shows the values of $\mu_1$ and $\mu_2$ in each iteration in the cartesian plane, where the noise of the gradient estimation is seen because of the wiggliness of the line. In general we see that the results are pretty good for such a simple algorithm, although to be fair, the problem is also quite simple. There are ways to have better and less noisy estimates, but they are beyond the scope of this work. For more details about better approximations of the gradient, see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{BBVI_plots.pdf}
-    \caption{Example of variational inference for Bayesian logistic regression.}
+    \caption{Example of mean-field variational inference for Bayesian logistic regression. TENGO QUE CAMBIAR DE BETA A MU LOS EJES.}
     \label{fig:BBVI_plots}
 \end{figure}
 
