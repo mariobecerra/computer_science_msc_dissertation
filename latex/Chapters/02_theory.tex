@@ -551,7 +551,18 @@ Let $\lambda$ be the parameters of the variational distribution $q(\theta)$. The
   \mathbb{E}_q \left[ \left( \nabla_{\lambda} \log q(\theta | \lambda) \right) \left( \log p(X, y, \theta) - \log q(\theta | \lambda) \right) \right].
 \end{equation}
 
-There are situations in which this gradient can be computed analytically, but for many other models, this cannot be done, hence some approximation must be made. For more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
+There are situations in which this gradient can be computed analytically, but for many other models, this cannot be done, because it may not be possible to analytically take the expectation, hence some approximation must be made. A good approach is to approximate the expected value with Monte-Carlo simulation. Let $\left\{ z_1, ..., z_S \right\}$ be samples taken from $q(\theta | \lambda)$, then we can approximate the expected value with an arithmetic mean as such
+
+\begin{equation*}
+  \begin{split}
+  \nabla_{\lambda} \mathcal{L}(q, \lambda) &=
+  \mathbb{E}_q \left[ \left( \nabla_{\lambda} \log q(\theta | \lambda) \right) \left( \log p(X, y, \theta) - \log q(\theta | \lambda) \right) \right] \\
+  & \approx \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\lambda} \log q(z_k | \lambda) \right) \left( \log p(X, y, z_k) - \log q(z_k | \lambda) \right).
+  \end{split}
+\end{equation*}
+
+
+A Monte Carlo approach can also be taken to compute the value of the ELBO. For more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
 
 To illustrate this, let's study a simple example in which we will use a family that is often used to approximate $p$, which is the \textbf{mean-field variational family}, where each parameter is independent of the rest, such that
 
@@ -567,11 +578,12 @@ $$
 
 where $\sigma(\cdot)$ is the logistic sigmoid function. The prior distribution for $\theta$ is a Gaussian $\theta \sim \mathrm{N}(0, \sigma_0^2 \mathbb{I}_p)$ where $\mathbb{I}_p$ is the $p \times p$ identity matrix and $\sigma_0^2 \in \mathbb{R}^+$.
 
-In this case, the mean field variational distribution is
+In this case, the mean-field variational distribution is
 
-$$
+\begin{equation}
+  \label{eq:mean_field_normal_prior}
   q(\theta | \lambda) = \prod_{j = 1}^p \mathrm{N}(\theta_j | \mu_j, \sigma_j^2)
-$$
+ \end{equation}
 
 with $\lambda = \left[ \mu_1, \hdots, \mu_p, \sigma_1^2, \hdots, \sigma_p^2 \right]^T$, and $\mathrm{N}(\theta_j | \mu_j, \sigma_j^2)$ denotes the value of a normal density function at $\theta_j$ with mean $\mu_j$ and variance $\sigma_j^2$.
 
@@ -644,6 +656,13 @@ Since $y$ is a Bernoulli random vector, then
       &= \sum_{i = 1}^n \left[ y_i \log \left( \sigma(\theta^T x_i \right) + (1 - y_i) (1 - \sigma(\theta^T x_i)) \right].
   \end{split}
 \end{equation*}
+
+And since we assumed that $\theta$ had a Gaussian prior, then
+
+$$
+  \log p(\theta) = \log \prod_{j = 1}^p \phi(\theta_j) = \sum_{j = 1}^p \log \phi(\theta_j) = \frac{1}{\sqrt{2 \pi}} e^{\left( -\frac{\theta_j^2}{2} \right)}.
+$$
+
 
 \begin{figure}[H]
     \centering
