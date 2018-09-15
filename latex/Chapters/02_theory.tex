@@ -325,14 +325,12 @@ $$
 
 until certain criteria are met.
 
-To see this algorithm in action, we can see an implemented example in which we generate a vector $x \in \mathbb{R}^n$ with $n = 1000$ such that $x_i \sim N(0, 1)$ for each $i \in \left\{1, ..., n \right\}$, then an auxiliary vector was computed, $p_i = \frac{1}{\exp \left( - \theta_0 - \theta_1 x_i \right)}$, with $\theta_0 = 1$ and $\theta_1 = 4$. Finally, the response variable $y$ was built simulating Bernoulli random variables, such that $y_i \sim \mathrm{Bern}(p_i)$.
+To see this algorithm in action, we can see an implemented example in the R programming language in which we generate a vector $x \in \mathbb{R}^n$ with $n = 1000$ such that $x_i \sim N(0, 1)$ for each $i \in \left\{1, ..., n \right\}$, then an auxiliary vector was computed, $p_i = \frac{1}{\exp \left( - \theta_0 - \theta_1 x_i \right)}$, with $\theta_0 = -5$ and $\theta_1 = 5$. Finally, the response variable $y$ was built simulating Bernoulli random variables, such that $y_i \sim \mathrm{Bern}(p_i)$.
+The implementation is compared with the result of the \texttt{glm} package.
 
-In this case, the stopping criteria was that the norm of the gradient $\nabla_{\theta} L(x, \theta)$ should be less than $0.0001$, or the ratio of norms between one iteration and the next had to be bigger than $0.8$, or to exceed 500 iterations. The vector of initial parameters was $\theta^0 = (-5, 5)^T$. We used a constant value of $\alpha_t = 2$.
+The initial vector of parameters was $\theta^0 = (0, 0)^T$ and we used a constant value of $\alpha_k = 2$.The stopping criteria was that the norm of the gradient $\nabla_{\theta} L(\theta)$ should be less than $0.0001$, which was achieved after 409 iterations.
 
-
-The big point is the real value of the parameters (1 and 4), and the x is the value that we get by using the glm package in R. The algorithm converges to that value, and once again the value that we get is exactly the same as in the \texttt{glm} package.
-
-The following images show the decreasing values of the gradient norm and the deviance with each iteration.
+Figure \ref{fig:GD_plots} shows the results of the implementation. On the left, we can see the value of the loss function in each iteration. On the right we can see the parameter vector's value in each iteration. The red dot is the value of the estimate by the \texttt{glm} package. We can see that the implemented algorithm converges to this value.
 
 \begin{figure}[H]
     \centering
@@ -340,6 +338,8 @@ The following images show the decreasing values of the gradient norm and the dev
     \caption{Example of gradient descent for logistic regression.}
     \label{fig:GD_plots}
 \end{figure}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
