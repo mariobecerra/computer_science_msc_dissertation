@@ -2,7 +2,9 @@ library(gridExtra)
 library(Rcpp)
 library(tidyverse)
 
-sourceCpp("sgd.cpp")
+theme_set(theme_bw(base_size = 9))
+
+sourceCpp("mini_batch_gd_log_reg.cpp")
 
 log_reg_minibatch <- function(X, y, minibatch_size = 15, 
                               max_it = 3000, 
@@ -14,8 +16,8 @@ log_reg_minibatch <- function(X, y, minibatch_size = 15,
                               verbose = F){
   
   # Parameters:
-  # X: covariate data
-  # y: response variable
+  # X: covariate data. Can be data.frame, tibble or matrix.
+  # y: response variable. Must be a numeric or integer vector.
   # minibatch_size: Minibatch size
   # max_it: maximum number of iterations of the algorithm
   # initial_point: initial point for the beta parameters
@@ -39,9 +41,10 @@ log_reg_minibatch <- function(X, y, minibatch_size = 15,
     num_iters = floor(n/minibatch_size) + 1
   }
   
-  # Two daa frames that keep track of the values of the parameters during the execution of the algorithm.
-  # This may consume a lot of memory if the data has too many observations and
-  # the max_it parameter is too big
+  # Two data frames that keep track of the values of the 
+  # parameters during the execution of the algorithm.
+  # This may consume a lot of memory if the data has too 
+  # many observations and the max_it parameter is too big.
   betas_df <- as.data.frame(matrix(rep(0, max_it*num_iters*p), ncol = p))
   names(betas_df) <- paste0("beta_", 0:(p-1))
   iteration_values <- tibble(
@@ -56,7 +59,7 @@ log_reg_minibatch <- function(X, y, minibatch_size = 15,
   while(i < max_it){
     i = i + 1
     if(verbose) {
-      if(i %% 1000 == 1){
+      if(i %% 100 == 1){
         cat("Iter:", i, "\n")
         cat("Betas:", betas, "\n")
         cat("\n")
@@ -106,16 +109,16 @@ plot_minibatches_2_params <- function(lm_minibatch
     val_2 = data$beta_1[n]
     gg <- data %>% 
       ggplot(aes(beta_0, beta_1)) +
-      xlab("Beta 0") +
-      ylab("Beta 1") +
+      xlab(expression(theta[0])) +
+      ylab(expression(theta[1])) +
       geom_path(size = 0.1, color = 'black') +
       geom_point(size = 0.01, color = 'black', alpha = 0.2) +
       geom_point(aes(x, y),
                  data = tibble(x = val_1,
                                y = val_2),
-                 shape = 'x',
-                 size = 5,
-                 color = 'blue') +
+                 # shape = 'x',
+                 size = 1,
+                 color = 'red') +
       theme_bw()
     return(gg)
   } else{
@@ -135,56 +138,76 @@ data <- tibble(x = rnorm(N),
                pr = 1/(1 + exp(-z)),
                y = rbinom(1000, 1, pr))
 
-mod_gradient_descent <- log_reg_minibatch(data[,"x"], 
-                                          data$y, 
-                                          minibatch_size = 1000, 
-                                          max_it = 5000, 
-                                          alpha = 0.1,
-                                          initial_point = c(0, 0),
-                                          verbose = T) 
-
-plot_minibatches_2_params(mod_gradient_descent)
-
-
-
-
-
-mod_sgd <- log_reg_minibatch(data[,"x"], 
-                             data$y, 
-                             minibatch_size = 1, 
-                             max_it = 5000, 
-                             alpha = 0.1,
-                             initial_point = c(0, 0),
-                             verbose = T) 
-
-plot_minibatches_2_params(mod_sgd)
-
-
+# mod_gradient_descent <- log_reg_minibatch(data[,"x"], 
+#                                           data$y, 
+#                                           minibatch_size = 1000, 
+#                                           max_it = 5000, 
+#                                           alpha = 0.1,
+#                                           initial_point = c(0, 0),
+#                                           verbose = T) 
+# 
+# plot_minibatches_2_params(mod_gradient_descent)
+# 
+# 
+# 
+# 
+# 
+# mod_sgd <- log_reg_minibatch(data[,"x"], 
+#                              data$y, 
+#                              minibatch_size = 1, 
+#                              max_it = 5000, 
+#                              alpha = 0.1,
+#                              initial_point = c(0, 0),
+#                              verbose = T) 
+# 
+# plot_minibatches_2_params(mod_sgd)
 
 
 
-plots_size <- lapply(0:8, function(i){
+
+mods_size = lapply(0:8, function(i){
   mb_size = 2^i
+  cat("Minibatch size:", mb_size, "\n")
   mod_minibatch = log_reg_minibatch(data[,"x"], 
-                    data$y, 
-                    minibatch_size = 2^i, 
-                    max_it = 5000, 
-                    alpha = 0.1,
-                    initial_point = c(0, 0),
-                    verbose = T) 
-  gg <- plot_minibatches_2_params(mod_minibatch) +
-    ggtitle(paste("Size:", mb_size))
+                                    data$y, 
+                                    minibatch_size = 2^i, 
+                                    max_it = 5000, 
+                                    alpha = 0.1,
+                                    initial_point = c(0, 0),
+                                    verbose = T) 
+  cat("\n\n")
+  out = list(mb_size = mb_size,
+             mod_minibatch = mod_minibatch)
+  return(out)
+})
+
+
+plots_size =  lapply(mods_size, function(x){
+  gg <- plot_minibatches_2_params(x$mod_minibatch) +
+    ggtitle(paste("Mini-batch size:", x$mb_size)) +
+    theme(plot.title = element_text(size = 9))
   return(gg)
 })
 
-# Didn't bother to look for a more elegant way to do this
-grid.arrange(plots_size[[1]],
-             plots_size[[2]],
-             plots_size[[3]],
-             plots_size[[4]],
-             plots_size[[5]],
-             plots_size[[6]],
-             plots_size[[7]],
-             plots_size[[8]],
-             plots_size[[9]],
-             ncol = 3)
+
+out_plot = arrangeGrob(
+  plots_size[[1]],
+  plots_size[[2]],
+  plots_size[[3]],
+  plots_size[[4]],
+  plots_size[[5]],
+  plots_size[[6]],
+  plots_size[[7]],
+  plots_size[[8]],
+  plots_size[[9]],
+  ncol = 3)
+
+
+
+# plot(out_plot)
+
+ggsave(out_plot, filename = "Mini-batch_GD_plots.png", 
+       dpi = 500, 
+       width = 15, 
+       height = 12, 
+       units = "cm")
