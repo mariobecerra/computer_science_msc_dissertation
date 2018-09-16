@@ -320,7 +320,7 @@ $$
 To minimize the loss function, we start with an initial vector of parameters $\theta^0 \in \mathbb{R}^2$, and in each iteration we update
 
 $$
-  \theta^{k+1} = \theta^k - \alpha_k \nabla_{\theta} L(x, \theta)
+  \theta^{k+1} = \theta^k - \alpha_k \nabla_{\theta} L(\theta)
 $$
 
 until certain criteria are met.
@@ -345,25 +345,44 @@ Figure \ref{fig:GD_plots} shows the results of the implementation. On the left, 
 In machine learning it is common to find the need to solve optimization problems of the form
 
 \begin{equation}
-  \min_{\theta \in \mathbb{R}^p} L(x, \theta), \quad \text{with} \, \,
-  L(\theta) = \frac{1}{n} \sum_{i = 1}^n { \psi_i(x, \theta) }.
+  \min_{\theta \in \mathbb{R}^p} L(\theta), \quad \text{with} \, \,
+  L(\theta) = \frac{1}{n} \sum_{i = 1}^n { \ell_i(\theta) }.
 \end{equation}
 
 In the past logistic regression example, the loss function that we wanted to minimize was expressed in that way. Gradient descent uses iterations in the form
 
 \[
-  \theta_{k+1} = \theta_k - \alpha_k \nabla L(\theta_k) :=\theta_k - \frac{\alpha_k}{n} \sum_{i = 1}^n \nabla \psi_i(\theta_k),
+  \theta_{k+1} = \theta_k - \alpha_k \nabla L(\theta_k) :=\theta_k - \frac{\alpha_k}{n} \sum_{i = 1}^n \nabla \ell_i(\theta_k),
 \]
 
 which involves evaluating $n$ gradients (one for each observation) and then taking an average. In some cases of machine learning, $n$ can be really big; hence computing all of those gradients in each iteration is expensive. That is why researchers come up with methods such as SGD, in which the number of gradients to compute does not depend on $n$ and is constant instead. SGD uses iterations of the form
 
 \[
-  \theta_{k+1} = \theta_k - \alpha_k \nabla \psi_{i_k}(\theta_k),
+  \theta_{k+1} = \theta_k - \alpha_k \nabla \ell_{i_k}(\theta_k),
 \]
 
-where $i_k \in \left\{1, 2, ..., n \right\}$ is randomly chosen. The gradient $\nabla \psi_{i_k}(\theta_k)$ is an unbiased estimator of $\nabla L(\theta_k)$. This way, each iteration is really cheap because it involves the computation of only one gradient. It can happen that some $\nabla \psi_{i_k}(\theta_k)$ in particular does not give a direction of descent from $\theta_k$, but on average we do get descent directions, such that the sequence $\left\{ \theta_0, \theta_1, ... \right\}$ guides to a minimizer $\theta^*$.
+where $i_k \in \left\{1, 2, ..., n \right\}$ is randomly chosen. The gradient $\nabla \ell_{i_k}(\theta_k)$ is an unbiased estimator of $\nabla L(\theta_k)$. This way, each iteration is really cheap because it involves the computation of only one gradient. It can happen that some $\nabla \ell_{i_k}(\theta_k)$ in particular does not give a direction of descent from $\theta_k$, but on average we do get descent directions, such that the sequence $\left\{ \theta_0, \theta_1, ... \right\}$ guides to a minimizer $\theta^*$.
+
+\subsection{Mini-batch gradient descent}
 
 An approach that is in between the two extremes of computing the gradients of all observations and the gradient of just one observation is \textbf{mini-batch gradient descent}. In mini-batch gradient descent, one chooses a fixed integer $l$, then the data set is divided in batches if size $l$, where the values in each batch are randomly chosen. Then, each of these batches is used to compute the gradient and update the values of the parameters. Usually $l$ is a small number compared to the size of a big data set, but big enough so that the gradient estimation is not too noisy, such as $l = 32$ or $l = 100$. This way, each iteration is cheaper because it involves the computation of only $l$ gradients instead of $n$. Stochastic gradient descent (SGD) is just mini-batch gradient descent with $l = 1$.
+
+So, mini-batch gradient descent updates the value of the parameters in each iteration as such
+
+
+$$
+  \theta_{k+1} = \theta_k - \frac{\alpha_k}{n} \sum_{i = 1}^l \nabla \ell_i(\theta_k).
+$$
+
+
+We implemented mini-batch gradient descent for logistic regression in R and test it with the same simulated data set as in the previous example. Figure \ref{fig:Mini-batch_GD_plots} shows the results of the implementation. Each of the plots shows the values of the parameters in each iteration, but the difference in each plot is the size of the mini-batch $l$. It is clear that with bigger $l$, the descent directions are less noisy, but in the end they all converge to more or less the same value.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Mini-batch_GD_plots.png}
+    \caption{Example of mini-batch gradient descent for logistic regression comparing mini-batch sizes.}
+    \label{fig:Mini-batch_GD_plots}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
