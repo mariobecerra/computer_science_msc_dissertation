@@ -23,18 +23,18 @@ double norm(NumericVector g){
   return(sqrt(sum(g2)));
 }
 
+
+//////////////////////////
+/////// FUNCTION 2
+//////////////////////////
 // [[Rcpp::export]]
 double sigmoid(double x){
   return(1/(1 + exp(-x)));
 }
 
 
-
-
-
-
 //////////////////////////
-/////// FUNCTION 2
+/////// FUNCTION 3
 //////////////////////////
 // [[Rcpp::export]]
 NumericVector gradient(NumericMatrix data, NumericVector betas){
@@ -75,11 +75,8 @@ NumericVector gradient(NumericMatrix data, NumericVector betas){
 
 
 
-
-
-
 //////////////////////////
-/////// FUNCTION 3
+/////// FUNCTION 4
 //////////////////////////
 // [[Rcpp::export]]
 List epoch_update(NumericMatrix data, NumericVector betas_in, double alpha, int n_epoch, int minibatch_size){
