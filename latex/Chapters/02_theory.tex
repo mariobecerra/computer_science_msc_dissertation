@@ -211,27 +211,8 @@ $$
 
 Methods to estimate the posterior include Markov Chain Monte Carlo (MCMC) methods such as Metropolis-Hastings or Hamiltonian Monte Carlo, and Variational Inference, discussed later in this document.
 
+No matter what paradigm we choose to follow, in general, when one is training a model for prediction, it is not the main goal to minimize training error, but prediction error; i.e., the error of any future observation $(X^0, Y^0)$. This means that we want to minimize the expected prediction error, hence, we usually divide the data set $(X, Y)$ in two: the training set and the test set. To do this, from the original data set, a random sample of observations is assigned to be part of the training set and the rest are part of the test set.The idea is that the test set should be used to measure the predictive performance of the model. A third set is sometimes added and is called the validation set, in which predictive performance is measured to select certain hyperparameters, such as regularization parameter values, discussed further in this document.
 
-% En general, cuando uno entrena un modelo para predecir, no se desea minimizar el error de entrenamiento, sino el error de predicción, esto es, el error de cualquier observación futura $(X^0, Y^0)$. Esto quiere decir que se quiere minimizar el error esperado de predicción, definido como $\mathbb{E} \left[ L(\hat{f}(X^0), Y^0 ) \right]$.
-%
-% Debido a que se quiere minimizar el error esperado de predicción, es común separar el conjunto de datos $(X, Y)$ en dos, el conjunto de entrenamiento, presentado anteriormente como $\mathcal{L}$, y un \textit{conjunto de validación} o \textit{conjunto de prueba} denotado como $\mathcal{T}$. Para hacer esto, del conjunto original de datos, se toma una muestra aleatoria para entrenar (este es el conjunto de entrenamiento $\mathcal{L}$) y el resto es el conjunto de validación $\mathcal{T}$, con el cual se prueba el poder predictivo del modelo. Para estimar $\mathbb{E} \left[ L(\hat{f}(X^0), Y^0 ) \right]$, donde $L$ es la pérdida cuadrática y $\mathcal{T} = \left\{ (x_1^0, y_1^0), \hdots, (x_m^0, y_m^0) \right\}$, se utiliza la función
-%
-% \[
-%   \hat{Err} = \frac{1}{m} \sum_{i = 1}^m \left( f(x_i^0) - y_i^0 \right)^2.
-% \]
-%
-% A $\hat{Err}$ se le conoce como el error de validación o error de prueba. Notar que si $m$ es grande, entonces el error de prueba se aproxima al error esperado de predicción.
-%
-% Notar que el error de entrenamiento no aproxima el error de predicción porque el error de entrenamiento depende de $\mathcal{L}$. De hecho la estimación del error de predicción utilizando el error de entrenamiento está sesgada hacia abajo, especialmente para modelos complejos.
-
-
-
-% \begin{enumerate}
-%   \item Likelihood
-%   \item MLE
-%   \item Decision theory
-%   \item Linear regression
-% \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -383,6 +364,32 @@ We implemented mini-batch gradient descent for logistic regression in R and test
     \caption{Example of mini-batch gradient descent for logistic regression comparing mini-batch sizes.}
     \label{fig:Mini-batch_GD_plots}
 \end{figure}
+
+
+\subsection{Overfitting and regularization}
+
+A common problem in machine learning can be \textbf{overfitting}. To explain this, consider the case of modeling a response variable $Y$ with the general model proposed in equation \ref{eq:general_learning_model}. If $f$ is too flexible, then a larger number of parameters must be estimated, which leads to part of the error being captured by those parameters. This is known as overfitting. The problem with an overfit model is that it will give bad predictions with data that has not been previously observed. This is why overfit models have a small training error, but a large test error.
+
+One way to control overfitting is with \textbf{regularization}, in which a penalization term is added to the loss function to prevent the parameters from taking values that are too high. A very simple regularizer is the $L_2$ norm regularizer in which the sum of the squared parameters is added to the loss function.
+
+For example, in linear regression, the usual loss function that we seek to minimize is
+
+\begin{equation}
+  \label{eq:lin_reg_loss_funct}
+  \sum_{i = 1}^n{ \left( y_i - \sum_{k = 0}^p  \theta_k x_k \right) ^ 2},
+\end{equation}
+
+but with the $L_2$ regularizer (also known as ridge regression), equation \ref{eq:lin_reg_loss_funct} is modified so that the loss function now is
+
+\begin{equation}
+  \label{eq:lin_reg_loss_funct_reg}
+  \sum_{i = 1}^n{ \left( y_i - \sum_{k = 0}^p \theta_k x_k \right) ^ 2}
+  + \lambda \left( \sum_{k = 1}^p \theta_k^2 \right),
+\end{equation}
+
+where $\lambda > 0$ is called the regularization parameter, and controls the relative importance between the two main terms of the sum. The value of this parameter can have a big impact in the loss function: if it is too big, then it will penalize too much and most parameters will be near 0, but if it is too small, then there is little regularization effect and it is as if there were no penalization at all. In practice, it is common to choose several concrete values of $\lambda$ (such as 0.001, 0.01 and 0.1) and select the final value using the validation set previously mentioned, so that the final $\lambda$ minimizes the validation set error.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
