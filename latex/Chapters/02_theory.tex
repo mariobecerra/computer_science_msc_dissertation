@@ -601,16 +601,15 @@ Figure \ref{fig:BBVI_plots} shows the results of the implementation, and we show
     \label{fig:BBVI_plots}
 \end{figure}
 
-%The posterior predictive distribution for a new observation pair $(x^*, y^*)$ can be approximated using the variational approximation. In particular, we could take $T$ samples from the variational  as such
-%
-%\begin{equation*}
-  %\begin{split}
-      %p(y^* | X, y, x^*) &=
-        %\int \prob{y^* | \theta, x^*} \prob{\theta | X, y} d\theta \\
-      %& \approx \int \prob{y^* | \theta, x^*} \q{\theta | X, y} d\theta \\
-      %& \approx \frac{1}{T} \sum_{t = 1}^T \prob{y^* | \theta, x^*},
-  %\end{split}
-%\end{equation*}
+The posterior predictive distribution of $y^*$ for a new vector of covariates $x^*$ can be approximated using the variational approximation. In particular, we could take $T$ samples from the variational as such: for $j \in \left\{ 1, \ldots, T \right\}$
+
+
+\begin{enumerate}
+  \item Sample a vector $\theta_j \sim q(\theta | \lambda)$
+  \item Use that value to sample $y_j^* \sim p(y^* | \theta_j, x^*)$
+\end{enumerate}
+
+Then $\left\{ y_j^* \right\}_{j = 1}^T$ is a set of $T$ independent samples from the posterior predictive distribution $\prob{y^* | X, y, x^*}$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
