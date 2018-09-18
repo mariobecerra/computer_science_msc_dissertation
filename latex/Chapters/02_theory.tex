@@ -601,6 +601,17 @@ Figure \ref{fig:BBVI_plots} shows the results of the implementation, and we show
     \label{fig:BBVI_plots}
 \end{figure}
 
+%The posterior predictive distribution for a new observation pair $(x^*, y^*)$ can be approximated using the variational approximation. In particular, we could take $T$ samples from the variational  as such
+%
+%\begin{equation*}
+  %\begin{split}
+      %p(y^* | X, y, x^*) &=
+        %\int \prob{y^* | \theta, x^*} \prob{\theta | X, y} d\theta \\
+      %& \approx \int \prob{y^* | \theta, x^*} \q{\theta | X, y} d\theta \\
+      %& \approx \frac{1}{T} \sum_{t = 1}^T \prob{y^* | \theta, x^*},
+  %\end{split}
+%\end{equation*}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ANNs
@@ -836,7 +847,7 @@ When using CNNs, a pooling layer is also usually added after each convolutional 
 
 \subsection{Architecture example}
 
-To illustrate how all these concepts are put together, we will show an example of an architecture that is very commonly used in image classification problems, called \textbf{LeNet architecure}, introduced by \citeauthor{lecun1998gradient} in \citeyear{lecun1998gradient} for a digit classification problem \cite{lecun1998gradient}. The architecture assumes a grayscale input image of $32 \times 32$ pixels, which is then fed to 6 convolutional filters of size $5 \times 5$, each followed by an activation function and a $2 \times 2$ max pooling layer, then 16 convolutional filters of size $5 \times 5$, each with their corresponding activation functions and then the $2 \times 2$ max pooling layer, followed by two fully connected layers of sizes 120 and 84, and finally a softmax transformation to map to the 10 digit classification problem probabilities.
+To illustrate how all these concepts are put together, we will show an example of an architecture that is very commonly used in image classification problems, called \textbf{LeNet architecture}, introduced by \citeauthor{lecun1998gradient} in \citeyear{lecun1998gradient} for a digit classification problem \cite{lecun1998gradient}. The architecture assumes a grayscale input image of $32 \times 32$ pixels, which is then fed to 6 convolutional filters of size $5 \times 5$, each followed by an activation function and a $2 \times 2$ max pooling layer, then 16 convolutional filters of size $5 \times 5$, each with their corresponding activation functions and then the $2 \times 2$ max pooling layer, followed by two fully connected layers of sizes 120 and 84, and finally a softmax transformation to map to the 10 digit classification problem probabilities.
 
 \begin{figure}[H]
     \centering
@@ -854,3 +865,58 @@ To illustrate how all these concepts are put together, we will show an example o
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Active Learning}
+
+An active learning problem is one in which the learner selects its own training data. For example, in a supervised learning problem where we are given a data set with covariates $X$ and response variable $y$. First we train a model $\hat{f}$ with the data that we have, afterwards the learner can choose new data $x^*$ from an unlabeled pool of data, ask to an \textit{oracle} what the corresponding output $y^*$ is, and then add the pair $(x^*, y^*)$ to the training data. The main goal of active learning is to select which $x^*$ to incorporate to the training data \cite{cohn1996active}.
+
+The new example is chosen using an \textbf{acquisition function} $a(x, \hat{f})$ that is usually based on the model's uncertainty about the prediction. The new observation $x^*$ is chosen so that it maximizes the acquisition function of all the observations in the pool set. In practice, the oracle is usually a human that gives the corresponding label $y^*$. After the new observation is added to the training data, the model is retrained with the updated data set. This process is iteratively repeated, with the training set increasing in size with every iteration. In the end, it is expected that this procedure leads to a better predictive performance than randomly selecting new observations to add to the training data.
+
+The acquisition functions that will be used and compared in this work are four, and three of them use the posterior predictive distribution, particularly, the posterior predictive probability of an observation $x^*$ having a label $y^*$ belonging to a class $c$, denoted as  $p(y^* = c | X, y, x^*)$. Naturally, because of the definition of these acquisition functions, they only work in classification frameworks.
+
+\begin{enumerate}
+  \item Predictive entropy:
+
+  $ \mathbb{H} \left[ y^* | X, y, x^* \right] = - \sum_c p(y^* = c | X, y, x^*) \log p(y^* = c | X, y, x^*)$.
+
+  \item Bayesian Active Learning by Disagreement (BALD):
+
+  $ \mathbb{H} \left[ y^* | X, y, x^* \right] - \mathbb{E}_{p(\theta | X, y)} \left[ \mathbb{H} \left[ y^* | x^*, \theta \right] \right]$.
+
+  \item Variation ratios: $1 - \max_y p(y^* | X, y, x^*)$.
+
+  \item Random: Choosing an observation uniformly random from the pool of unlabeled data.
+
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
