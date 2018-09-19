@@ -74,9 +74,10 @@ Since the denominator of equation \ref{eq:bayes_theorem} does not depend on $\th
 
 This posterior distribution is also used to predict the values of unseen data. Let $x^*$ be a vector of covariates for which we want to make a prediction $\hat{y}^*$, then we use the \textbf{posterior predictive distribution}, defined as
 
-$$
+\begin{equation}
+  \label{eq:post_pred_dist}
   \prob{y^* | X, y, x^*} = \int \prob{y^* | \theta, x^*} \prob{\theta | X, y} d\theta.
-$$
+\end{equation}
 
 Note that this posterior distribution is, as it name implies, a distribution; i.e., it is not a single prediction but a whole bunch of predictions, quantified by how likely each value is to be. If we wanted a point prediction $\hat{y}^*$ for $x^*$ then we could take the expected value of the posterior predictive distribution such that
 
@@ -718,16 +719,16 @@ $$
 
 Parameters $\mu_{i,k}^{[l]}$ and $\sigma_{i,k}^{[l]}$ are chosen to reflect the prior knowledge that we may have about the values of the parameters $\theta_{i,k}^{[l]}$. If we have no prior knowledge, then a vague prior can be used.
 
-In contrast to classical neural networks where parameters $\Theta$ are chosen so that they minimize an error function, in Bayesian neural networks we wish to update our knowledge on the parameters $\Theta$ given the data $X$. This is achieved with Bayes' theorem in the following way
+In contrast to classical neural networks where parameters $\Theta$ are chosen so that they minimize an error function, in Bayesian neural networks we wish to update our knowledge on the parameters $\Theta$ given the data $X$ and $y$. This is achieved with Bayes' theorem in the following way
 
 $$
-  \prob{\Theta | X, y} = \frac{\prob{X | \Theta} \prob{\Theta}}{\prob{X}}.
+  \prob{\Theta | X, y} = \frac{\prob{y | \Theta, X} \prob{\Theta | X}}{\prob{y | X}}.
 $$
 
 %In our example, $\prob{X | \Theta} = \normalfunc{X}{\mathrm{MLP}(X, \Theta)}{\sigma^2}$ and $\prob{\Theta} = \normalfunc{\Theta}{[]}$
-In our example, $\prob{X | \Theta}$ and $\prob{\Theta}$ are the joint density functions of Gaussian random variables with their corresponding parameter values.
+In our example, $\prob{y | \Theta, X}$ and $\prob{\Theta | X}$ are the joint density functions of Gaussian random variables with their corresponding parameter values.
 
-To make predictions in the Bayesian case, we use the posterior predictive distribution.
+To make predictions in the Bayesian case, we use the posterior predictive distribution defined in equation \ref{eq:post_pred_dist}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
