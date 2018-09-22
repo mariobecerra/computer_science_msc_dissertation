@@ -30,9 +30,9 @@ The estimate $\hat{f}$ can be chosen from a wide family of models, such as a lin
 
 For example, in the linear regression case, it is common to minimize the squared error function
 
-$$
+\begin{equation}
   \hat{f} = \argmin_{f \in \mathcal{F}} \frac{1}{n} \sum_{i = 1}^n{ ( y_i - f(x_i) ) ^ 2},
-$$
+\end{equation}
 
 where $\mathcal{F}$ is the family of functions of the form $f(X) = X\theta$ with $\theta \in \mathbb{R}^p$. Thus, $\hat{f}(X) = X \hat{\theta}$, where $\hat{\theta}$ minimizes the error function.
 
@@ -52,9 +52,9 @@ With some algebra, it is fairly easy to see that maximizing equation \ref{eq:gau
 
 In the case of a binary classification problem, assuming that $y_i$ follows a Bernoulli distribution, such that the probability of $y_i$ of being 1 is $p_i(\theta)$, where $\theta$ is the parameter that indexes the probability, then the likelihood function in this case is $\prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i}$ and thus, the log-likelihood is
 
-$$
+\begin{equation}
   L(\theta) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\theta) \right) + (1 - y_i) \log \left( 1 - p_i(\theta) \right) \right].
-$$
+\end{equation}
 
 Another approach to the learning problem is the \textbf{Bayesian approach}, in which we first assume a prior distribution on the parameters $\theta$ and we update our knowledge about them with data $X$. That is, we first quantify the knowledge that we may have about $\theta$ using a prior distribution $\prob{\theta}$ and then compute the posterior distribution of $\theta$ given $X$ and $y$ using Bayes' theorem as such
 
@@ -81,9 +81,9 @@ This posterior distribution is also used to predict the values of unseen data. L
 
 Note that this posterior distribution is, as it name implies, a distribution; i.e., it is not a single prediction but a whole bunch of predictions, quantified by how likely each value is to be. If we wanted a point prediction $\hat{y}^*$ for $x^*$ then we could take the expected value of the posterior predictive distribution such that
 
-$$
+\begin{equation}
   \hat{y}^* = \mathbb{E}_{y^* | X, y, x^*} \left[ \prob{y^* | X, y, x^*} \right].
-$$
+\end{equation}
 
 There are other possible point estimates such as the median, or the maximum a posteriori (MAP) estimate, but we will not study them in detail.
 
@@ -93,38 +93,38 @@ If we wanted to build a linear classifier from our two covariates, we would run 
 This way, $y_i$ is a random variable that follows a Bernoulli distribution with parameter $p_i$, where $p_i$ is the probability of $y_i$ being 1.
 The range of $f$ as a linear model is $\mathbb{R}$, so we must map it to the $\left[ 0,1 \right]$ space in which probabilities live, and it can be done with what is called a \textbf{link function}. The \textbf{logistic sigmoid function} $\sigma \left( \cdot \right)$ is a widely used link function for this type of problems \cite[p.~114]{christopher2006pattern}. It is defined as
 
-$$
+\begin{equation}
   \sigma(w) = \frac{e^w}{1 + e^w} = \frac{1}{1 + e^{-w}}.
-$$
+\end{equation}
 
 It is easy to see that $\lim_{w \to -\infty} \sigma(w) = 0$ and $\lim_{w \to \infty} \sigma(w) = 1$. There is more reasoning behind the logistic sigmoid function, and some of it has to be that it belongs to the exponential family of functions. To see more details about this, see \cite{christopher2006pattern}.
 
 Another possible link function is the \textbf{probit function}, defined as the inverse of the cumulative distribution function of a Gaussian random variable \cite[p.~296]{friedman2001elements}. That is, $\sigma(w) = \Phi^{-1}\left( x \right)$,
 where
 
-$$
+\begin{equation}
   \Phi(w) = \int_{-\infty}^w \frac{1}{\sqrt{2 \pi}} \exp{\left( -\frac{x^2}{2} \right)} dx
-$$
+\end{equation}
 
 is the Gaussian cumulative distribution function. There are some differences in the theory and behavior of the logistic and the probit functions, but in practice they hardly make any substantial difference. Henceforth, we will use the logistic function as a link function for binary classification problems.
 
 So, we know that $\sigma \left( \cdot \right)$ maps from $\mathbb{R}$ to $\left[ 0,1 \right]$, but we don't know exactly how to relate this to our original problem which is to build a linear classifier using the vectors $x^{(1)}$ and $x^{(2)}$. Using  $\sigma \left( \cdot \right)$, we can define the probability of $y_i$ of belonging to class $1$ given features $x_i^{(1)}$ and $x_i^{(2)}$, summarized as $x_i$, as
 
-$$
+\begin{equation}
   \prob{y_i = 1 | x_i, \theta} = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}) = \frac{1}{1 + e^{-\left( \theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)} \right)}},
-$$
+\end{equation}
 
 and thus
 
-$$
+\begin{equation}
   \prob{y_i = 0 | x_i, \theta} = 1 - \prob{y_i = 1 | x_i} = \frac{1}{1 + e^{\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}}}.
-$$
+\end{equation}
 
 So, $y_i$ is fully described as a Bernoulli distribution with parameter $p_i =\prob{y_i = 1 | x_i, \theta}$. As we previously mentioned, the likelihood of $n$ observations is
 
-$$
+\begin{equation}
   \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i}
-$$
+\end{equation}
 
 and, in consequence, the log-likelihood of $n$ observations is
 
@@ -150,25 +150,25 @@ Now, why is this an error function? If $y_i = 1$, then $1 - y_i = 0$, so the sec
 
 Now, let's move to the Bayesian approach to logistic regression. As before, we will assume that $y_i$ follows a Bernoulli distribution such that the probability of being 1 is $p_i(\theta) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$, with $\sigma \left( \cdot \right)$ the logistic sigmoid function. In the Bayesian paradigm, parameter vector $\theta = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ must have a joint prior distribution. As mentioned before, a good idea is to place a Gaussian distribution to it and, in this case, assume independence between the parameters, such that
 
-$$
+\begin{equation}
   \theta \sim \normaldist{\mu}{\frac{1}{\tau} I}
-$$
+\end{equation}
 
 where $\mu \in \mathbb{R}^3$, $\tau \in \mathbb{R}^+$ and $I$ is a $3 \times 3$ identity matrix. In this context, $\tau$ is the inverse of the variance, and is called the \textbf{precision}. Assuming $\mu = \left[ \mu_0, \mu_1, \mu_2 \right]^T$, then the prior distribution takes the following form
 
-$$
+\begin{equation}
   \prob{\theta} = \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}}.
-$$
+\end{equation}
 
 And, the likelihood is
 
-$$
+\begin{equation}
   \prob{X | \theta} = \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i},
-$$
+\end{equation}
 
 so, following Bayes' theorem in equation \ref{eq:bayes_theorem_prop}, the posterior distribution is
 
-$$
+\begin{equation}
   \prob{\theta | X, y} =
     \frac
     {
@@ -178,15 +178,15 @@ $$
       \int \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
       \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right] d\theta
     }.
-$$
+\end{equation}
 
 Unfortunately, the integral is not directly solvable, and that is the reason numerical methods are used. Most of them rely on the fact that the denominator is only a normalizing constant and only use the equation as a proportion
 
-$$
+\begin{equation}
   \prob{\theta | X, y} \propto
   \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
   \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right].
-$$
+\end{equation}
 
 Methods to estimate the posterior include Markov Chain Monte Carlo (MCMC) methods such as Metropolis-Hastings or Hamiltonian Monte Carlo, and Variational Inference, discussed later in this document.
 
@@ -204,9 +204,9 @@ No matter what paradigm we choose to follow, in general, when one is training a 
 As mentioned before, in machine learning one usually wants to find the parameters that minimize a loss function such as the one in equation \ref{eq:logistic_example_loss_function}, a problem which in some cases, as in linear regression, using the first and second order conditions, we can find a closed formula to find the parameters; but in many other cases, such as in logistic regression, this is not possible, so we resort to numerical optimization techniques.
 The general problem of unrestricted optimization \cite{nocedal2006numerical} is
 
-\begin{equation*}
+\begin{equation}
   \min_{\theta \in \mathbb{R}^p} L(\theta).
-\end{equation*}
+\end{equation}
 
 
 For statistical learning, $L$ is usually a convex loss function and $\theta$ is a parameter or vector of parameters. A solution is a vector $\theta^*$ called local minimizer, which makes the function $L$ to be minimized in a neighborhood around $\theta^*$. Formally, a vector $\theta^*$ is a local minimizer if there exists a neighborhood $\mathcal{N}$ of $\theta^*$ such that $L(\theta^*) \leq L(\theta)$ for all $\theta \in \mathcal{N}$.
@@ -231,22 +231,22 @@ We find a problem when we want to compute the step length $\alpha_k$: we want to
 
 In the case of logistic regression, we want to minimize loss function defined in equation \ref{eq:logistic_example_loss_function}, which is
 
-$$
+\begin{equation}
   L(\theta) = - \sum_{i=1}^{n} \left[ y_i \log(\sigma(\theta^T x_i)) + (1-y_i) \log(1-\sigma(\theta^T x_i)) \right] =
   - \sum_{i=1}^{n}{\ell_i(\theta)}
-$$
+\end{equation}
 
 where $\sigma(\cdot)$ is the logistic sigmoid function, $\theta^T x_i = \sum_{j=0}^{p}{\theta_j x_{ij}}$ and $\ell_i(\theta)$ is defined as
 
-$$
+\begin{equation}
   \ell_i(\theta) = y_i \log(\sigma(\theta^T x_i)) + (1-y_i) \log(1-\sigma(\theta^T x_i)).
-$$
+\end{equation}
 
 We take the partial derivatives
 
-$$
+\begin{equation}
   \frac{\partial L}{\partial \theta_j} = - \sum_{i = 1}^n { \frac{\partial \ell_i}{\partial \theta_j} }
-$$
+\end{equation}
 
 and, using the fact that $\sigma'(w) = \sigma(w)(1-\sigma(w))$, we have
 
@@ -264,24 +264,24 @@ and, using the fact that $\sigma'(w) = \sigma(w)(1-\sigma(w))$, we have
 
 So, we have that
 
-$$
+\begin{equation}
   \frac{\partial L}{\partial \theta_j} = - \sum_{i = 1}^n { x_{ij}(y_i - \sigma(\sum_{j=0}^{p}{\theta_j x_{ij}})) },
-$$
+\end{equation}
 
 where once more $x_{i1} = 1$ for all $i \in \left\{1, ..., n \right\}$.
 
 
 From here, we have that the gradient descent direction for each iteration is
 
-$$
+\begin{equation}
   \nabla_{\theta} L = \left( \frac{\partial L}{\partial \theta_0}, ..., \frac{\partial L}{\partial \theta_p} \right)^T.
-$$
+\end{equation}
 
 To minimize the loss function, we start with an initial vector of parameters $\theta^0 \in \mathbb{R}^2$, and in each iteration we update
 
-$$
+\begin{equation}
   \theta^{k+1} = \theta^k - \alpha_k \nabla_{\theta} L(\theta)
-$$
+\end{equation}
 
 until certain criteria are met.
 
@@ -311,15 +311,15 @@ In machine learning it is common to find the need to solve optimization problems
 
 In the past logistic regression example, the loss function that we wanted to minimize was expressed in that way. Gradient descent uses iterations in the form
 
-\[
+\begin{equation}
   \theta_{k+1} = \theta_k - \alpha_k \nabla L(\theta_k) :=\theta_k - \frac{\alpha_k}{n} \sum_{i = 1}^n \nabla \ell_i(\theta_k),
-\]
+\end{equation}
 
 which involves evaluating $n$ gradients (one for each observation) and then taking an average. In some cases of machine learning, $n$ can be really big; hence computing all of those gradients in each iteration is expensive. That is why researchers come up with methods such as SGD, in which the number of gradients to compute does not depend on $n$ and is constant instead. SGD uses iterations of the form
 
-\[
+\begin{equation}
   \theta_{k+1} = \theta_k - \alpha_k \nabla \ell_{i_k}(\theta_k),
-\]
+\end{equation}
 
 where $i_k \in \left\{1, 2, ..., n \right\}$ is randomly chosen. The gradient $\nabla \ell_{i_k}(\theta_k)$ is an unbiased estimator of $\nabla L(\theta_k)$. This way, each iteration is really cheap because it involves the computation of only one gradient. It can happen that some $\nabla \ell_{i_k}(\theta_k)$ in particular does not give a direction of descent from $\theta_k$, but on average we do get descent directions, such that the sequence $\left\{ \theta_0, \theta_1, ... \right\}$ guides to a minimizer $\theta^*$.
 
@@ -330,9 +330,9 @@ An approach that is in between the two extremes of computing the gradients of al
 So, mini-batch gradient descent updates the value of the parameters in each iteration as such
 
 
-$$
+\begin{equation}
   \theta_{k+1} = \theta_k - \frac{\alpha_k}{n} \sum_{i = 1}^l \nabla \ell_i(\theta_k).
-$$
+\end{equation}
 
 
 We implemented mini-batch gradient descent for logistic regression in R and test it with the same simulated data set as in the previous example. Figure \ref{fig:Mini-batch_GD_plots} shows the results of the implementation. Each of the plots shows the values of the parameters in each iteration, but the difference in each plot is the size of the mini-batch $l$. It is clear that with bigger $l$, the descent directions are less noisy, but in the end they all converge to more or less the same value.
@@ -398,41 +398,41 @@ Although the main goal of VI methods is tho minimize the KL divergence in \ref{e
 
 The relationship between ELBO and KL divergence is easy to see. Starting from the KL divergence definition, using the logarithm quotient rule, and by the fact that the expected value is a linear operator, we have
 
-$$
+\begin{equation}
     \kl{q}{p} =
     \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X, y}} \right) \right] =
     \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log {\prob{\theta | X, y}}  \right].
-$$
+\end{equation}
 
 Then, using the definition of conditional probability, we have
 
-$$
+\begin{equation}
     %\mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta | X, y)  \right] =
     \kl{q}{p} =
     \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, X, y)}{p(y | X) p(X)}  \right].
-$$
+\end{equation}
 
 Using the logarithm quotient rule one more time
 
-$$
+\begin{equation}
   % \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, X, y)}{p(y | X) p(X)}  \right] =
   \kl{q}{p} =
   \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X, y) - \log p(y | X) - \log p(X)  \right].
-$$
+\end{equation}
 
 But since $p(X)$ does not depend on $q$, the expected value of $p(X)$ is a constant; so we have
 
-$$
+\begin{equation}
  %\mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) - \log p(X)  \right] =
  \kl{q}{p} =
  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X, y) \right] + \log p(y | X) + \log p(X)
-$$
+\end{equation}
 
 And since we are trying to find the optimal $q$, then $\log p(X)$ is just a constant in the optimization process, and we can disregard it and just minimize equation
 
-$$
+\begin{equation}
   \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X, y) \right]
-$$
+\end{equation}
 
 which as we see, is the negative of the ELBO, so minimizing the KL divergence is equivalent to maximizing the ELBO.
 
@@ -446,28 +446,28 @@ Let $\lambda$ be the parameters of the variational distribution $q(\theta)$. The
 
 There are situations in which this gradient can be computed analytically, but for many other models, this cannot be done, because it may not be possible to analytically take the expectation, hence some approximation must be made. A good approach is to approximate the expected value with Monte-Carlo simulation. Let $\left\{ z_1, ..., z_S \right\}$ be samples taken from $q(\theta | \lambda)$, then we can approximate the expected value with an arithmetic mean as such
 
-\begin{equation*}
+\begin{equation}
   \begin{split}
   \nabla_{\lambda} \mathcal{L}(q, \lambda) &=
   \mathbb{E}_q \left[ \left( \nabla_{\lambda} \log q(\theta | \lambda) \right) \left( \log p(X, y, \theta) - \log q(\theta | \lambda) \right) \right] \\
   & \approx \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\lambda} \log q(z_k | \lambda) \right) \left( \log p(X, y, z_k) - \log q(z_k | \lambda) \right).
   \end{split}
-\end{equation*}
+\end{equation}
 
 
 This approach gives noisy but unbiased estimates of the expected value. A Monte Carlo approach can also be taken to compute the value of the ELBO. For more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
 
 To illustrate this, let's study a simple example in which we will use a family that is often used to approximate $p$, which is the \textbf{mean-field variational family}, where each parameter is independent of the rest, such that
 
-$$
+\begin{equation}
   q(\theta) = \prod_{i = 1}^p q(\theta_i | \lambda_i).
-$$
+\end{equation}
 
 In this example, we will try to approximate the posterior distribution of two-class logistic regression. Assume a data matrix $X \in \mathbb{R}^{n \times p}$ and a response vector $y$ with values 1 or 0. Each observation $y_i$ is modeled with a Bernoulli distribution such that
 
-$$
+\begin{equation}
   y_i | x_i, \theta \sim \mathrm{Bern}(\sigma(\theta^T x_i))
-$$
+\end{equation}
 
 where $\sigma(\cdot)$ is the logistic sigmoid function. The prior distribution for $\theta$ is a Gaussian $\theta \sim \mathrm{N}(0, \sigma_0^2 \mathbb{I}_p)$ where $\mathbb{I}_p$ is the $p \times p$ identity matrix and $\sigma_0^2 \in \mathbb{R}^+$.
 
@@ -482,7 +482,7 @@ with $\lambda = \left[ \mu_1, \hdots, \mu_p, \sigma_1^2, \hdots, \sigma_p^2 \rig
 
 According to equation \ref{eq:ELBO_gradient}, to compute the gradient of the ELBO, we need to be able to compute $\nabla_{\lambda} \log q(\theta | \lambda)$, so we need that partial derivative of $\log q(\theta | \lambda)$ with respect to each $\mu_j$ and $\sigma_j^2$, $j \in \left\{ 1, \hdots, p \right\}$. Let's start with $\mu_j$.
 
-\begin{equation*}
+\begin{equation}
   \begin{split}
       \nabla_{\mu_j} \log q(\theta | \lambda) & =
       \nabla_{\mu_j} \log \left( \prod_{ k = 1}^p \mathrm{N} \left( \theta_k | \mu_k, \sigma_k^2 \right) \right) \\
@@ -491,11 +491,11 @@ According to equation \ref{eq:ELBO_gradient}, to compute the gradient of the ELB
       &= \nabla_{\mu_j} \log \left( \frac{1}{\sqrt{2 \pi \sigma_j^2}} \exp \left( -\frac{(\theta_j - \mu_j)^2}{2 \sigma_j^2} \right) \right) \\
       &= \frac{\theta_j - \mu_j}{\sigma_j^2}.
   \end{split}
-\end{equation*}
+\end{equation}
 
 Now for $\sigma_j^2$. It is easier to work with the logarithm, so let $\alpha_j = \log \sigma_j^2$, and instead of computing $\nabla_{\sigma_j^2}$, we will compute $\nabla_{\alpha_j}$.
 
-\begin{equation*}
+\begin{equation}
   \begin{split}
       \nabla_{\alpha_j} \log q(\theta | \lambda) & =
       \nabla_{\alpha_j} \log \left( \prod_{ k = 1}^p \mathrm{N} \left( \theta_k | \mu_k, \sigma_k^2 \right) \right) \\
@@ -507,11 +507,11 @@ Now for $\sigma_j^2$. It is easier to work with the logarithm, so let $\alpha_j 
       &= - \frac{1}{2} + \frac{(\theta_j - \mu_j)^2}{2} \mathrm{e}^{-\alpha_j} =
       - \frac{1}{2} + \frac{(\theta_j - \mu_j)^2}{2 \sigma_j^2}.
   \end{split}
-\end{equation*}
+\end{equation}
 
 To compute the gradient in equation \ref{eq:ELBO_gradient}, we also need to compute the data log-likelihood $p(X, y, \theta)$. Using the chain rule of probability, this can be written as $\log p(y | X, \theta) + \log p(X | \theta) + \log p(\theta)$. Note that in order to compute the gradient, $\log p(X | \theta)$ is not needed, because of the following
 
-\begin{equation*}
+\begin{equation}
   \begin{split}
       \nabla_{\lambda} \mathcal{L} &=
       \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(X, y, \theta) - \log q(\theta | \lambda) \right) \right] \\
@@ -519,11 +519,11 @@ To compute the gradient in equation \ref{eq:ELBO_gradient}, we also need to comp
       &= \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y | X, \theta) + \log p(\theta) - \log q(\theta | \lambda) \right) \right] +  \log p(X | \theta) \mathbb{E}_q \left[ \nabla_{\lambda} q(\theta | \lambda) \right] \\
       &= \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y | X, \theta) + \log p(\theta) - \log q(\theta | \lambda) \right) \right] +  c \mathbb{E}_q \left[ \nabla_{\lambda} q(\theta | \lambda) \right].
   \end{split}
-\end{equation*}
+\end{equation}
 
 In the last line, we have reduced $\log p(X | \theta)$ as just a constant $c$. We can see that $\mathbb{E}_q \left[ \nabla_{\lambda} q(\theta | \lambda) \right] = 0$ by using the dominated convergence theorem \cite{ranganath2014black} like so:
 
-\begin{equation*}
+\begin{equation}
   \begin{split}
       \mathbb{E}_q \left[ \nabla_{\lambda} q(\theta | \lambda) \right] &=
       \int \nabla_{\lambda} q(\theta | \lambda) d\theta \\
@@ -531,36 +531,36 @@ In the last line, we have reduced $\log p(X | \theta)$ as just a constant $c$. W
       &= \nabla_{\lambda} 1 d\theta \\
       &= 0.
   \end{split}
-\end{equation*}
+\end{equation}
 
 So, we can write the derivative of the ELBO as
 
-$$
+\begin{equation}
   \nabla_{\lambda} \mathcal{L} = \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y | X, \theta) + \log p(\theta) - \log q(\theta | \lambda) \right) \right].
-$$
+\end{equation}
 
 Since $y$ is a Bernoulli random vector, then
 
 
-\begin{equation*}
+\begin{equation}
   \begin{split}
       \log p(y | X, \theta) &=
       \log \left( \prod_{i = 1}^n \sigma(\theta^T x_i)^{y_i} (1 - \sigma(\theta^T x_i))^{1-y_i} \right) \\
       &= \sum_{i = 1}^n \left[ y_i \log \left( \sigma(\theta^T x_i \right) + (1 - y_i) (1 - \sigma(\theta^T x_i)) \right].
   \end{split}
-\end{equation*}
+\end{equation}
 
 And since we assumed that $\theta$ had a Gaussian prior, then
 
-$$
+\begin{equation}
   \log p(\theta) = \log \prod_{j = 1}^p \phi(\theta_j) = \sum_{j = 1}^p \log \phi(\theta_j) = \frac{1}{\sqrt{2 \pi}} e^{\left( -\frac{\theta_j^2}{2} \right)}.
-$$
+\end{equation}
 
 With these derivations, we can now take a gradient ascent approach to optimize the ELBO. To do this, we would start with a random $\lambda$ vector, and in each step $t$ take $S$ samples $z_k$ from $q(\theta | \lambda)$ to compute the approximate gradient as
 
-$$
+\begin{equation}
   \nabla_{\lambda} \mathcal{L} \approx \Delta_{\lambda} \mathcal{L} = \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\lambda} \log q(z_k | \lambda) \right) \left( \log p(X, y, z_k) - \log q(z_k | \lambda) \right),
-$$
+\end{equation}
 
 and then update the $\lambda$ parameter as $\lambda_{t+1} = \lambda_{t} + \eta_t  \Delta_{\lambda_t} \mathcal{L}$, with each $eta_t$ chosen accordingly, until a certain stopping criteria is met.
 
@@ -613,35 +613,35 @@ This image doesn't explicitly show the parameters $\theta_0^{[0]}$ and $\theta_0
 
 If the response variable $y$ happened to be a categorical variable, let's say binary, then one last transformation would have to be applied to map the model to the $\left[0, 1\right]$ interval and model $y$ as a probability. Then we would have
 
-$$
+\begin{equation}
   y_i =
   \phi \left( \theta_0^{[1]} +  \sum_{j = 1}^m \theta_j^{[1]} \sigma \left( \theta_0^{[0]} + \theta_j^{[0]} x_i \right) \right) =
   \phi \left( \theta_0^{[1]} +  \sum_{j = 1}^m \theta_j^{[1]} a_{j,i} \right),
-$$
+\end{equation}
 
 with $\phi(\cdot)$ the logistic function to map from $\mathbb{R}$ to $\left[ 0, 1 \right]$. The choice of function $\phi(\cdot)$ depends on the nature of the response variable. As we saw previously, in the case of a continuous response variable, $\phi(\cdot)$ is the identity function.
 
 We can establish a more complex model by taking linear combinations of non-linear functions of the previous result. Let's define
-$$
+\begin{equation}
 a_{k,i}^{[1]} = \sigma^{[1]} \left( \theta_{0}^{[1]} + \theta_k^{[0]} x_i \right)
-$$
+\end{equation}
 
 for $k \in \left\{ 1, \ldots, m \right\}$ and
 
-$$
+\begin{equation}
   a_{k,i}^{[2]} = \sigma^{[2]} \left(  \theta_{0,k}^{[1]} + \sum_{j = 1}^m \theta_{j,k}^{[1]} a_{j,1}^{[0]}  \right)
-$$
+\end{equation}
 
-% $$
+% \begin{equation}
 % a_{k,i}^{[2]} = \theta_0^{j} +  \sum_{k = 1}^m \theta_k^{j} \sigma^{[2)} \left( \theta_0^{k} + \theta_1^{k} x_i \right) =
 % \theta_0^{j} +  \sum_{k = 1}^m \theta_k^{j} a_{k,i}^{[1]}
-% $$
+% \end{equation}
 
 for $k \in \left\{ 1, \ldots, r \right\}$, then
 
-$$
+\begin{equation}
   y_i = \theta_0^{[2]} + \sum_{j = 1}^r \theta_j^{[2]} a_{j,i}^{[2]}
-$$
+\end{equation}
 
 where $r$, like $m$, is chosen beforehand. The values $m$ and $r$ are usually called the number of nodes or units of each layer. This is what is called a deeper model, because it has more layers. Notice that we have two different activation functions $\sigma^{[1]}(\cdot)$ and $\sigma^{[2]}(\cdot)$. Each layer can have a different function. The first one could be a sigmoid function and the second one a hyperbolic tangent, or vice versa, or they could both be the same function.
 
@@ -668,9 +668,9 @@ To be consistent, $a_{k,i}^{[0]}$ is defined as $x_i^{[k]}$, and so, $a_{k}^{[0]
 
 So, in general, a feed-forward neural network or multilayer perceptron with $L$ hidden layers is such that
 
-$$
+\begin{equation}
   y_i = \phi \left( \theta_{0,1}^{[L]} +  \sum_{j = 1}^{n^{[L]}} \theta_{j,1}^{[L]} a_{k,i}^{[L]} \right),
-$$
+\end{equation}
 
 and where equation \ref{eq:ann_act_funct_def} holds. As a way to summarize the whole notation, we will denote a multilayer perceptron with parameters $\Theta$ and data matrix $X$ as $\mathrm{MLP} \left(X, \Theta \right)$, where parameter $\Theta$ is a general way to refer to all parameters $\theta_{j,k}^{[l]}$ for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$, $j \in \left\{ 1, \ldots, n^{[l-1]} \right\}$ and $l \in \left\{ 1, \ldots, L \right\}$.
 
@@ -685,9 +685,9 @@ Figure \ref{fig:theory_ANN_diagram_03} shows an example of an architecture with 
 
 As mentioned before, the values of the parameters in the network are chosen so that they minimize a certain error function. In the continuous case, the commonly called \textbf{squared loss} is often used, defined as the sum of the squared difference between the real values and the output of the model, which is also equivalent to the maximization of a Gaussian likelihood function. This loss function is mathematically defined as
 
-\begin{equation*}
+\begin{equation}
   L(\Theta) = \sum_{i = 1}^n \left[ y_i - \hat{y}_i \right]^2
-\end{equation*}
+\end{equation}
 
 where $\hat{y_i}$ is the output of the model for the $i$-th observation of the data and the covariate vector $x_i$ and $\Theta$ is the vector of all parameters in the model.
 
@@ -700,30 +700,31 @@ In the case of a binary classification problem, a very commonly used loss is the
 
 In the case of a multiple classification problem, equation \ref{eq:binary_cross_entropy_loss} is extended for more classes using the same maximum likelihood idea. In a $k$ class classification problem, the loss is defined as
 
-\begin{equation*}
+\begin{equation}
   L(\Theta) = - \sum_{i = 1}^n \left[ \sum_{j = 1}^k y_{i,j} \log{\left( \hat{y}_{i,j} \right)}  \right]
-\end{equation*}
+\end{equation}
 
 where $y_{i,j} = 1$ if the $i$-th training point belongs to the $j$-th class and $\hat{y}_{i,j}$ is the model's predicted probability of the $i$-th training point belonging to the $j$-th class.
 
 In the Bayesian approach, we first assign prior distributions to each of the parameters and specify a conditional distribution to the response variable $y$. For example, in the continuous case, it is common to assign a Gaussian conditional distribution to $y$, such that
-$$
+
+\begin{equation}
   y | \Theta, X \sim \normaldist{\mathrm{MLP}(X, \Theta)}{\sigma^2}
-$$
+\end{equation}
 
 where $\mathrm{MLP}(X, \Theta)$ denotes the architecture of a multilayer perceptron with parameters $\Theta$ and data matrix $X$. Since the $\Theta$ parameters can be any real value, it is also common to assign a Gaussian distribution to them, so that the prior distribution is such that
 
-$$
+\begin{equation}
   \theta_{i,k}^{[l]} \sim \normaldist{\mu_{i,k}^{[l]}}{\sigma_{i,k}^{[l]}}.
-$$
+\end{equation}
 
 Parameters $\mu_{i,k}^{[l]}$ and $\sigma_{i,k}^{[l]}$ are chosen to reflect the prior knowledge that we may have about the values of the parameters $\theta_{i,k}^{[l]}$. If we have no prior knowledge, then a vague prior can be used.
 
 In contrast to classical neural networks where parameters $\Theta$ are chosen so that they minimize an error function, in Bayesian neural networks we wish to update our knowledge on the parameters $\Theta$ given the data $X$ and $y$. This is achieved with Bayes' theorem in the following way
 
-$$
+\begin{equation}
   \prob{\Theta | X, y} = \frac{\prob{y | \Theta, X} \prob{\Theta | X}}{\prob{y | X}}.
-$$
+\end{equation}
 
 %In our example, $\prob{X | \Theta} = \normalfunc{X}{\mathrm{MLP}(X, \Theta)}{\sigma^2}$ and $\prob{\Theta} = \normalfunc{\Theta}{[]}$
 In our example, $\prob{y | \Theta, X}$ and $\prob{\Theta | X}$ are the joint density functions of Gaussian random variables with their corresponding parameter values.
@@ -751,7 +752,7 @@ Convolutional Neural Networks (CNNs) are neural networks with a quite particular
 
 The base of CNNs is the convolution operation, which will be described assuming an image. Let's assume that we have an image represented as a $m \times n$ matrix $I$, with $I_{i,j}$ represents the pixel in the $i$-th row and $j$-th column as such
 
-$$
+\begin{equation}
   I =
     \begin{bmatrix}
       I_{1,1} & I_{1,2} & I_{1,3} & \dots  & I_{1,n} \\
@@ -759,11 +760,11 @@ $$
       \vdots & \vdots & \vdots & \ddots & \vdots \\
       I_{m,1} & I_{m,2} & I_{m,3} & \dots  & I_{m,n}
     \end{bmatrix}.
-$$
+\end{equation}
 
 The convolution operation uses another matrix called a \textbf{filter} or a \textbf{kernel}, with dimensions $p \times r$. This matrix must be of a lower dimension than the image, that is, $p < m$ and $r < n$. Let's denote the filter as matrix $K$ as such
 
-$$
+\begin{equation}
   K =
     \begin{bmatrix}
       \theta_{1,1} & \theta_{1,2} & \theta_{1,3} & \dots  & \theta_{1,q} \\
@@ -771,7 +772,7 @@ $$
       \vdots & \vdots & \vdots & \ddots & \vdots \\
       \theta_{p,1} & \theta_{p,2} & \theta_{p,3} & \dots  & \theta_{p,q}
     \end{bmatrix}.
-$$
+\end{equation}
 
 The convolution operation between $I$ and $K$ is denoted as $I * K$, and its result is another matrix $S$, for which each element is defined as
 
@@ -800,9 +801,9 @@ The rest of the elements are computed in a similar way. Note that the resulting 
 
 Note that an image classification problem could be solved by turning the input image into a long vector, but then this would be fed to a fully connected layer, which would mean that a large number of parameters would have to be fit. This is one of the reason convolutions are used: instead of estimating a large number of parameters, the convolution operation needs a small number of parameters (9 in the case of the example) to be fit. Additionally, the convolution operation takes into account the topology of the image input, which have a very local structure \cite{lecun1998gradient}.
 
-% $$
+% \begin{equation}
 %   S_{1,4} = \sum_{k=1}^3 \sum_{l=1}^3 I_{1+k-1,4+l-1} K_{k, l} = I_{1,4}K_{1,1} + I_{1,5}K_{1,2} + I_{1,6}K_{1,3} + I_{2,4}K_{2,1} + I_{2,5}K_{2,2} + I_{2,6}K_{2,3} + I_{3,4}K_{3,1} + I_{3,5}K_{3,2} + I_{3,6}K_{3,3}
-% $$
+% \end{equation}
 
 \begin{figure}[H]
     \centering
