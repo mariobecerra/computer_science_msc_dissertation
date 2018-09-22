@@ -2,10 +2,6 @@
 
 Latex code for my computer science master thesis.
 
-### To compile on the cloud
-
-Go to https://v2.overleaf.com/read/dscncbsfvjvf and compile.
-
 ### To compile locally
 
 Must have `latex` and `biber` installed. Follow the following instructions:
@@ -15,6 +11,10 @@ Must have `latex` and `biber` installed. Follow the following instructions:
 2. cd to `latex` directory.
 
 3. Folder has a Makefile, so all you have to do is execute the command `make all`
+
+### To compile on the cloud
+
+Go to https://v2.overleaf.com/read/dscncbsfvjvf and compile. This version may not reflect most recent changes because I have to manually pull changes from the repository and I don't do this with every single commit.
 
 ### R scripts
 
