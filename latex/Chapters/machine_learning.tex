@@ -165,7 +165,7 @@ Unfortunately, the integral is not directly solvable, and that is the reason num
   \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right].
 \end{equation}
 
-Methods to estimate the posterior include Markov Chain Monte Carlo (MCMC) methods such as Metropolis-Hastings or Hamiltonian Monte Carlo, and Variational Inference, discussed in chapter \ref{ch_variational_inference}.
+Methods to estimate the posterior include Markov Chain Monte Carlo (MCMC) methods such as Metropolis-Hastings or Hamiltonian Monte Carlo, and Variational Inference, discussed in chapter \ref{ch:variational_inference}.
 
 No matter what paradigm one follows, in general, when one is training a model for prediction, it is not the main goal to minimize training error, but prediction error, i.e., the error of any future observation $(x^*, y^*)$. This means that one wants to minimize the expected prediction error, hence, it is common to divide the data set $(X, Y)$ in two: the training set and the test set. To do this, from the original data set, a random sample of observations is assigned to be part of the training set and the rest are part of the test set.The idea is that the test set should be used to measure the predictive performance of the model. A third set is sometimes added and is called the validation set, in which predictive performance is measured to select certain hyperparameters, such as regularization parameter values, discussed further in this document.
 
