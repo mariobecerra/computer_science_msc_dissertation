@@ -11,103 +11,88 @@
 
 % \section{Variational Inference}
 
-As mentioned before, when doing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\theta | X, y}$, which is very often intractable, so one must resort to numerical approximations. In this section, we'll give a brief overview of one possible numerical approximation, called variational inference (VI). The idea of VI is to use optimization to approximate the target distribution $\prob{\theta | X, y}$ with some other approximate distribution $q(\theta)$ that minimizes the Kullback-Leibler (KL) divergence to the real posterior \cite{blei2017variational}. We will define such divergence as
+As mentioned before, when doing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\theta | y, X}$, which is very often intractable, so one must resort to numerical approximations. In this chapter, we give a brief overview of one possible numerical approximation, called variational inference (VI). The idea of VI is to use optimization to approximate the target distribution $\prob{\theta | y, X}$ with some other approximate distribution $q(\theta)$ that minimizes the Kullback-Leibler (KL) divergence to the real posterior \cite{blei2017variational}. This divergence is defined as
 \begin{equation}
   \label{eq:kl_divergence}
-  \kl{q}{p} = \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X, y}} \right) \right] = \int_{-\infty}^{\infty} q(\theta) \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X, y}} \right) \right] d\theta.
+  \kl{q}{p} = \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | y, X}} \right) \right] = \int_{-\infty}^{\infty} q(\theta) \left[ \log \left( \frac{q(\theta)}{\prob{\theta | y, X}} \right) \right] d\theta.
 \end{equation}
 
-Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$, and that we usually try to minimize $\kl{q}{p}$ instead of $\kl{p}{q}$ because the latter requires averaging with respect to $\prob{\theta | X, y}$, which is what we are trying to approximate in the first place. Methods to deal with this type of KL divergence exist and are called expectation propagation, but they are not of concern in this work.
+Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$, and that the usual goal is to minimize $\kl{q}{p}$ instead of $\kl{p}{q}$ because the latter requires averaging with respect to $\prob{\theta | y, X}$, which is what the modeler is trying to approximate in the first place. Methods to deal with this type of KL divergence exist and are called expectation propagation, but they are not of concern in this work.
 
 Although the main goal of VI methods is tho minimize the KL divergence in \ref{eq:kl_divergence}, in practice what is usually done is to maximize a related quantity called the ELBO (Evidence Lower BOund), defined as
-
 \begin{equation}
   \label{eq:elbo_def}
-  \mathcal{L}(q) = \mathbb{E}_q\left[ \log p(X, y, \theta) \right] - \mathbb{E}_q\left[ \log q(\theta) \right].
+  \mathcal{L}(q) = \mathbb{E}_q\left[ \log p(y, X, \theta) \right] - \mathbb{E}_q\left[ \log q(\theta) \right].
 \end{equation}
 
-The relationship between ELBO and KL divergence is easy to see. Starting from the KL divergence definition, using the logarithm quotient rule, and by the fact that the expected value is a linear operator, we have
-
+The relationship between ELBO and KL divergence is easy to see. Starting from the KL divergence definition, using the logarithm quotient rule, and by the fact that the expected value is a linear operator, then
 \begin{equation}
     \kl{q}{p} =
-    \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | X, y}} \right) \right] =
-    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log {\prob{\theta | X, y}}  \right].
+    \mathbb{E}_q \left[ \log \left( \frac{q(\theta)}{\prob{\theta | y, X}} \right) \right] =
+    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log {\prob{\theta | y, X}}  \right].
 \end{equation}
 
-Then, using the definition of conditional probability, we have
-
+Then, using the definition of conditional probability,
 \begin{equation}
-    %\mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta | X, y)  \right] =
+    %\mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta | y, X)  \right] =
     \kl{q}{p} =
-    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, X, y)}{p(y | X) p(X)}  \right].
+    \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, y, X)}{p(y | X) p(X)}  \right].
 \end{equation}
 
-Using the logarithm quotient rule one more time
-
+Using the logarithm quotient rule one more time,
 \begin{equation}
-  % \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, X, y)}{p(y | X) p(X)}  \right] =
+  % \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log \frac{p(\theta, y, X)}{p(y | X) p(X)}  \right] =
   \kl{q}{p} =
-  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X, y) - \log p(y | X) - \log p(X)  \right].
+  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, y, X) - \log p(y | X) - \log p(X)  \right].
 \end{equation}
 
-But since $p(X)$ does not depend on $q$, the expected value of $p(X)$ is a constant; so we have
-
+But since $p(X)$ does not depend on $q$, the expected value of $p(X)$ is a constant, hence
 \begin{equation}
  %\mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X) - \log p(X)  \right] =
  \kl{q}{p} =
- \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X, y) \right] + \log p(y | X) + \log p(X)
+ \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, y, X) \right] + \log p(y | X) + \log p(X).
 \end{equation}
 
-And since we are trying to find the optimal $q$, then $\log p(X)$ is just a constant in the optimization process, and we can disregard it and just minimize equation
-
+Since the goal is to find the optimal $q$, then $\log p(X)$ is just a constant in the optimization process, and can be ignored to just minimize the equation
 \begin{equation}
-  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, X, y) \right]
+  \mathbb{E}_q \left[ \log  q(\theta) \right] - \mathbb{E}_q \left[ \log p(\theta, y, X) \right]
 \end{equation}
+which is the negative of the ELBO. Hence, minimizing the KL divergence is equivalent to maximizing the ELBO.
 
-which as we see, is the negative of the ELBO, so minimizing the KL divergence is equivalent to maximizing the ELBO.
-
-Let $\lambda$ be the parameters of the variational distribution $q(\theta)$. The objective is to approximate $p(\theta | X, y)$ by finding the values of the $\lambda$ vector that maximize equation \ref{eq:elbo_def}, which could be done in several ways, for example, coordinate ascent, or gradient ascent. In order to perform gradient ascent, we need to compute the gradient of the objective function with respect to the parameters, that is, we need $\nabla_{\lambda} \mathcal{L}(q, \lambda)$. It is not very hard to prove that
-
+Let $\lambda$ be the parameters of the variational distribution $q(\theta)$. The objective is to approximate $p(\theta | y, X)$ by finding the values of the $\lambda$ vector that maximize equation \ref{eq:elbo_def}, which could be done in several ways, for example, coordinate ascent, or gradient ascent. In order to perform gradient ascent, is it necessary to compute the gradient of the objective function with respect to the parameters, that is, $\nabla_{\lambda} \mathcal{L}(q, \lambda)$. It is not very hard to prove that
 \begin{equation}
   \label{eq:ELBO_gradient}
   \nabla_{\lambda} \mathcal{L}(q, \lambda) =
-  \mathbb{E}_q \left[ \left( \nabla_{\lambda} \log q(\theta | \lambda) \right) \left( \log p(X, y, \theta) - \log q(\theta | \lambda) \right) \right].
+  \mathbb{E}_q \left[ \left( \nabla_{\lambda} \log q(\theta | \lambda) \right) \left( \log p(y, X, \theta) - \log q(\theta | \lambda) \right) \right].
 \end{equation}
 
-There are situations in which this gradient can be computed analytically, but for many other models, this cannot be done, because it may not be possible to analytically take the expectation, hence some approximation must be made. A good approach is to approximate the expected value with Monte-Carlo simulation. Let $\left\{ z_1, ..., z_S \right\}$ be samples taken from $q(\theta | \lambda)$, then we can approximate the expected value with an arithmetic mean as such
-
+There are situations in which this gradient can be computed analytically, but for many other models, this cannot be done because it may not be possible to analytically take the expectation, hence some approximation must be made. A good approach is to approximate the expected value with Monte-Carlo simulation. Let $\left\{ z_1, ..., z_S \right\}$ be samples taken from $q(\theta | \lambda)$, then one can approximate the expected value with an arithmetic mean as such,
 \begin{equation}
   \begin{split}
   \nabla_{\lambda} \mathcal{L}(q, \lambda) &=
-  \mathbb{E}_q \left[ \left( \nabla_{\lambda} \log q(\theta | \lambda) \right) \left( \log p(X, y, \theta) - \log q(\theta | \lambda) \right) \right] \\
-  & \approx \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\lambda} \log q(z_k | \lambda) \right) \left( \log p(X, y, z_k) - \log q(z_k | \lambda) \right).
+  \mathbb{E}_q \left[ \left( \nabla_{\lambda} \log q(\theta | \lambda) \right) \left( \log p(y, X, \theta) - \log q(\theta | \lambda) \right) \right] \\
+  & \approx \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\lambda} \log q(z_k | \lambda) \right) \left( \log p(y, X, z_k) - \log q(z_k | \lambda) \right).
   \end{split}
 \end{equation}
 
-
 This approach gives noisy but unbiased estimates of the expected value. A Monte Carlo approach can also be taken to compute the value of the ELBO. For more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
 
-To illustrate this, let's study a simple example in which we will use a family that is often used to approximate $p$, which is the \textbf{mean-field variational family}, where each parameter is independent of the rest, such that
-
+A family that is often used to approximate $p$ is the \textbf{mean-field variational family}, where each parameter is independent of the rest, such that
 \begin{equation}
   q(\theta) = \prod_{i = 1}^p q(\theta_i | \lambda_i).
 \end{equation}
 
-In this example, we will try to approximate the posterior distribution of two-class logistic regression. Assume a data matrix $X \in \mathbb{R}^{n \times p}$ and a response vector $y$ with values 1 or 0. Each observation $y_i$ is modeled with a Bernoulli distribution such that
-
+To illustrate this, let's study a simple example in which we will try to approximate the posterior distribution of a two-class logistic regression. Assume a data matrix $X \in \mathbb{R}^{n \times p}$ and a response vector $y$ with values 1 or 0. Each observation $y_i$ is modeled with a Bernoulli distribution such that
 \begin{equation}
   y_i | x_i, \theta \sim \mathrm{Bern}(\sigma(\theta^T x_i))
 \end{equation}
-
 where $\sigma(\cdot)$ is the logistic sigmoid function. The prior distribution for $\theta$ is a Gaussian $\theta \sim \mathrm{N}(0, \sigma_0^2 \mathbb{I}_p)$ where $\mathbb{I}_p$ is the $p \times p$ identity matrix and $\sigma_0^2 \in \mathbb{R}^+$.
 
 In this case, the mean-field variational distribution is
-
 \begin{equation}
   \label{eq:mean_field_normal_prior}
   q(\theta | \lambda) = \prod_{j = 1}^p \mathrm{N}(\theta_j | \mu_j, \sigma_j^2)
  \end{equation}
-
 with $\lambda = \left[ \mu_1, \hdots, \mu_p, \sigma_1^2, \hdots, \sigma_p^2 \right]^T$, and $\mathrm{N}(\theta_j | \mu_j, \sigma_j^2)$ denotes the value of a normal density function at $\theta_j$ with mean $\mu_j$ and variance $\sigma_j^2$.
 
 According to equation \ref{eq:ELBO_gradient}, to compute the gradient of the ELBO, we need to be able to compute $\nabla_{\lambda} \log q(\theta | \lambda)$, so we need that partial derivative of $\log q(\theta | \lambda)$ with respect to each $\mu_j$ and $\sigma_j^2$, $j \in \left\{ 1, \hdots, p \right\}$. Let's start with $\mu_j$.
@@ -139,12 +124,12 @@ Now for $\sigma_j^2$. It is easier to work with the logarithm, so let $\alpha_j 
   \end{split}
 \end{equation}
 
-To compute the gradient in equation \ref{eq:ELBO_gradient}, we also need to compute the data log-likelihood $p(X, y, \theta)$. Using the chain rule of probability, this can be written as $\log p(y | X, \theta) + \log p(X | \theta) + \log p(\theta)$. Note that in order to compute the gradient, $\log p(X | \theta)$ is not needed, because of the following
+To compute the gradient in equation \ref{eq:ELBO_gradient}, we also need to compute the data log-likelihood $p(y, X, \theta)$. Using the chain rule of probability, this can be written as $\log p(y | X, \theta) + \log p(X | \theta) + \log p(\theta)$. Note that in order to compute the gradient, $\log p(X | \theta)$ is not needed, because of the following
 
 \begin{equation}
   \begin{split}
       \nabla_{\lambda} \mathcal{L} &=
-      \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(X, y, \theta) - \log q(\theta | \lambda) \right) \right] \\
+      \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y, X, \theta) - \log q(\theta | \lambda) \right) \right] \\
       &= \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y | X, \theta) + \log p(X | \theta) + \log p(\theta) - \log q(\theta | \lambda) \right) \right] \\
       &= \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y | X, \theta) + \log p(\theta) - \log q(\theta | \lambda) \right) \right] +  \log p(X | \theta) \mathbb{E}_q \left[ \nabla_{\lambda} q(\theta | \lambda) \right] \\
       &= \mathbb{E}_q \left[ \left( \nabla_{\lambda} q(\theta | \lambda) \right) \left( \log p(y | X, \theta) + \log p(\theta) - \log q(\theta | \lambda) \right) \right] +  c \mathbb{E}_q \left[ \nabla_{\lambda} q(\theta | \lambda) \right].
@@ -189,7 +174,7 @@ And since we assumed that $\theta$ had a Gaussian prior, then
 With these derivations, we can now take a gradient ascent approach to optimize the ELBO. To do this, we would start with a random $\lambda$ vector, and in each step $t$ take $S$ samples $z_k$ from $q(\theta | \lambda)$ to compute the approximate gradient as
 
 \begin{equation}
-  \nabla_{\lambda} \mathcal{L} \approx \Delta_{\lambda} \mathcal{L} = \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\lambda} \log q(z_k | \lambda) \right) \left( \log p(X, y, z_k) - \log q(z_k | \lambda) \right),
+  \nabla_{\lambda} \mathcal{L} \approx \Delta_{\lambda} \mathcal{L} = \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\lambda} \log q(z_k | \lambda) \right) \left( \log p(y, X, z_k) - \log q(z_k | \lambda) \right),
 \end{equation}
 
 and then update the $\lambda$ parameter as $\lambda_{t+1} = \lambda_{t} + \eta_t  \Delta_{\lambda_t} \mathcal{L}$, with each $eta_t$ chosen accordingly, until a certain stopping criteria is met.
@@ -218,4 +203,4 @@ The posterior predictive distribution of $y^*$ for a new vector of covariates $x
   \item Use that value to sample $y_j^* \sim p(y^* | \theta_j, x^*)$
 \end{enumerate}
 
-Then $\left\{ y_j^* \right\}_{j = 1}^T$ is a set of $T$ independent samples from the posterior predictive distribution $\prob{y^* | X, y, x^*}$.
+Then $\left\{ y_j^* \right\}_{j = 1}^T$ is a set of $T$ independent samples from the posterior predictive distribution $\prob{y^* | y, X, x^*}$.
