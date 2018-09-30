@@ -19,33 +19,27 @@ As mentioned before, when doing Bayesian inference, it is of interest to compute
 
 Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$, and that is why it is called a divergence and not a distance. The former is called the reverse KL divergence and the latter is called the forward KL divergence, and each one of them prioritizes different aspects of the approximation. Reverse KL is said to be ``zero-forcing'' because it ensures that $q$ is zero in the areas in which $p$ is zero. On the contrary, forward KL is said to be ``zero-avoiding'' because $q$ avoids areas whose value is zero when $p$ also takes zero values. This behavior can be appreciated in figure \ref{fig:KL_example}, which shows an example in which a mixture of Gaussians is being approximated by another Gaussian unimodal distribution.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{KL_example_1.pdf}
-    \caption{Approximations using forward and reverse KL-divergence.}
-    \label{fig:KL_example}
-\end{figure}
 
-% \begin{figure}
-%      \centering
-%      \begin{subfigure}[b]{0.3\textwidth}
-%          \centering
-%          \includegraphics[width=\textwidth]{KL_example_1,pdf}
-%          \caption{$y=x$}
-%          \label{fig:y equals x}
-%      \end{subfigure}
-%      \hfill
-%      \begin{subfigure}[b]{0.3\textwidth}
-%          \centering
-%          \includegraphics[width=\textwidth]{KL_example_2.pdf}
-%          \caption{$y=3sinx$}
-%          \label{fig:three sin x}
-%      \end{subfigure}
-%
-%      \end{subfigure}
-%         \caption{Three simple graphs}
-%         \label{fig:three graphs}
-% \end{figure}
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{KL_example_1,pdf}
+         \caption{$y=x$}
+         \label{fig:y equals x}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{KL_example_2.pdf}
+         \caption{$y=3sinx$}
+         \label{fig:three sin x}
+     \end{subfigure}
+
+        \caption{Three simple graphs}
+        \label{fig:three graphs}
+\end{figure}
 
 %
 % \begin{figure}[t!]
