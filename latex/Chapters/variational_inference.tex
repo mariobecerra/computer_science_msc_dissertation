@@ -21,10 +21,79 @@ Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{KL_example.png}
+    \includegraphics[width=\textwidth]{KL_example_1.pdf}
     \caption{Approximations using forward and reverse KL-divergence.}
     \label{fig:KL_example}
 \end{figure}
+
+% \begin{figure}
+%      \centering
+%      \begin{subfigure}[b]{0.3\textwidth}
+%          \centering
+%          \includegraphics[width=\textwidth]{KL_example_1,pdf}
+%          \caption{$y=x$}
+%          \label{fig:y equals x}
+%      \end{subfigure}
+%      \hfill
+%      \begin{subfigure}[b]{0.3\textwidth}
+%          \centering
+%          \includegraphics[width=\textwidth]{KL_example_2.pdf}
+%          \caption{$y=3sinx$}
+%          \label{fig:three sin x}
+%      \end{subfigure}
+%
+%      \end{subfigure}
+%         \caption{Three simple graphs}
+%         \label{fig:three graphs}
+% \end{figure}
+
+%
+% \begin{figure}[t!]
+%     \centering
+%     \begin{subfigure}[t]{0.5\textwidth}
+%         \centering
+%         \includegraphics[height=1.2in]{KL_example_1.pdf}
+%         \caption{Lorem ipsum}
+%     \end{subfigure}%
+%     ~
+%     \begin{subfigure}[t]{0.5\textwidth}
+%         \centering
+%         \includegraphics[height=1.2in]{KL_example_2.pdf}
+%         \caption{Lorem ipsum, lorem ipsum,Lorem ipsum, lorem ipsum,Lorem ipsum}
+%     \end{subfigure}
+%     \caption{Approximations using forward and reverse KL-divergence.}
+%     \label{fig:KL_example}
+% \end{figure}
+
+
+% \begin{figure}
+%   \begin{subfigure}{.5\textwidth}
+%     \centering
+%     \includegraphics[width=.8\linewidth]{KL_example_1.pdf}}
+%     \caption{1a}
+%     \label{fig:KL_example_sfig_1}
+%   \end{subfigure}%
+%   \begin{subfigure}{.5\textwidth}
+%     \centering
+%     \includegraphics[width=.8\linewidth]{KL_example_1.pdf}}
+%     \caption{1b}
+%     \label{fig:KL_example_sfig_2}
+%   \end{subfigure}
+%   \caption{Approximations using forward and reverse KL-divergence.}
+%   \label{fig:KL_example}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \begin{multicols}{2}
+%         \includegraphics[width=\linewidth]{KL_example_1.pdf}\par
+%         \includegraphics[width=\linewidth]{KL_example_2.pdf}\par
+%     \end{multicols}
+%     \caption{Approximations using forward and reverse KL-divergence.}
+%     \label{fig:KL_example}
+% \end{figure}
+
+
 
 
 % The usual goal is to minimize $\kl{q}{p}$ instead of $\kl{p}{q}$ because the latter requires averaging with respect to $\prob{\theta | y, X}$, which is what the modeler is trying to approximate in the first place. Methods to deal with this type of KL divergence exist and are called expectation propagation, but they are not of concern in this work.
