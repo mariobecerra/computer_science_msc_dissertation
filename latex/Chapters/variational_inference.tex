@@ -77,7 +77,7 @@ Let $\lambda$ be the parameters of the variational distribution $q(\theta)$. The
 \end{equation}
 
 There are situations in which this gradient can be computed analytically, but for many other models, this cannot be done because it may not be possible to analytically take the expectation, hence some approximation must be made. A good approach is to approximate the expected value with Monte Carlo simulation. Let $\left\{ z_1, ..., z_S \right\}$ be samples taken from $q(\theta | \lambda)$, then one can approximate the expected value with an arithmetic mean as such,
-``````````\begin{equation}
+\begin{equation}
   \begin{split}
   \nabla_{\lambda} \mathcal{L}(q, \lambda) &=
   \mathbb{E}_q \left[ \left( \nabla_{\lambda} \log q(\theta | \lambda) \right) \left( \log p(y, X, \theta) - \log q(\theta | \lambda) \right) \right] \\
