@@ -19,21 +19,25 @@ As mentioned before, when doing Bayesian inference, it is of interest to compute
 
 Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$, and that is why it is called a divergence and not a distance. The former is called the reverse KL divergence and the latter is called the forward KL divergence, and each one of them prioritizes different aspects of the approximation. Reverse KL is said to be ``zero-forcing'' because it ensures that $q$ is zero in the areas in which $p$ is zero. On the contrary, forward KL is said to be ``zero-avoiding'' because $q$ avoids areas whose value is zero when $p$ also takes zero values.
 
-This behavior can be appreciated in figure \ref{fig:KL_example}, which shows forward and reverse KL divergence of a mixture of Gaussians and two unimodal Gaussian distributions. The blue distribution in the figure is the mixture of Gaussians, and the red distributions are the unimodal Gaussians. On the left, the zero-avoiding behavior is evident because it avoids the areas in which the mixture takes zero values, and because it has a lower forward KL divergence; whereas on the right the zero-forcing behavior can be appreciated because the red distribution has a mode where the blue distribution has zero values, and it has got a lower reverse KL divergence.
+This behavior can be appreciated in figure \ref{fig:KL_example}, which shows forward and reverse KL divergence of a mixture of Gaussians, denoted $p$, and three different unimodal Gaussian distributions, denoted $q$. The blue distribution in the figure is the mixture of Gaussians, and the red distributions are the unimodal Gaussians.
+% I cringe when I see this, but I didn't have time to make appropriate labels for the subfigures
+In subfigure (a), the zero-forcing behavior can be appreciated because the red distribution $q$ has a mode where the blue distribution $p$ has zero values, and the reverse KL divergence is lower than the forward KL divergence.
+In subfigures (b) and (c), the zero-avoiding behavior is evident because $q$ avoids the areas in which the mixture $p$ takes zero values, and because it has a lower forward KL divergence. These two figures also show the two local optima gotten from minimizing the reverse KL divergence, each being placed in the two modes of the $p$ distribution. In fact, both forward and reverse KL divergence on subfigure (b) are equal to the ones on subfigure (c).
 
 \begin{figure}[H]
   \centering
-  \subfloat[$\kl{p}{q} < \kl{q}{p}$]{\includegraphics[width=0.5\textwidth]{KL_example_1.pdf}}
+  \subfloat[$\kl{p}{q} < \kl{q}{p}$]{\includegraphics[width=0.333\textwidth]{KL_example_1.pdf}}
   \hfill
-  \subfloat[$\kl{p}{q} > \kl{q}{p}$]{\includegraphics[width=0.5\textwidth]{KL_example_2.pdf}}
-  \caption{Comparison of forward and backward KL divergence. On the left, the forward KL divergence is smaller than the reverse KL divergence. On the right, the opposite happens.}
+  \subfloat[$\kl{p}{q} > \kl{q}{p}$]{\includegraphics[width=0.333\textwidth]{KL_example_2.pdf}}
+  \hfill
+  \subfloat[$\kl{p}{q} > \kl{q}{p}$]{\includegraphics[width=0.333\textwidth]{KL_example_3.pdf}}
+  \caption{Comparison of forward and backward KL divergence. On the left, the forward KL divergence is smaller than the reverse KL divergence. On the center and on the right, the opposite happens.}
   \label{fig:KL_example}
 \end{figure}
 
+In VI, the goal is usually to minimize the reverse KL divergence $\kl{q}{p}$ instead of the forward KL $\kl{p}{q}$ because the latter requires averaging with respect to $\prob{\theta | y, X}$, which is what the modeler is trying to approximate in the first place. Methods to deal with this type of KL divergence exist and are called expectation propagation, but they are not of concern in this work.
 
-% The usual goal is to minimize $\kl{q}{p}$ instead of $\kl{p}{q}$ because the latter requires averaging with respect to $\prob{\theta | y, X}$, which is what the modeler is trying to approximate in the first place. Methods to deal with this type of KL divergence exist and are called expectation propagation, but they are not of concern in this work.
-
-Although the main goal of VI methods is tho minimize the KL divergence in \ref{eq:kl_divergence}, in practice what is usually done is to maximize a related quantity called the ELBO (Evidence Lower BOund), defined as
+Although the main goal of VI methods is to minimize the reverse KL divergence in \ref{eq:kl_divergence}, in practice what is usually done is to maximize a related quantity called the ELBO (Evidence Lower BOund), defined as
 \begin{equation}
   \label{eq:elbo_def}
   \mathcal{L}(q) = \mathbb{E}_q\left[ \log p(y, X, \theta) \right] - \mathbb{E}_q\left[ \log q(\theta) \right].

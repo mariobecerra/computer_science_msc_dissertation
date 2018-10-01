@@ -11,11 +11,11 @@ library(ggplot2)
 theme_set(theme_bw())
 
 n = 10000000
-prob = 0.8
+prob = 0.5
 fill_alpha = 0.4
 line_size = 0.1
 xlim = c(-8, 8)
-ylim = c(0, 0.29)
+ylim = c(0, 0.27)
 
 pi = rbinom(n = n, size = 1, p = prob)
 
@@ -23,7 +23,9 @@ p = pi*rnorm(n, 5, 1) + (1 - pi)*rnorm(n, -5, 1)
 
 dat_plot = tibble(p = pi*rnorm(n, 4, 1.2) + (1 - pi)*rnorm(n, -4, 1.2),
                   q1 = rnorm(n, 0, 3),
-                  q2 = rnorm(n, 4, 1.5)) %>% 
+                  q2 = rnorm(n, 4, 1.5),
+                  q3 = rnorm(n, -4, 1.5),
+                  ) %>% 
   filter_all(all_vars(between(., xlim[1], xlim[2])))
 
 
@@ -41,7 +43,13 @@ commands = c(
   "KL.divergence(dat_plot$p, dat_plot$q2, k=1)",
   
   # Reverse KL
-  "KL.divergence(dat_plot$q2, dat_plot$p, k=1)"
+  "KL.divergence(dat_plot$q2, dat_plot$p, k=1)",
+  
+  # Forward KL
+  "KL.divergence(dat_plot$p, dat_plot$q3, k=1)",
+  
+  # Reverse KL
+  "KL.divergence(dat_plot$q3, dat_plot$p, k=1)"
 )
 
 
@@ -53,14 +61,20 @@ kl_divs = mclapply(commands, function(x) eval(parse(text = x))) %>%
 
 ## Tibbles to position the text in the plot
 data_text_1 = tibble(
-  text = paste0(c("Forward KL = ", "Reverse KL = "), round(kl_divs[1:2], 3)),
-  x = c(-4, -4),
+  text = paste0(c("Forward KL = ", "Reverse KL = "), round(kl_divs[1:2], 2)),
+  x = c(0, 0),
   y = c(0.2, 0.18)
 )
 
 data_text_2 = tibble(
-  text = paste0(c("Forward KL = ", "Reverse KL = "), round(kl_divs[3:4], 3)),
+  text = paste0(c("Forward KL = ", "Reverse KL = "), round(kl_divs[3:4], 2)),
   x = c(-4, -4),
+  y = c(0.2, 0.18)
+)
+
+data_text_3 = tibble(
+  text = paste0(c("Forward KL = ", "Reverse KL = "), round(kl_divs[3:4], 2)),
+  x = c(4, 4),
   y = c(0.2, 0.18)
 )
 
@@ -69,7 +83,7 @@ data_text_2 = tibble(
 plot_1 = dat_plot %>% 
   ggplot() +
   geom_density(aes(p), color = "blue", fill = "blue", alpha = fill_alpha, size = line_size) +
-  geom_density(aes(q2), color = "red", fill = "red", alpha = fill_alpha, size = line_size) +
+  geom_density(aes(q1), color = "red", fill = "red", alpha = fill_alpha, size = line_size) +
   geom_text(data = data_text_1,
             aes(x, y, label = text)) +
   xlim(xlim) +
@@ -85,7 +99,7 @@ plot_1 = dat_plot %>%
 plot_2 = dat_plot %>% 
   ggplot() +
   geom_density(aes(p), color = "blue", fill = "blue", alpha = fill_alpha, size = line_size) +
-  geom_density(aes(q1), color = "red", fill = "red", alpha = fill_alpha, size = line_size) +
+  geom_density(aes(q2), color = "red", fill = "red", alpha = fill_alpha, size = line_size) +
   geom_text(data = data_text_2,
             aes(x, y, label = text)) +
   xlim(xlim) +
@@ -93,14 +107,32 @@ plot_2 = dat_plot %>%
   xlab(expression(theta)) +
   ylab("") +
   theme(
-    axis.text.x = element_blank(), # Remove x axis tick labels
-    axis.text.y = element_blank(), # Remove y axis tick labels
-    axis.ticks = element_blank()   # Remove ticks 
+    axis.text.x = element_blank(), 
+    axis.text.y = element_blank(), 
+    axis.ticks = element_blank()   
+  ) 
+
+
+plot_3 = dat_plot %>% 
+  ggplot() +
+  geom_density(aes(p), color = "blue", fill = "blue", alpha = fill_alpha, size = line_size) +
+  geom_density(aes(q3), color = "red", fill = "red", alpha = fill_alpha, size = line_size) +
+  geom_text(data = data_text_3,
+            aes(x, y, label = text)) +
+  xlim(xlim) +
+  ylim(ylim) +
+  xlab(expression(theta)) +
+  ylab("") +
+  theme(
+    axis.text.x = element_blank(), 
+    axis.text.y = element_blank(), 
+    axis.ticks = element_blank()   
   ) 
 
 
 # Save plots
-ggsave("KL_example_1.pdf", plot_1, width = 12, height = 12, units = "cm")
-ggsave("KL_example_2.pdf", plot_2, width = 12, height = 12, units = "cm")
+ggsave("KL_example_1.pdf", plot_1, width = 7, height = 7, units = "cm")
+ggsave("KL_example_2.pdf", plot_2, width = 7, height = 7, units = "cm")
+ggsave("KL_example_3.pdf", plot_3, width = 7, height = 7, units = "cm")
 
 
