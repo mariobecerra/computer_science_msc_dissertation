@@ -34,7 +34,7 @@
 \RequirePackage{macros}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Espaciados %%%%%%%%%%%%%%%%%%%%%%%%%%
-\parindent 0pt
+\parindent 12pt
 \parskip 1ex
 \renewcommand{\baselinestretch}{1.33}
 
