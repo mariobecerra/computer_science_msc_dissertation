@@ -15,11 +15,11 @@
 
 Machine learning is a set of methods used to learn patterns in data, and then use these patterns to make predictions about new unseen data, or to take other decisions \cite{murphy2012machine}. With the amount of data available nowadays, it has become a fruitful and demanded field in many areas. Machine learning has exploded lately mainly thanks to the advanced in computing power, without which most of modern techniques wouldn't be feasible.
 
-Machine learning is usually divided in two areas: supervised learning and unsupervised learning. The former involves building a model to predict a response variable from certain explanatory variables (or covariates); while the latter involves a set of variables without a response: one wishes to learn relationships and structure of the data.
+Machine learning is usually divided in two areas: supervised learning and unsupervised learning. The former involves building a model to predict a response variable from certain explanatory variables (or features); while the latter involves a set of variables without a response: one wishes to learn relationships and structure of the data.
 
 An example of supervised learning is to estimate the income of a home from a set of variables such as zip code, size of home, number of cars they own, etc; and an example of unsupervised learning is to find groups of homes that naturally come up in the data, such that there is high similarity within each group and little between groups. In this work, only supervised learning is presented and studied.
 
-As previously mentioned, in supervised learning there is a response variable denoted as vector $y$ with $n$ elements, and each covariate is denoted by $x^{(k)} \in \mathbb{R}^n$ for $k$ from 1 to $p$. All covariates can be summarized in notation in a single data matrix $X \in \mathbb{R}^{n \times p}$. It is assumed that there exists a relationship between $y$ and $X$, which can be written as
+As previously mentioned, in supervised learning there is a response variable denoted as vector $y$ with $n$ elements, and each feature is denoted by $x^{(k)} \in \mathbb{R}^n$ for $k$ from 1 to $p$. All features can be summarized in notation in a single data matrix $X \in \mathbb{R}^{n \times p}$. It is assumed that there exists a relationship between $y$ and $X$, which can be written as
 \begin{equation}
   \label{eq:general_learning_model}
   Y = f(X) + \varepsilon,
@@ -65,7 +65,7 @@ Since the denominator of equation \ref{eq:bayes_theorem} does not depend on $\th
     \prob{\theta | y, X} \propto \prob{y | \theta, X} \prob{\theta | X}.
 \end{equation}
 
-The posterior distribution is also used to predict the values of unseen data. Let $x^*$ be a vector of covariates for which a prediction $\hat{y}^*$ is desired, then the \textbf{posterior predictive distribution} must be used, defined as
+The posterior distribution is also used to predict the values of unseen data. Let $x^*$ be a vector of features for which a prediction $\hat{y}^*$ is desired, then the \textbf{posterior predictive distribution} must be used, defined as
 \begin{equation}
   \label{eq:post_pred_dist}
   \prob{y^* | X, y, x^*} = \int \prob{y^* | \theta, x^*} \prob{\theta | X, y} d\theta.
@@ -78,7 +78,7 @@ Note that this posterior distribution is, as it name implies, a distribution, i.
 
 There are other possible point estimates such as the median, or the maximum a posteriori (MAP) estimate, but these will not be studied in detail in this work.
 
-All these concepts can be illustrated in the context of logistic regression. Suppose that we have $n$ observations of a binary response variable $y \in \left\{0, 1\right\}^n$ and two continuous covariates $x^{(1)}, x^{(2)} \in \mathbb{R}^n$. The frequentist approach using the maximum likelihood estimate will be studied first, then it will be transformed into a simple learning problem in which the goal is to minimize a loss function, and finally, the Bayesian approach will be examined.
+All these concepts can be illustrated in the context of logistic regression. Suppose that we have $n$ observations of a binary response variable $y \in \left\{0, 1\right\}^n$ and two continuous features $x^{(1)}, x^{(2)} \in \mathbb{R}^n$. The frequentist approach using the maximum likelihood estimate will be studied first, then it will be transformed into a simple learning problem in which the goal is to minimize a loss function, and finally, the Bayesian approach will be examined.
 
 If someone wanted to build a classifier using a linear regression model, then they would run into a problem because a linear model of the form $\mu(x_i) = \theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}$ is not bounded, and in contrast, the response variable $y$ from the data only takes the values $0$ and $1$, and, so it is a better idea to model the probability that a feature vector belongs to each class. This way, $y_i$ is a random variable that follows a Bernoulli distribution with parameter $p_i$, where $p_i$ is the probability of $y_i$ being 1.
 The range of $f$ as a linear model is $\mathbb{R}$, so it must be mapped to the $\left[ 0,1 \right]$ interval in which probabilities live, and it can be done with what is called a \textbf{link function}. The \textbf{logistic sigmoid function} % $\sigma \left( \cdot \right)$

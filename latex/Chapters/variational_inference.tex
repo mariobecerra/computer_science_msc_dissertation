@@ -187,7 +187,7 @@ With these derivations, a gradient ascent approach can be taken in order to opti
 \end{equation}
 and then the $\lambda$ parameter is updated as $\lambda_{t+1} = \lambda_{t} + \eta_t  \Delta_{\lambda_t} \mathcal{L}$, with each $\eta_t$ chosen accordingly, until a certain stopping criteria is met.
 
-An implementation of this algorithm was made in R with a simulated data set of $n = 500$ data points and $p = 1$ covariate. The response vector was created with the logistic sigmoid function as $y_i = \sigma(\theta_0 + \theta_1 x_i)$, with $\theta_0 = -5$ and $\theta_1 = 5$. The initial value for $\lambda = \left[ \mu_1, \mu_2, \alpha_1, \alpha_2 ]^T \right]$ is zero, for each iteration $S = 50$ Monte Carlo samples are taken to compute the approximate gradient, and the step size $\eta_t$ is chosen using the AdaGrad method in which
+An implementation of this algorithm was made in R with a simulated data set of $n = 500$ data points and $p = 1$ feature. The response vector was created with the logistic sigmoid function as $y_i = \sigma(\theta_0 + \theta_1 x_i)$, with $\theta_0 = -5$ and $\theta_1 = 5$. The initial value for $\lambda = \left[ \mu_1, \mu_2, \alpha_1, \alpha_2 ]^T \right]$ is zero, for each iteration $S = 50$ Monte Carlo samples are taken to compute the approximate gradient, and the step size $\eta_t$ is chosen using the AdaGrad method in which
 $\eta_t = \left( \mathrm{diag}(G_t) \right)^{\frac{1}{2}}$, where $\mathrm{diag}(G_t)$ refers to the diagonal of the matrix $G_t = \left( \Delta_{\lambda_t} \right) \left( \Delta_{\lambda_t} \right)^T$ \cite{duchi2011adaptive}. The stopping criterion is that
 % $\frac{\norm{\mu_{t+1} - \mu_{t}}}{\norm{\mu_t}} < 0.00003$,
 $\norm{\mu_{t+1} - \mu_{t}} < 0.005$,
@@ -202,7 +202,7 @@ Figure \ref{fig:BBVI_plots} shows the results of the implementation, and a compa
     \label{fig:BBVI_plots}
 \end{figure}
 
-The posterior predictive distribution of $y^*$ for a new vector of covariates $x^*$ can be approximated using the variational approximation. In particular, the modeler could take $T$ samples from the variational posterior distribution as such, for $j \in \left\{ 1, \ldots, T \right\}$:
+The posterior predictive distribution of $y^*$ for a new vector of features $x^*$ can be approximated using the variational approximation. In particular, the modeler could take $T$ samples from the variational posterior distribution as such, for $j \in \left\{ 1, \ldots, T \right\}$:
 \begin{enumerate}
   \item Sample a vector $\theta_j \sim q(\theta | \lambda)$
   \item Use that value to sample $y_j^* \sim p(y^* | \theta_j, x^*)$
