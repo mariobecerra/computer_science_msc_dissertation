@@ -13,11 +13,11 @@
 
 \section{Machine learning}
 
-Machine learning is a set of methods used to learn patterns in data, and then use these patterns to make predictions about new unseen data, or to take other decisions \cite{murphy2012machine}. With the amount of data available nowadays, it has become a fruitful and demanded field in many areas. Machine learning has exploded lately mainly thanks to the advanced in computing power, without which most of modern techniques wouldn't be feasible.
+Machine learning is a set of methods used to learn patterns in data, and then use these patterns to take decisions, such as making predictions about new unseen data,  clustering, or have an agent taking actions based on a reward signal \cite{murphy2012machine} \cite{sutton1998reinforcement}. With the amount of data available nowadays, it has become a fruitful and demanded field in many areas. Machine learning has exploded lately mainly thanks to the advanced in computing power, without which most of modern techniques wouldn't be feasible.
 
-Machine learning is usually divided in two areas: supervised learning and unsupervised learning. The former involves building a model to predict a response variable from certain explanatory variables (or features); while the latter involves a set of variables without a response: one wishes to learn relationships and structure of the data.
+Machine learning is usually divided in supervised learning, unsupervised learning and reinforcement learning. The first one involves building a model to predict a response variable from certain explanatory variables (or features). The second one involves a set of variables without a response in which one wishes to learn relationships and structure of the data. The third one involves mapping situations to actions to maximize a reward signal. Reinforcement learning (RL) is similar to supervised learning, but the biggest difference is that in RL, the learner is not told which actions it should take, it learns through trial and error.
 
-An example of supervised learning is to estimate the income of a home from a set of variables such as zip code, size of home, number of cars they own, etc; and an example of unsupervised learning is to find groups of homes that naturally come up in the data, such that there is high similarity within each group and little between groups. In this work, only supervised learning is presented and studied.
+An example of supervised learning is to estimate the income of a home from a set of variables such as zip code, size of home, number of cars they own, etc. An example of unsupervised learning is to find groups of homes that naturally come up in the data, such that there is high similarity within each group and little between groups. An example of RL is to learn to play the arcade game Pong. Recently, supervised learning and reinforcement learning have been combined to achieve harder goals, such as beating the Go world champion \cite{silver2017mastering} In this work, only supervised learning is presented and studied.
 
 As previously mentioned, in supervised learning there is a response variable denoted as vector $y$ with $n$ elements, and each feature is denoted by $x^{(k)} \in \mathbb{R}^n$ for $k$ from 1 to $p$. All features can be summarized in notation in a single data matrix $X \in \mathbb{R}^{n \times p}$. It is assumed that there exists a relationship between $y$ and $X$, which can be written as
 \begin{equation}
@@ -36,14 +36,17 @@ where $\mathcal{F}$ is the family of functions of the form $f(X) = X\theta$ with
 
 The linear regression model belongs to a type of methods called \textbf{parametric methods}, in which the modeler first makes an assumption about the functional form of $f$, and then trains the model by choosing the parameters that minimize a previously selected loss function \cite[p.~21]{james2013introduction}. In the case of linear regression, the form of $f$ is assumed to be $f(X) = X\theta$, and the parameters chosen are the elements of the $\hat{\theta}$ vector that minimize the squared error function of the model.
 
-An approach to the estimation of parameters that is different to the concept of error function minimization, and one that is also more general, is the one of \textbf{maximum likelihood estimation}.
+An approach to the estimation of parameters that is different to the concept of error function minimization is the one of \textbf{maximum likelihood estimation}.
 This is a probabilistic approach in which a certain probability distribution for the data is assumed.
-In the case of linear regression, it is commonly assumed that the error term in \ref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{X \theta}{\sigma^2}$. It is also usually assumed that the observations $y_i$ for $i$ from 1 to $n$ come from a random sample and are, thus, independent of each other. Therefore, the log-probability of the sample is
+In the case of linear regression, it is commonly assumed that the error term in \ref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon_i \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{x_i^T \theta}{\sigma^2}$ for $i \in \left\{ 1, \ldots, n \right\}$. It is also usually assumed that the observations $y_i$ come from a random sample and are independent of each other. Therefore, the log-probability of the sample is
 \begin{equation}
   \label{eq:gaussian_likelihood}
-  L(\theta) = \sum_{i = 1}^n \log \normalfunc{y_i}{X \theta}{\sigma^2},
+  %L(\theta) = \sum_{i = 1}^n \log \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{(y_i - x_i^T \theta)^2}{2\sigma^2}},
+  L(\theta) = \sum_{i = 1}^n \log \left[ \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(y_i - x_i^T \theta)^2}{2\sigma^2}} \right],
 \end{equation}
-where $\normalfunc{x_i}{\mu}{\sigma^2}$ denotes the density function of a Gaussian random variable with mean $\mu$ and variance $\sigma^2$ evaluated in point $x_i$. The \textbf{principle of maximum likelihood} states that the values for $\theta$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \ref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements}.
+%where $\normalfunc{x_i}{\mu}{\sigma^2}$ denotes the density function of a Gaussian random variable with mean $\mu$ and variance $\sigma^2$ evaluated in point $x_i$.
+
+The \textbf{principle of maximum likelihood} states that the values for $\theta$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \ref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}.
 With some algebra, it is fairly easy to see that maximizing equation \ref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
 
 In the case of a binary classification problem, assuming that $y_i$ follows a Bernoulli distribution, such that the probability of $y_i$ of being 1 is $p_i(\theta)$, where $\theta$ is the parameter that indexes the probability, then the likelihood function in this case is $\prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i}$ and thus, the log-likelihood is
@@ -71,12 +74,12 @@ The posterior distribution is also used to predict the values of unseen data. Le
   \prob{y^* | X, y, x^*} = \int \prob{y^* | \theta, x^*} \prob{\theta | X, y} d\theta.
 \end{equation}
 
-Note that this posterior distribution is, as it name implies, a distribution, i.e., it is not a single prediction but a whole bunch of predictions, quantified by how likely each value is to be. If the goal is to have a point prediction $\hat{y}^*$ for $x^*$, then the modeler could take the expected value of the posterior predictive distribution such that
+Note that this posterior distribution is, as it name implies, a distribution, i.e., it is not a single prediction but many predictions, possibly an infinite number, weighted by how probable each value is to be. If the goal is to have a point prediction $\hat{y}^*$ for $x^*$, then the modeler could use decision theory to find a point estimate. The idea is to specify a loss function $L(y^*, \hat{y}^*)$ that quantifies the loss of having an estimate $\hat{y}^*$ when the real value is $y^*$, and have the point estimate be the $\hat{y}^*$ that minimizes this loss function. The optimal value for the squared loss $L(y^*, \hat{y}^*) = (y^* - \hat{y}^*)^2$ is the expected value of the posterior predictive distribution, that is,
 \begin{equation}
   \hat{y}^* = \mathbb{E}_{y^* | x^*, y, X} \left[ \prob{y^* | X, y, x^*} \right].
 \end{equation}
 
-There are other possible point estimates such as the median, or the maximum a posteriori (MAP) estimate, but these will not be studied in detail in this work.
+Another loss function is the absolute loss $L(y^*, \hat{y}^*) = \vert y^* - \hat{y}^* \vert$ which results in using the median of the posterior predictive distribution as a point estimate. One more function is the 0-1 loss function $L(y^*, \hat{y}^*) = \mathbb{I}(y^* \neq \hat{y}^* )$ which results in using the mode of the posterior predictive distribution as a point estimate. This last estimate is also called a maximum a posteriori estimate.
 
 All these concepts can be illustrated in the context of logistic regression. Suppose that we have $n$ observations of a binary response variable $y \in \left\{0, 1\right\}^n$ and two continuous features $x^{(1)}, x^{(2)} \in \mathbb{R}^n$. The frequentist approach using the maximum likelihood estimate will be studied first, then it will be transformed into a simple learning problem in which the goal is to minimize a loss function, and finally, the Bayesian approach will be examined.
 
@@ -183,7 +186,7 @@ As mentioned before, in machine learning the goal is to find the parameters that
   \min_{\theta \in \mathbb{R}^p} L(\theta).
 \end{equation}
 
-In statistical learning, $L$ is usually a convex loss function and $\theta$ is a parameter or vector of parameters. A solution is a vector $\theta^*$ called local minimizer, which minimizes the function $L$ in a neighborhood around $\theta^*$. Formally, a vector $\theta^*$ is a local minimizer if there exists a neighborhood $\mathcal{V}$ of $\theta^*$ such that $L(\theta^*) \leq L(\theta)$ for all $\theta \in \mathcal{V}$.
+In machine learning, $L$ is usually a convex loss function and $\theta$ is a parameter or vector of parameters. A solution is a vector $\theta^*$ called local minimizer, which minimizes the function $L$ in a neighborhood around $\theta^*$. Formally, a vector $\theta^*$ is a local minimizer if there exists a neighborhood $\mathcal{V}$ of $\theta^*$ such that $L(\theta^*) \leq L(\theta)$ for all $\theta \in \mathcal{V}$.
 
 The sufficient second order conditions are used in numerical optimization. Suppose that the Hessian matrix $\nabla^2 L$ is continuous in an open neighborhood of $\theta^*$, that the gradient $\nabla L(\theta^*) = 0$ and that $\nabla^2 L(\theta^*)$ is positive definite; then $\theta^*$ is a local minimizer of $L$.
 
