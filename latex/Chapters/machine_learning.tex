@@ -38,7 +38,7 @@ The linear regression model belongs to a type of methods called \textbf{parametr
 
 An approach to the estimation of parameters that is different to the concept of error function minimization is the one of \textbf{maximum likelihood estimation}.
 This is a probabilistic approach in which a certain probability distribution for the data is assumed.
-In the case of linear regression, it is commonly assumed that the error term in \ref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon_i \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{x_i^T \theta}{\sigma^2}$ for $i \in \left\{ 1, \ldots, n \right\}$. It is also usually assumed that the observations $y_i$ come from a random sample and are independent of each other. Therefore, the log-probability of the sample is
+In the case of linear regression, it is commonly assumed that the error term in \eqref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon_i \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{x_i^T \theta}{\sigma^2}$ for $i \in \left\{ 1, \ldots, n \right\}$. It is also usually assumed that the observations $y_i$ come from a random sample and are independent of each other. Therefore, the log-probability of the sample is
 \begin{equation}
   \label{eq:gaussian_likelihood}
   %L(\theta) = \sum_{i = 1}^n \log \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{(y_i - x_i^T \theta)^2}{2\sigma^2}},
@@ -46,8 +46,8 @@ In the case of linear regression, it is commonly assumed that the error term in 
 \end{equation}
 %where $\normalfunc{x_i}{\mu}{\sigma^2}$ denotes the density function of a Gaussian random variable with mean $\mu$ and variance $\sigma^2$ evaluated in point $x_i$.
 
-The \textbf{principle of maximum likelihood} states that the values for $\theta$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \ref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}.
-With some algebra, it is fairly easy to see that maximizing equation \ref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
+The \textbf{principle of maximum likelihood} states that the values for $\theta$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \eqref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}.
+With some algebra, it is fairly easy to see that maximizing equation \eqref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
 
 In the case of a binary classification problem, assuming that $y_i$ follows a Bernoulli distribution, such that the probability of $y_i$ of being 1 is $p_i(\theta)$, where $\theta$ is the parameter that indexes the probability, then the likelihood function in this case is $\prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i}$ and thus, the log-likelihood is
 \begin{equation}
@@ -62,7 +62,7 @@ Another approach to the learning problem is the \textbf{Bayesian approach}, in w
 
 The posterior distribution represents the knowledge about $\theta$ after the data has been seen. It is a compromise between the prior beliefs and the data. % The multiplier $\prob{y | \theta, X}$ is called the likelihood, and is the probability of the data given the parameters.
 
-Since the denominator of equation \ref{eq:bayes_theorem} does not depend on $\theta$ because it is only a normalizing constant, it is just usually described as a proportion
+Since the denominator of equation \eqref{eq:bayes_theorem} does not depend on $\theta$ because it is only a normalizing constant, it is just usually described as a proportion
 \begin{equation}
   \label{eq:bayes_theorem_prop}
     \prob{\theta | y, X} \propto \prob{y | \theta, X} \prob{\theta | X}.
@@ -81,26 +81,31 @@ Note that this posterior distribution is, as it name implies, a distribution, i.
 
 Another loss function is the absolute loss $L(y^*, \hat{y}^*) = \vert y^* - \hat{y}^* \vert$ which results in using the median of the posterior predictive distribution as a point estimate. One more function is the 0-1 loss function $L(y^*, \hat{y}^*) = \mathbb{I}(y^* \neq \hat{y}^* )$ which results in using the mode of the posterior predictive distribution as a point estimate. This last estimate is also called a maximum a posteriori estimate.
 
+\subsection{Example}
+
 All these concepts can be illustrated in the context of logistic regression. Suppose that we have $n$ observations of a binary response variable $y \in \left\{0, 1\right\}^n$ and two continuous features $x^{(1)}, x^{(2)} \in \mathbb{R}^n$. The frequentist approach using the maximum likelihood estimate will be studied first, then it will be transformed into a simple learning problem in which the goal is to minimize a loss function, and finally, the Bayesian approach will be examined.
 
-If someone wanted to build a classifier using a linear regression model, then they would run into a problem because a linear model of the form $\mu(x_i) = \theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}$ is not bounded, and in contrast, the response variable $y$ from the data only takes the values $0$ and $1$, and, so it is a better idea to model the probability that a feature vector belongs to each class. This way, $y_i$ is a random variable that follows a Bernoulli distribution with parameter $p_i$, where $p_i$ is the probability of $y_i$ being 1.
+If someone wanted to build a classifier using a linear regression model, then they would run into a problem because a linear model of the form $\mu(x_i) = \theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}$ is not bounded. In contrast, the response variable $y$ from the data only takes the values $0$ and $1$, hence, it is a better idea to model the probability that a feature vector belongs to each class. This way, $y_i$ is a random variable that follows a Bernoulli distribution with parameter $p_i$, where $p_i$ is the probability of $y_i$ being 1.
 The range of $f$ as a linear model is $\mathbb{R}$, so it must be mapped to the $\left[ 0,1 \right]$ interval in which probabilities live, and it can be done with what is called a \textbf{link function}. The \textbf{logistic sigmoid function} % $\sigma \left( \cdot \right)$
 is a widely used link function for this type of problems \cite[p.~114]{christopher2006pattern}. It is defined as
 \begin{equation}
   \sigma(w) = \frac{e^w}{1 + e^w} = \frac{1}{1 + e^{-w}}.
 \end{equation}
 
-It is easy to see that $\lim_{w \to -\infty} \sigma(w) = 0$ and $\lim_{w \to \infty} \sigma(w) = 1$. There is more reasoning behind the logistic sigmoid function, and some of it has to be that it belongs to the exponential family of functions. For more details about this, see \cite{christopher2006pattern}.
+It is easy to see that $\lim_{w \to -\infty} \sigma(w) = 0$ and $\lim_{w \to \infty} \sigma(w) = 1$. 
+
+%There is more reasoning behind the logistic sigmoid function, and some of it has to be that it belongs to the exponential family of functions. For more details about this, see \cite{christopher2006pattern}.
 
 Another possible link function is the \textbf{probit function}, defined as the inverse of the cumulative distribution function of a Gaussian random variable \cite[p.~296]{friedman2001elements}. That is, $\sigma(w) = \Phi^{-1}\left( x \right)$,
 where
 \begin{equation}
-  \Phi(w) = \int_{-\infty}^w \frac{1}{\sqrt{2 \pi}} \exp{\left( -\frac{x^2}{2} \right)} dx = \int_{-\infty}^w \normalfunc{x}{0}{1} dx.
+  %\Phi(w) = \int_{-\infty}^w \frac{1}{\sqrt{2 \pi}} \exp{\left( -\frac{x^2}{2} \right)} dx = \int_{-\infty}^w \normalfunc{x}{0}{1} dx.
+  \Phi(w) = \int_{-\infty}^w \frac{1}{\sqrt{2 \pi}} \exp{\left( -\frac{x^2}{2} \right)} dx.
 \end{equation}
 
-There are some differences in the theory and behavior of the logistic and the probit functions, but in practice they hardly make any substantial difference. Henceforth, we will use the logistic function as the link function for binary classification problems.
+There are some differences in the theory and behavior of the logistic and the probit functions, but in practice they hardly make any substantial difference and the choice of one over the other may be a matter of taste or convenience \cite[p.~118]{gelman2006data}. Henceforth, we will use the logistic function as the link function for binary classification problems.
 
-So,it has been established that $\sigma \left( \cdot \right)$ maps from $\mathbb{R}$ to $\left[ 0,1 \right]$, but it is yet to be explained how to relate this to the original problem which is to build a linear classifier using the vectors $x^{(1)}$ and $x^{(2)}$. Using  $\sigma \left( \cdot \right)$, one can define the probability that $y_i$ belongs to class $1$ given features $x_i^{(1)}$ and $x_i^{(2)}$ as
+It has been established that $\sigma \left( \cdot \right)$ maps from $\mathbb{R}$ to $\left[ 0,1 \right]$, but it is yet to be explained how to relate this to the original problem which is to build a linear classifier using the vectors $x^{(1)}$ and $x^{(2)}$. Using  $\sigma \left( \cdot \right)$, one can define the probability that $y_i$ belongs to class $1$ given features $x_i^{(1)}$ and $x_i^{(2)}$ as
 \begin{equation}
   \prob{y_i = 1 | x_i, \theta} = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}) = \frac{1}{1 + e^{-\left( \theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)} \right)}},
 \end{equation}
@@ -109,21 +114,21 @@ with $x_i = \left[ x_i^{(1)}, x_i^{(2)} \right]^T$. Thus
   \prob{y_i = 0 | x_i, \theta} = 1 - \prob{y_i = 1 | x_i} = \frac{1}{1 + e^{\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}}}.
 \end{equation}
 
-So, $y_i$ is fully described as a Bernoulli distribution with parameter $p_i =\prob{y_i = 1 | x_i, \theta}$. When the response variable is Bernoulli distributed, the likelihood of $n$ observations is
+This means that $y_i$ is fully described as a Bernoulli distribution with parameter $p_i =\prob{y_i = 1 | x_i, \theta}$. When the response variable is Bernoulli distributed, the likelihood of $n$ independent observations is
 \begin{equation}
   \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i}.
 \end{equation}
 
-Then, in consequence, the log-likelihood of $n$ observations is
+Then, in consequence, the log-likelihood of $n$ independent observations is
 \begin{equation}
   \label{eq:log_likelihood_logistic_example}
   L(\theta) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\theta) \right) + (1 - y_i) \log \left( 1 - p_i(\theta) \right) \right],
 \end{equation}
 where $p_i(\theta) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$.
 
-So, the maximum likelihood estimator of $\theta = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ is the vector $\hat{\theta}$ that maximizes $L(\theta)$ in equation \ref{eq:log_likelihood_logistic_example}; that is $\hat{\theta} = \argmax L(\theta)$.
+The maximum likelihood estimator of $\theta = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ is the vector $\hat{\theta}$ that maximizes $L(\theta)$ in equation \eqref{eq:log_likelihood_logistic_example}; that is $\hat{\theta} = \argmax L(\theta)$.
 
-Another way to see the problem of binary classification, is to simply see it as a learning problem in which the goal is to minimize a certain loss function. It has been shown here that maximizing equation \ref{eq:log_likelihood_logistic_example} leads to the maximum likelihood estimate, but if the sign is changed, then the result is a loss function that can be minimized, and it is the exact same problem as before.
+Another way to interpret the problem of binary classification, is to consider the learning problem from an optimization perspective in which the goal is to minimize a certain loss function. It has been shown above that maximizing equation \eqref{eq:log_likelihood_logistic_example} leads to the maximum likelihood estimate. However, if the sign is changed, the result is a loss function that can be minimized, and it is the exact same problem as before.
 
 The new objective function that needs to be minimized is
 \begin{equation}
@@ -131,46 +136,58 @@ The new objective function that needs to be minimized is
   L(\theta) = - \sum_{i = 1}^n \left[ y_i \log\left( p_i(\theta) \right) + (1 - y_i) \log \left( 1 - p_i(\theta) \right) \right].
 \end{equation}
 
-Now, why is this an error function? If $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and what is left remaining is $\log\left( p_i(\theta) \right)$. Now, when $p_i(\theta)$ is big, that is, close to 1, then $\log\left( p_i(\theta) \right) \approx 0$; but if $p_i(\theta)$ small, that is, close to 0, then $\log\left( p_i(\theta) \right) \approx -\infty$, and so the overall loss function tends to infinity. This means that when the real value of $y_i$ is 1 and a low probability is assigned to it, the loss function is large, but if a high probability is assigned to it, the loss function is small. The same reasoning works for when $y_i = 0$: if a low probability is assigned, then the loss function is small, but if a high probability is assigned, then the loss function is large. Hence, minimizing the loss function leads to choosing values of $\theta$ such that they yield a high probability to the cases when $y_i = 1$ and a low one when $y_i = 0$.
+Intuitively, this is an error function because if $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and what is left remaining is $\log\left( p_i(\theta) \right)$. Now, when $p_i(\theta)$ is big, that is, close to 1, then $\log\left( p_i(\theta) \right) \to 0$. However, if $p_i(\theta)$ is small, that is, close to 0, then $\log\left( p_i(\theta) \right) \to -\infty$, and so the overall loss function tends to infinity. This means that when the real value of $y_i$ is 1 and a low probability is assigned to it, then the loss function is large; but if a high probability is assigned to it, then the loss function is small. The same reasoning works for when $y_i = 0$.
+% The same reasoning works for when $y_i = 0$: if a low probability is assigned, then the loss function is small; but if a high probability is assigned, then the loss function is large. 
+Hence, minimizing the loss function leads to choosing values of $\theta$ that yield a high probability to the cases when $y_i = 1$ and a low one when $y_i = 0$.
 
 % There are other possible loss functions for this problem, such as the \textbf{hinge loss}
 
-Now, let's move to the Bayesian approach to logistic regression. As before, it will be assumed that $y_i$ follows a Bernoulli distribution such that the probability of being 1 is $p_i(\theta) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$, where $\sigma \left( \cdot \right)$ is the logistic sigmoid function. In the Bayesian paradigm, parameter vector $\theta = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ must have a joint prior distribution. As mentioned before, a good idea is to place a Gaussian distribution to it and, in this case, assume independence between the parameters, such that
+The logistic regression model can be reformulated from a Bayesian approach. As before, it will be assumed that $y_i$ follows a Bernoulli distribution such that the probability of being 1 is $p_i(\theta) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$, where $\sigma \left( \cdot \right)$ is the logistic sigmoid function. In the Bayesian paradigm, the unknown parameter vector $\boldsymbol{\theta} = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ must have a joint prior distribution. A good idea is to assume a Gaussian distribution for the unknown unobservable parameter $\boldsymbol{\theta}$. Furthermore, independence between the components of $\boldsymbol{\theta}$ can be assumed which in turn allows one to write the prior distribution as
 \begin{equation}
-  \theta \sim \normaldist{\mu}{\frac{1}{\tau} I},
+  %\theta \sim \normaldist{\mu}{\frac{1}{\tau} I},
+  \theta \sim \normaldist{\mu}{\sigma^2 I},
 \end{equation}
-where $\mu \in \mathbb{R}^3$, $\tau \in \mathbb{R}^+$ and $I$ is a $3 \times 3$ identity matrix. In this context, $\tau$ is the inverse of the variance, and is called the \textbf{precision}. Assuming $\mu = \left[ \mu_0, \mu_1, \mu_2 \right]^T$, then the prior distribution takes the following form
+where $\mu \in \mathbb{R}^3$, $\sigma^2 \in \mathbb{R}^+$ and $I$ is a $3 \times 3$ identity matrix. 
+% In this context, $\tau$ is the inverse of the variance, and is called the \textbf{precision}. 
+Assuming $\mu = \left[ \mu_0, \mu_1, \mu_2 \right]^T$, then the prior distribution takes the following form
 \begin{equation}
-  \prob{\theta} = \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}}.
+  % \prob{\theta} = \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}}.
+  \prob{\theta} = \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}}.
 \end{equation}
 
-The likelihood is
+The likelihood can be written as
 \begin{equation}
   \prob{X | \theta} = \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i},
 \end{equation}
-so, following Bayes' theorem in equation \ref{eq:bayes_theorem_prop}, the posterior distribution is
+which follows from the independence assumption in the data-generating mechanism. Furthermore, Bayes' theorem in equation \eqref{eq:bayes_theorem_prop} allows one to write the posterior distribution as
+%so, following Bayes' theorem in equation \eqref{eq:bayes_theorem_prop}, the posterior distribution is
 \begin{equation}
   \prob{\theta | y, X} =
     \frac
     {
       \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
-      \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right]
+      \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right]
+      % \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right]
     }{
       \int \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
-      \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right] d\theta
+      \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right]
+      % \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} d\theta
     }.
 \end{equation}
 
-Unfortunately, the integral is not directly solvable, and that is the reason numerical methods are used. Most of them rely on the fact that the denominator is only a normalizing constant and only use the equation as a proportion
+Unfortunately, the integral cannot be solved analytically, which is why numerical methods are used. 
+It should be noted that the denominator is a constant with respect to $\theta$, thus, the posterior distribution can be computed up to a normalizing constant as
+%Most of them rely on the fact that the denominator is only a normalizing constant and only use the equation as a proportion
 \begin{equation}
   \prob{\theta | y, X} \propto
   \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
-  \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right].
+  \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right].
+  %\left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right].
 \end{equation}
 
 Methods to estimate the posterior include Markov Chain Monte Carlo (MCMC) methods such as Metropolis-Hastings or Hamiltonian Monte Carlo, and Variational Inference, discussed in chapter \ref{ch:variational_inference}.
 
-No matter what paradigm one follows, in general, when one is training a model for prediction, it is not the main goal to minimize training error, but prediction error, i.e., the error of any future observation $(x^*, y^*)$. This means that one wants to minimize the expected prediction error, hence, it is common to divide the data set $(X, Y)$ in two: the training set and the test set. To do this, from the original data set, a random sample of observations is assigned to be part of the training set and the rest are part of the test set.The idea is that the test set should be used to measure the predictive performance of the model. A third set is sometimes added and is called the validation set, in which predictive performance is measured to select certain hyperparameters, such as regularization parameter values, discussed further in this document.
+No matter what paradigm one follows, in general, when one is training a model for prediction, it is not the main goal to minimize training error, but prediction error, i.e., the error of any future observation $(x^*, y^*)$. This means that one wants to minimize the expected prediction error, hence, it is common to divide the data set $(X, Y)$ in two: the training set and the test set. To do this, from the original data set, a random sample of observations is assigned to be part of the training set and the rest are part of the test set. The idea is that the test set should be used to measure the predictive performance of the model. A third set is sometimes added and is called the validation set, in which predictive performance is measured to select certain hyperparameters, such as regularization parameter values, discussed further in this document.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -181,7 +198,7 @@ No matter what paradigm one follows, in general, when one is training a model fo
 
 \section{Loss function optimization}
 
-As mentioned before, in machine learning the goal is to find the parameters that minimize a loss function such as the one in equation \ref{eq:logistic_example_loss_function}. In some cases like linear regression, it is possible to use the first and second order conditions to find a closed formula to find the parameters; but in many other cases this cannot be done, like in logistic regression, so we resort to numerical optimization techniques. The general problem of unrestricted optimization \cite{nocedal2006numerical} is
+As mentioned before, in machine learning the goal is to find the parameters that minimize a loss function such as the one in equation \eqref{eq:logistic_example_loss_function}. In some cases like linear regression, it is possible to use the first and second order conditions to find a closed formula to find the parameters; but in many other cases this cannot be done, like in logistic regression, so we resort to numerical optimization techniques. The general problem of unrestricted optimization \cite{nocedal2006numerical} is
 \begin{equation}
   \min_{\theta \in \mathbb{R}^p} L(\theta).
 \end{equation}
@@ -206,7 +223,7 @@ Choosing the step length $\alpha_k$ is problematic because it is desirable to fi
 %The best option is the global minimizer of the auxiliary function $\phi(\alpha_k) = L(\theta_k + \alpha_k p_k)$, but it is too expensive to compute.
 Generally, heuristics are used to choose the sequence of values for $\alpha_k$, such as using the outer product of the gradient with itself, as shown in \cite{duchi2011adaptive}.
 
-Now, let's study how gradient descent works in the case of logistic regression. The loss function to be minimized, defined in equation \ref{eq:logistic_example_loss_function}, is
+Now, let's study how gradient descent works in the case of logistic regression. The loss function to be minimized, defined in equation \eqref{eq:logistic_example_loss_function}, is
 \begin{equation}
   L(\theta) = - \sum_{i=1}^{n} \left[ y_i \log(\sigma(\theta^T x_i)) + (1-y_i) \log(1-\sigma(\theta^T x_i)) \right] =
   - \sum_{i=1}^{n}{\ell_i(\theta)}
@@ -243,7 +260,7 @@ Hence, the gradient descent direction for each iteration is
   \nabla_{\theta} L = \left( \frac{\partial L}{\partial \theta_1}, ..., \frac{\partial L}{\partial \theta_p} \right)^T.
 \end{equation}
 
-To minimize the loss function, an initial vector of parameters $\theta^0 \in \mathbb{R}^2$ is chosen, and in each iteration this vector is updated using equation \ref{eq:parameter_update_gd} until certain criteria are met.
+To minimize the loss function, an initial vector of parameters $\theta^0 \in \mathbb{R}^2$ is chosen, and in each iteration this vector is updated using equation \eqref{eq:parameter_update_gd} until certain criteria are met.
 
 This algorithm was implemented in the R programming language by generating a vector $x \in \mathbb{R}^n$ with $n = 1000$ such that $x_i \sim N(0, 1)$ for each $i \in \left\{1, ..., n \right\}$; then an auxiliary vector was computed, $p_i = \frac{1}{\exp \left( - \theta_0 - \theta_1 x_i \right)}$, with $\theta_0 = -5$ and $\theta_1 = 5$. Finally, the response variable $y$ was built simulating Bernoulli random variables, such that $y_i \sim \mathrm{Bern}(p_i)$.
 The implementation is compared with the result of the \texttt{glm} package.
@@ -300,7 +317,7 @@ We implemented mini-batch gradient descent for logistic regression in R and test
 
 \subsection{Overfitting and regularization}
 
-A common problem in machine learning can be \textbf{overfitting}. To explain this, consider the case of modeling a response variable $Y$ with the general model proposed in equation \ref{eq:general_learning_model}. If $f$ is too flexible, then a larger number of parameters must be estimated, which leads to part of the error being captured by those parameters. This is what is known as overfitting. The problem with an overfit model is that it will give bad predictions with data that has not been previously observed. This is why overfit models have a small training error, but a bigger test error.
+A common problem in machine learning can be \textbf{overfitting}. To explain this, consider the case of modeling a response variable $Y$ with the general model proposed in equation \eqref{eq:general_learning_model}. If $f$ is too flexible, then a larger number of parameters must be estimated, which leads to part of the error being captured by those parameters. This is what is known as overfitting. The problem with an overfit model is that it will give bad predictions with data that has not been previously observed. This is why overfit models have a small training error, but a bigger test error.
 
 One way to control overfitting is with \textbf{regularization}, in which a penalization term is added to the loss function to prevent the parameters from taking values that are too high. A very simple regularizer is the $L_2$ norm regularizer in which the sum of the squared parameters is added to the loss function.
 
@@ -309,7 +326,7 @@ For example, in linear regression, the usual loss function that is sought to be 
   \label{eq:lin_reg_loss_funct}
   \sum_{i = 1}^n{ \left( y_i - \sum_{k = 1}^p  \theta_k x_k \right) ^ 2},
 \end{equation}
-but with the $L_2$ regularizer (also known as ridge regression), equation \ref{eq:lin_reg_loss_funct} is modified so that the loss function now is
+but with the $L_2$ regularizer (also known as ridge regression), equation \eqref{eq:lin_reg_loss_funct} is modified so that the loss function now is
 \begin{equation}
   \label{eq:lin_reg_loss_funct_reg}
   \sum_{i = 1}^n{ \left( y_i - \sum_{k = 1}^p \theta_k x_k \right) ^ 2}
