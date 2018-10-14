@@ -134,7 +134,6 @@ where $\mathrm{MLP}(X, \Theta)$ denotes the architecture of a multilayer percept
 Parameters $\mu_{i,k}^{[l]}$ and $\sigma_{i,k}^{[l]}$ are chosen to reflect the prior knowledge that we may have about the values of the parameters $\theta_{i,k}^{[l]}$. If we have no prior knowledge, then a vague prior can be used.
 
 In contrast to classical neural networks where parameters $\Theta$ are chosen so that they minimize an error function, in Bayesian neural networks we wish to update our knowledge on the parameters $\Theta$ given the data $X$ and $y$. This is achieved with Bayes' theorem in the following way
-
 \begin{equation}
   \prob{\Theta | X, y} = \frac{\prob{y | \Theta, X} \prob{\Theta | X}}{\prob{y | X}}.
 \end{equation}
@@ -143,6 +142,9 @@ In contrast to classical neural networks where parameters $\Theta$ are chosen so
 In our example, $\prob{y | \Theta, X}$ and $\prob{\Theta | X}$ are the joint density functions of Gaussian random variables with their corresponding parameter values.
 
 To make predictions in the Bayesian case, we use the posterior predictive distribution defined in equation \eqref{eq:post_pred_dist}.
+
+In \citeyear{gal2015dropout1}, \citeauthor{gal2015dropout1} proved that dropout can be seen as a Bayesian approximation to a deep Gaussian process \cite{gal2015dropout}. They show that applying dropout before each weight layer in a neural network with arbitrary depth is mathematically equivalent to a variational approximation that minimized the KL divergence to the posterior distribution to a deep Gaussian process. They later showed that stochastic regularization techniques such as dropout, can be seen as variational approximations to a Bayesian neural network, including convolutional neural networks \cite{gal2015bayesian} \cite{gal2015modern}.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
