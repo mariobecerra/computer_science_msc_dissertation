@@ -225,7 +225,7 @@ In gradient descent, the direction $p_k$ in which the algorithm moves is the max
 Choosing the step length $\alpha_k$ is problematic because it is desirable to find a value such that the function $L$ decreases as much as possible, but it is not desirable to spend too much time choosing the value. The best option is the global minimizer of the auxiliary function $\phi(\alpha_k) = L(\theta_k + \alpha_k p_k)$, but it may be too expensive to compute \cite[p.~31]{nocedal2006numerical}. Generally, heuristics are used to choose the sequence of values for $\alpha_k$ and try which one satisfies those conditions. One of those conditions is called Armijo conditions, and finds the $\alpha_k$ that allows a sufficient descent in the function $L$, measured as
 \begin{equation}
     L(\theta_k + \alpha_k p_k) \leq L(\theta_k) + c_1 \alpha_k \nabla L(\theta_k)^T p_k,
-\end{equation} 
+\end{equation}
 for a constant $c_1 \in (0, 1)$. Usually $c_1$ is small, such as $10^{-4}$. This condition may not be enough, because for very small values of $\alpha_k$ the condition can be met, and very small step lengths are not always desirable. One way to fix this is to use backtracking, which consists in choosing a big value of $\alpha_k$ (such as $\alpha_k = 1$), and then an iterative sub-algorithm is initiated to decrease the value of $\alpha_k$ until the Armijo condition is met. Another way to choose the step length $\alpha_k$ is using the outer product of the gradient with itself, as shown in \cite{duchi2011adaptive}.
 
 In the following paragraphs, an example of logistic regression is shown to understand how gradient descent works.
@@ -275,7 +275,7 @@ This algorithm was implemented in the R programming language \cite{R_manual} by 
 Then an auxiliary vector was computed, $p_i = \frac{1}{\exp \left( - \theta_0 - \theta_1 x_i^{(1)} \right)}$, with $\theta_0 = -5$ and $\theta_1 = 5$. Finally, the response variable $y$ was built simulating Bernoulli random variables, such that $y_i \sim \mathrm{Bern}(p_i)$.
 The implementation is compared with the result of the \texttt{glm} package.
 
-The initial vector of parameters was $\theta^0 = (0, 0)^T$ and a constant value of $\alpha_k = 2$ was used. The stopping criteria was that the norm of the gradient $\nabla_{\theta} L(\theta)$ should be less than $0.0001$, which was achieved after 409 iterations.
+The initial vector of parameters was $\theta^0 = (0, 0)^T$ and a constant value of $\alpha_k = 0.1$ was used. The stopping criteria was that the norm of the gradient, i.e. $\norm{\nabla_{\theta} L(\theta)}$, should be less than $10^{-16}$; or that the norm of the difference of the parameters from one iteration to the other, i.e. $\norm{\theta_{k+1} - \theta_k}$, should be less than $10^{-16}$. This was achieved after 16,102 iterations.
 
 Figure \ref{fig:GD_plots} shows the results of the implementation. On the left, the value of the loss function in each iteration can be seen. On the right, the parameter vector's value in each iteration. The red dot is the value of the estimate by the \texttt{glm} package. It can be seen that the implemented algorithm converges to this value.
 
@@ -288,7 +288,7 @@ Figure \ref{fig:GD_plots} shows the results of the implementation. On the left, 
 
 \subsection{Stochastic gradient descent (SGD)}
 
-In machine learning it is common to find the need to solve optimization problems of the form
+In machine learning it is common to assume that observations are i.i.d. and thus, it is also common to find the need to solve optimization problems of the form
 \begin{equation}
   \min_{\theta \in \mathbb{R}^p} L(\theta), \quad \text{with} \, \,
   L(\theta) = \frac{1}{n} \sum_{i = 1}^n { \ell_i(\theta) }.

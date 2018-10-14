@@ -1,5 +1,6 @@
 library(tidyverse)
 library(gridExtra)
+library(scales)
 
 theme_set(theme_bw(base_size = 12))
 
@@ -13,7 +14,7 @@ N <- 1000
 theta_0 <- -5
 theta_1 <- 5
 
-set.seed(124362)
+set.seed(126774)
 data <- tibble(x = rnorm(N),
                z = theta_0 + theta_1*x,
                pr = 1/(1 + exp(-z)),
@@ -50,7 +51,7 @@ deviance <- function(thetas, data = data){
 }
 
 
-max_it <- 10000
+max_it <- 50000
 data_gradient_descent <- tibble(it = 1:max_it,
                                 theta_0 = rep(0, max_it),
                                 theta_1 = rep(0, max_it),
@@ -72,8 +73,19 @@ while(i < max_it){
   data_gradient_descent$theta_1[i] <- thetas[2]
   data_gradient_descent$gradient_norm[i] <- g_norm
   data_gradient_descent$deviance[i] <- deviance(thetas, data)
-  if(g_norm < 0.0001) break
-  alpha = 2
+  data_gradient_descent$alpha[i] <- alpha
+  thetas_old = thetas
+  thetas <- thetas - alpha*g
+  # Compute the norm of the theta differences
+  dif_thetas_norm <- sum((thetas - thetas_old)^2)
+  flag_1 = g_norm < 1e-16
+  flag_2 = dif_thetas_norm < 1e-16
+  if(flag_1 | flag_2) {
+    if(flag_1) cat("\n\nEnded because of convergence in gradient.\n\n")
+    if(flag_2) cat("\n\nEnded because of convergence in thetas values.\n\n")
+    break
+  }
+  alpha = 0.1
   if(i %% 100 == 1){
     cat("It: ", i, 
         "\n\ttheta_0: ", thetas[1], 
@@ -83,8 +95,7 @@ while(i < max_it){
         "\n\talpha: ", alpha,
         "\n\n")
   }
-  data_gradient_descent$alpha[i] <- alpha
-  thetas <- thetas - alpha*g
+  
 }
 
 
@@ -94,7 +105,8 @@ iter_loss_plot = data_gradient_descent %>%
   ggplot(aes(it, deviance)) +
   geom_line(size = 0.5) +
   xlab("Iteration") +
-  ylab("Loss function")
+  ylab("Loss function") +
+  scale_x_continuous(label = comma)
 
 
 iter_theta_plot =  data_gradient_descent %>% 
@@ -118,7 +130,8 @@ iter_theta_plot =  data_gradient_descent %>%
              # shape = 'x',
              color = 'red',
              size = 1) +
-  theme(panel.grid.minor = element_blank())
+  theme(panel.grid.minor = element_blank()) +
+  scale_x_continuous(label = comma)
 
 
 out_plot = arrangeGrob(iter_loss_plot, iter_theta_plot, 
