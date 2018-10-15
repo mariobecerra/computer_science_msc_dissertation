@@ -60,7 +60,8 @@ Another approach to the learning problem is the \textbf{Bayesian approach}, in w
   \prob{\theta | y, X } = \frac{\prob{y | \theta, X} \prob{\theta | X}}{\prob{y | X}} = \frac{\prob{y | \theta, X} \prob{\theta | X}}{\int \prob{y | \theta, X} \prob{\theta | X} d\theta}.
 \end{equation}
 
-The posterior distribution represents the knowledge about $\theta$ after the data has been seen. It is a compromise between the prior beliefs and the data. % The multiplier $\prob{y | \theta, X}$ is called the likelihood, and is the probability of the data given the parameters.
+The posterior distribution represents the knowledge about $\theta$ after the data has been seen. It is a compromise between the prior beliefs and the data. An advantage of the Bayesian approach is that uncertainty can be mathematically described by using probability. In addition, Bayesian statistics is logically consistent while dealing with this uncertainty \cite{cox1946probability} \cite{cox1963algebra} \cite{jaynes2003probability} \cite{o2004advanced}. A philosophical difference between the frequentist and the Bayesian approach is that in the latter, the degree of belief of the researcher is represented in the distribution of the parameters and hence, they are treated as random variables, whereas in the former approach, they are treated as a fixed but unknown value \cite{o2004advanced}.
+% The multiplier $\prob{y | \theta, X}$ is called the likelihood, and is the probability of the data given the parameters.
 
 Since the denominator of equation \eqref{eq:bayes_theorem} does not depend on $\theta$ because it is only a normalizing constant, it is just usually described as a proportion
 \begin{equation}
