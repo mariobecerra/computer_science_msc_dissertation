@@ -32,47 +32,47 @@ For example, in the linear regression case, it is common to minimize the squared
 \begin{equation}
   \hat{f} = \argmin_{f \in \mathcal{F}} \frac{1}{n} \sum_{i = 1}^n{ ( y_i - f(x_i) ) ^ 2},
 \end{equation}
-where $\mathcal{F}$ is the family of functions of the form $f(X) = X\theta$ with $\theta \in \mathbb{R}^p$. Thus, the  estimate $\hat{f}$ is $\hat{f}(X) = X \hat{\theta}$, where $\hat{\theta}$ minimizes the error function.
+where $\mathcal{F}$ is the family of functions of the form $f(X) = X\boldsymbol{\theta}$ with $\boldsymbol{\theta} \in \mathbb{R}^p$. Thus, the  estimate $\hat{f}$ is $\hat{f}(X) = X \hat{\boldsymbol{\theta}}$, where $\hat{\boldsymbol{\theta}}$ minimizes the error function.
 
-The linear regression model belongs to a type of methods called \textbf{parametric methods}, in which the modeler first makes an assumption about the functional form of $f$, and then trains the model by choosing the parameters that minimize a previously selected loss function \cite[p.~21]{james2013introduction}. In the case of linear regression, the form of $f$ is assumed to be $f(X) = X\theta$, and the parameters chosen are the elements of the $\hat{\theta}$ vector that minimize the squared error function of the model.
+The linear regression model belongs to a type of methods called \textbf{parametric methods}, in which the modeler first makes an assumption about the functional form of $f$, and then trains the model by choosing the parameters that minimize a previously selected loss function \cite[p.~21]{james2013introduction}. In the case of linear regression, the form of $f$ is assumed to be $f(X) = X\boldsymbol{\theta}$, and the parameters chosen are the elements of the $\hat{\boldsymbol{\theta}}$ vector that minimize the squared error function of the model.
 
 An approach to the estimation of parameters that is different to the concept of error function minimization is the one of \textbf{maximum likelihood estimation}.
 This is a probabilistic approach in which a certain probability distribution for the data is assumed.
-In the case of linear regression, it is commonly assumed that the error term in \eqref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon_i \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{x_i^T \theta}{\sigma^2}$ for $i \in \left\{ 1, \ldots, n \right\}$. It is also usually assumed that the observations $y_i$ come from a random sample and are independent of each other. Therefore, the log-probability of the sample is
+In the case of linear regression, it is commonly assumed that the error term in \eqref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon_i \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{x_i^T \boldsymbol{\theta}}{\sigma^2}$ for $i \in \left\{ 1, \ldots, n \right\}$. It is also usually assumed that the observations $y_i$ come from a random sample and are independent of each other. Therefore, the log-probability of the sample is
 \begin{equation}
   \label{eq:gaussian_likelihood}
-  %L(\theta) = \sum_{i = 1}^n \log \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{(y_i - x_i^T \theta)^2}{2\sigma^2}},
-  L(\theta) = \sum_{i = 1}^n \log \left[ \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(y_i - x_i^T \theta)^2}{2\sigma^2}} \right],
+  %L(\boldsymbol{\theta}) = \sum_{i = 1}^n \log \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{(y_i - x_i^T \boldsymbol{\theta})^2}{2\sigma^2}},
+  L(\boldsymbol{\theta}) = \sum_{i = 1}^n \log \left[ \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(y_i - x_i^T \boldsymbol{\theta})^2}{2\sigma^2}} \right],
 \end{equation}
 %where $\normalfunc{x_i}{\mu}{\sigma^2}$ denotes the density function of a Gaussian random variable with mean $\mu$ and variance $\sigma^2$ evaluated in point $x_i$.
 
-The \textbf{principle of maximum likelihood} states that the values for $\theta$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \eqref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}.
+The \textbf{principle of maximum likelihood} states that the values for $\boldsymbol{\theta}$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \eqref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}.
 With some algebra, it is fairly easy to see that maximizing equation \eqref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
 
-In the case of a binary classification problem, assuming that $y_i$ follows a Bernoulli distribution, such that the probability of $y_i$ of being 1 is $p_i(\theta)$, where $\theta$ is the parameter that indexes the probability, then the likelihood function in this case is $\prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i}$ and thus, the log-likelihood is
+In the case of a binary classification problem, assuming that $y_i$ follows a Bernoulli distribution, such that the probability of $y_i$ of being 1 is $p_i(\boldsymbol{\theta})$, where $\boldsymbol{\theta}$ is the parameter that indexes the probability, then the likelihood function in this case is $\prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i}$ and thus, the log-likelihood is
 \begin{equation}
-  L(\theta) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\theta) \right) + (1 - y_i) \log \left( 1 - p_i(\theta) \right) \right].
+  L(\boldsymbol{\theta}) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\boldsymbol{\theta}) \right) + (1 - y_i) \log \left( 1 - p_i(\boldsymbol{\theta}) \right) \right].
 \end{equation}
 
-Another approach to the learning problem is the \textbf{Bayesian approach}, in which a prior distribution on the parameters $\theta$ is assumed, and then the knowledge about them is updated with data. That is, the modeler first quantifies the knowledge that they may have about $\theta$ using a prior distribution $\prob{\theta}$ and then computes the posterior distribution of $\theta$ given $X$ and $y$ using Bayes' theorem as such
+Another approach to the learning problem is the \textbf{Bayesian approach}, in which a prior distribution on the parameters $\boldsymbol{\theta}$ is assumed, and then the knowledge about them is updated with data. That is, the modeler first quantifies the knowledge that they may have about $\boldsymbol{\theta}$ using a prior distribution $\prob{\boldsymbol{\theta}}$ and then computes the posterior distribution of $\boldsymbol{\theta}$ given $X$ and $y$ using Bayes' theorem as such
 \begin{equation}
   \label{eq:bayes_theorem}
-  \prob{\theta | y, X } = \frac{\prob{y | \theta, X} \prob{\theta | X}}{\prob{y | X}} = \frac{\prob{y | \theta, X} \prob{\theta | X}}{\int \prob{y | \theta, X} \prob{\theta | X} d\theta}.
+  \prob{\boldsymbol{\theta} | y, X } = \frac{\prob{y | \boldsymbol{\theta}, X} \prob{\boldsymbol{\theta} | X}}{\prob{y | X}} = \frac{\prob{y | \boldsymbol{\theta}, X} \prob{\boldsymbol{\theta} | X}}{\int \prob{y | \boldsymbol{\theta}, X} \prob{\boldsymbol{\theta} | X} d\boldsymbol{\theta}}.
 \end{equation}
 
-The posterior distribution represents the knowledge about $\theta$ after the data has been seen. It is a compromise between the prior beliefs and the data. An advantage of the Bayesian approach is that uncertainty can be mathematically described by using probability. In addition, Bayesian statistics is logically consistent while dealing with this uncertainty \cite{cox1946probability} \cite{cox1963algebra} \cite{jaynes2003probability} \cite{o2004advanced}. A philosophical difference between the frequentist and the Bayesian approach is that in the latter, the degree of belief of the researcher is represented in the distribution of the parameters and hence, they are treated as random variables, whereas in the former approach, they are treated as a fixed but unknown value \cite{o2004advanced}.
-% The multiplier $\prob{y | \theta, X}$ is called the likelihood, and is the probability of the data given the parameters.
+The posterior distribution represents the knowledge about $\boldsymbol{\theta}$ after the data has been seen. It is a compromise between the prior beliefs and the data. An advantage of the Bayesian approach is that uncertainty can be mathematically described by using probability. In addition, Bayesian statistics is logically consistent while dealing with this uncertainty \cite{cox1946probability} \cite{cox1963algebra} \cite{jaynes2003probability} \cite{o2004advanced}. A philosophical difference between the frequentist and the Bayesian approach is that in the latter, the degree of belief of the researcher is represented in the distribution of the parameters and hence, they are treated as random variables, whereas in the former approach, they are treated as a fixed but unknown value \cite{o2004advanced}.
+% The multiplier $\prob{y | \boldsymbol{\theta}, X}$ is called the likelihood, and is the probability of the data given the parameters.
 
-Since the denominator of equation \eqref{eq:bayes_theorem} does not depend on $\theta$ because it is only a normalizing constant, it is just usually described as a proportion
+Since the denominator of equation \eqref{eq:bayes_theorem} does not depend on $\boldsymbol{\theta}$ because it is only a normalizing constant, it is just usually described as a proportion
 \begin{equation}
   \label{eq:bayes_theorem_prop}
-    \prob{\theta | y, X} \propto \prob{y | \theta, X} \prob{\theta | X}.
+    \prob{\boldsymbol{\theta} | y, X} \propto \prob{y | \boldsymbol{\theta}, X} \prob{\boldsymbol{\theta} | X}.
 \end{equation}
 
 The posterior distribution is also used to predict the values of unseen data. Let $x^*$ be a vector of features for which a prediction $\hat{y}^*$ is desired, then the \textbf{posterior predictive distribution} must be used, defined as
 \begin{equation}
   \label{eq:post_pred_dist}
-  \prob{y^* | X, y, x^*} = \int \prob{y^* | \theta, x^*} \prob{\theta | X, y} d\theta.
+  \prob{y^* | X, y, x^*} = \int \prob{y^* | \boldsymbol{\theta}, x^*} \prob{\boldsymbol{\theta} | X, y} d\boldsymbol{\theta}.
 \end{equation}
 
 Note that this posterior distribution is, as it name implies, a distribution, i.e., it is not a single prediction but many predictions, possibly an infinite number, weighted by how probable each value is to be. If the goal is to have a point prediction $\hat{y}^*$ for $x^*$, then the modeler could use decision theory to find a point estimate. The idea is to specify a loss function $L(y^*, \hat{y}^*)$ that quantifies the loss of having an estimate $\hat{y}^*$ when the real value is $y^*$, and have the point estimate be the $\hat{y}^*$ that minimizes this loss function. The optimal value for the squared loss $L(y^*, \hat{y}^*) = (y^* - \hat{y}^*)^2$ is the expected value of the posterior predictive distribution, that is,
@@ -108,79 +108,79 @@ There are some differences in the theory and behavior of the logistic and the pr
 
 It has been established that $\sigma \left( \cdot \right)$ maps from $\mathbb{R}$ to $\left[ 0,1 \right]$, but it is yet to be explained how to relate this to the original problem which is to build a linear classifier using the vectors $x^{(1)}$ and $x^{(2)}$. Using  $\sigma \left( \cdot \right)$, one can define the probability that $y_i$ belongs to class $1$ given features $x_i^{(1)}$ and $x_i^{(2)}$ as
 \begin{equation}
-  \prob{y_i = 1 | x_i, \theta} = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}) = \frac{1}{1 + e^{-\left( \theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)} \right)}},
+  \prob{y_i = 1 | x_i, \boldsymbol{\theta}} = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}) = \frac{1}{1 + e^{-\left( \theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)} \right)}},
 \end{equation}
 with $x_i = \left[ x_i^{(1)}, x_i^{(2)} \right]^T$. Thus
 \begin{equation}
-  \prob{y_i = 0 | x_i, \theta} = 1 - \prob{y_i = 1 | x_i} = \frac{1}{1 + e^{\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}}}.
+  \prob{y_i = 0 | x_i, \boldsymbol{\theta}} = 1 - \prob{y_i = 1 | x_i} = \frac{1}{1 + e^{\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}}}.
 \end{equation}
 
-This means that $y_i$ is fully described as a Bernoulli distribution with parameter $p_i =\prob{y_i = 1 | x_i, \theta}$. When the response variable is Bernoulli distributed, the likelihood of $n$ independent observations is
+This means that $y_i$ is fully described as a Bernoulli distribution with parameter $p_i =\prob{y_i = 1 | x_i, \boldsymbol{\theta}}$. When the response variable is Bernoulli distributed, the likelihood of $n$ independent observations is
 \begin{equation}
-  \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i}.
+  \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i}.
 \end{equation}
 
 Then, in consequence, the log-likelihood of $n$ independent observations is
 \begin{equation}
   \label{eq:log_likelihood_logistic_example}
-  L(\theta) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\theta) \right) + (1 - y_i) \log \left( 1 - p_i(\theta) \right) \right],
+  L(\boldsymbol{\theta}) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\boldsymbol{\theta}) \right) + (1 - y_i) \log \left( 1 - p_i(\boldsymbol{\theta}) \right) \right],
 \end{equation}
-where $p_i(\theta) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$.
+where $p_i(\boldsymbol{\theta}) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$.
 
-The maximum likelihood estimator of $\theta = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ is the vector $\hat{\theta}$ that maximizes $L(\theta)$ in equation \eqref{eq:log_likelihood_logistic_example}; that is $\hat{\theta} = \argmax L(\theta)$.
+The maximum likelihood estimator of $\boldsymbol{\theta} = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ is the vector $\hat{\boldsymbol{\theta}}$ that maximizes $L(\boldsymbol{\theta})$ in equation \eqref{eq:log_likelihood_logistic_example}; that is $\hat{\boldsymbol{\theta}} = \argmax L(\boldsymbol{\theta})$.
 
 Another way to interpret the problem of binary classification, is to consider the learning problem from an optimization perspective in which the goal is to minimize a certain loss function. It has been shown above that maximizing equation \eqref{eq:log_likelihood_logistic_example} leads to the maximum likelihood estimate. However, if the sign is changed, the result is a loss function that can be minimized, and it is the exact same problem as before.
 
 The new objective function that needs to be minimized is
 \begin{equation}
   \label{eq:logistic_example_loss_function}
-  L(\theta) = - \sum_{i = 1}^n \left[ y_i \log\left( p_i(\theta) \right) + (1 - y_i) \log \left( 1 - p_i(\theta) \right) \right].
+  L(\boldsymbol{\theta}) = - \sum_{i = 1}^n \left[ y_i \log\left( p_i(\boldsymbol{\theta}) \right) + (1 - y_i) \log \left( 1 - p_i(\boldsymbol{\theta}) \right) \right].
 \end{equation}
 
-Intuitively, this is an error function because if $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and what is left remaining is $\log\left( p_i(\theta) \right)$. Now, when $p_i(\theta)$ is big, that is, close to 1, then $\log\left( p_i(\theta) \right) \to 0$. However, if $p_i(\theta)$ is small, that is, close to 0, then $\log\left( p_i(\theta) \right) \to -\infty$, and so the overall loss function tends to infinity. This means that when the real value of $y_i$ is 1 and a low probability is assigned to it, then the loss function is large; but if a high probability is assigned to it, then the loss function is small. The same reasoning works for when $y_i = 0$.
+Intuitively, this is an error function because if $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and what is left remaining is $\log\left( p_i(\boldsymbol{\theta}) \right)$. Now, when $p_i(\boldsymbol{\theta})$ is big, that is, close to 1, then $\log\left( p_i(\boldsymbol{\theta}) \right) \to 0$. However, if $p_i(\boldsymbol{\theta})$ is small, that is, close to 0, then $\log\left( p_i(\boldsymbol{\theta}) \right) \to -\infty$, and so the overall loss function tends to infinity. This means that when the real value of $y_i$ is 1 and a low probability is assigned to it, then the loss function is large; but if a high probability is assigned to it, then the loss function is small. The same reasoning works for when $y_i = 0$.
 % The same reasoning works for when $y_i = 0$: if a low probability is assigned, then the loss function is small; but if a high probability is assigned, then the loss function is large.
-Hence, minimizing the loss function leads to choosing values of $\theta$ that yield a high probability to the cases when $y_i = 1$ and a low one when $y_i = 0$.
+Hence, minimizing the loss function leads to choosing values of $\boldsymbol{\theta}$ that yield a high probability to the cases when $y_i = 1$ and a low one when $y_i = 0$.
 
 % There are other possible loss functions for this problem, such as the \textbf{hinge loss}
 
-The logistic regression model can be reformulated from a Bayesian approach. As before, it will be assumed that $y_i$ follows a Bernoulli distribution such that the probability of being 1 is $p_i(\theta) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$, where $\sigma \left( \cdot \right)$ is the logistic sigmoid function. In the Bayesian paradigm, the unknown parameter vector $\boldsymbol{\theta} = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ must have a joint prior distribution. A good idea is to assume a Gaussian distribution for the unknown unobservable parameter $\boldsymbol{\theta}$. Furthermore, independence between the components of $\boldsymbol{\theta}$ can be assumed which in turn allows one to write the prior distribution as
+The logistic regression model can be reformulated from a Bayesian approach. As before, it will be assumed that $y_i$ follows a Bernoulli distribution such that the probability of being 1 is $p_i(\boldsymbol{\theta}) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$, where $\sigma \left( \cdot \right)$ is the logistic sigmoid function. In the Bayesian paradigm, the unknown parameter vector $\boldsymbol{\boldsymbol{\theta}} = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ must have a joint prior distribution. A good idea is to assume a Gaussian distribution for the unknown unobservable parameter $\boldsymbol{\boldsymbol{\theta}}$. Furthermore, independence between the components of $\boldsymbol{\boldsymbol{\theta}}$ can be assumed which in turn allows one to write the prior distribution as
 \begin{equation}
-  %\theta \sim \normaldist{\mu}{\frac{1}{\tau} I},
-  \theta \sim \normaldist{\mu}{\sigma^2 I},
+  %\boldsymbol{\theta} \sim \normaldist{\mu}{\frac{1}{\tau} I},
+  \boldsymbol{\theta} \sim \normaldist{\mu}{\sigma^2 I},
 \end{equation}
 where $\mu \in \mathbb{R}^3$, $\sigma^2 \in \mathbb{R}^+$ and $I$ is a $3 \times 3$ identity matrix.
 % In this context, $\tau$ is the inverse of the variance, and is called the \textbf{precision}.
 Assuming $\mu = \left[ \mu_0, \mu_1, \mu_2 \right]^T$, then the prior distribution takes the following form
 \begin{equation}
   % \prob{\theta} = \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}}.
-  \prob{\theta} = \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}}.
+  \prob{\boldsymbol{\theta}} = \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}}.
 \end{equation}
 
 The likelihood can be written as
 \begin{equation}
-  \prob{X | \theta} = \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i},
+  \prob{X | \boldsymbol{\theta}} = \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i},
 \end{equation}
 which follows from the independence assumption in the data-generating mechanism. Furthermore, Bayes' theorem in equation \eqref{eq:bayes_theorem_prop} allows one to write the posterior distribution as
 %so, following Bayes' theorem in equation \eqref{eq:bayes_theorem_prop}, the posterior distribution is
 \begin{equation}
-  \prob{\theta | y, X} =
+  \prob{\boldsymbol{\theta} | y, X} =
     \frac
     {
-      \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
+      \left[ \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i} \right]
       \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right]
       % \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right]
     }{
-      \int \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
+      \int \left[ \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i} \right]
       \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right]
       % \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} d\theta
     }.
 \end{equation}
 
-It should be noted that the integral in the denominator is a constant with respect to $\theta$, thus, the posterior distribution can be computed up to a normalizing constant as
+It should be noted that the integral in the denominator is a constant with respect to $\boldsymbol{\theta}$, thus, the posterior distribution can be computed up to a normalizing constant as
 %Most of them rely on the fact that the denominator is only a normalizing constant and only use the equation as a proportion
 \begin{equation}
-  \prob{\theta | y, X} \propto
-  \left[ \prod_{i = 1}^n  p_i(\theta)^{y_i}\left(1 - p_i(\theta) \right)^{1 - y_i} \right]
+  \prob{\boldsymbol{\theta} | y, X} \propto
+  \left[ \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i} \right]
   \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right].
   %\left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right].
 \end{equation}
@@ -206,12 +206,12 @@ When training highly flexible models, the separation of data in training and val
 
 As mentioned before, in machine learning the goal is to find the parameters that minimize a loss function such as the one in equation \eqref{eq:logistic_example_loss_function}. In some cases like linear regression, it is possible to use the first and second order conditions to find a closed formula to find the parameters; but in many other cases this cannot be done, like in logistic regression, so we resort to numerical optimization techniques. The general problem of unconstrained optimization \cite{nocedal2006numerical} is
 \begin{equation}
-  \min_{\theta \in \mathbb{R}^p} L(\theta).
+  \min_{\boldsymbol{\theta} \in \mathbb{R}^p} L(\boldsymbol{\theta}).
 \end{equation}
 
-In machine learning, $L$ is usually a convex loss function and $\theta$ is a parameter or vector of parameters. A solution is a vector $\theta^*$ called local minimizer, which minimizes the function $L$ in a neighborhood around $\theta^*$. Formally, a vector $\theta^*$ is a local minimizer if there exists a neighborhood $\mathcal{V}$ of $\theta^*$ such that $L(\theta^*) \leq L(\theta)$ for all $\theta \in \mathcal{V}$.
+In machine learning, $L$ is usually a convex loss function and $\boldsymbol{\theta}$ is a parameter or vector of parameters. A solution is a vector $\boldsymbol{\theta}^*$ called local minimizer, which minimizes the function $L$ in a neighborhood around $\boldsymbol{\theta}^*$. Formally, a vector $\boldsymbol{\theta}^*$ is a local minimizer if there exists a neighborhood $\mathcal{V}$ of $\boldsymbol{\theta}^*$ such that $L(\boldsymbol{\theta}^*) \leq L(\boldsymbol{\theta})$ for all $\boldsymbol{\theta} \in \mathcal{V}$.
 
-The sufficient second order conditions are used in numerical optimization. Suppose that the Hessian matrix $\nabla^2 L$ is continuous in an open neighborhood of $\theta^*$, that the gradient $\nabla L(\theta^*) = 0$ and that $\nabla^2 L(\theta^*)$ is positive definite; then $\theta^*$ is a local minimizer of $L$. In general, all algorithms search for a point $\theta^*$ such that $\nabla L(\theta^*) = 0$.
+The sufficient second order conditions are used in numerical optimization. Suppose that the Hessian matrix $\nabla^2 L$ is continuous in an open neighborhood of $\boldsymbol{\theta}^*$, that the gradient $\nabla L(\boldsymbol{\theta}^*) = 0$ and that $\nabla^2 L(\boldsymbol{\theta}^*)$ is positive definite; then $\boldsymbol{\theta}^*$ is a local minimizer of $L$. In general, all algorithms search for a point $\boldsymbol{\theta}^*$ such that $\nabla L(\boldsymbol{\theta}^*) = 0$.
 
 Many numerical optimization algorithms are iterative, such as coordinate descent, Newton and quasi-Newton methods, gradient free methods, and gradient descent. Coordinate descent algorithms work by fixing all but one parameter in each iteration and then minimizing the loss function with respect to the remaining parameter \cite{friedman2007pathwise} \cite{wright2015coordinate}.
 Newton methods use a second-order Taylor series approximation to the loss function and iteratively descend by computing the Hessian matrix \cite[p.~22]{nocedal2006numerical}. Quasi-Newton methods use this same idea, but instead of computing the Hessian matrix exactly, they use some approximation to it \cite{byrd1995limited} \cite[p.~23]{nocedal2006numerical}.
@@ -220,17 +220,17 @@ Gradient descent is explained in the next subsection.
 
 \subsection{Gradient descent (GD)}
 
-Gradient descent belongs to a family of optimization algorithms called \textbf{line search algorithms}. In each iteration, these algorithms search for a direction in which to move and then update the current value in accordance to that direction \cite[p.~19]{nocedal2006numerical}. That is, in the $k$-th iteration, $\theta$ has the value $\theta_k$, and the algorithms look for a direction $p_k$ to update to a new value $\theta_{k+1} = \theta_k + \alpha_k p_k$, where $\alpha_k > 0$ is the ``distance'' in which the algorithm moves toward direction $p_k$, and is called \textbf{step length}. Once that the value of the parameter is updated, the algorithm finds a new direction in which to move forward and then updates the parameter value again. This is done until a stopping criteria is met. This usually is that the gradient vector norm is smaller than a certain small positive scalar.
+Gradient descent belongs to a family of optimization algorithms called \textbf{line search algorithms}. In each iteration, these algorithms search for a direction in which to move and then update the current value in accordance to that direction \cite[p.~19]{nocedal2006numerical}. That is, in the $k$-th iteration, $\boldsymbol{\theta}$ has the value $\boldsymbol{\theta}_k$, and the algorithms look for a direction $p_k$ to update to a new value $\boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k + \alpha_k p_k$, where $\alpha_k > 0$ is the ``distance'' in which the algorithm moves toward direction $p_k$, and is called \textbf{step length}. Once that the value of the parameter is updated, the algorithm finds a new direction in which to move forward and then updates the parameter value again. This is done until a stopping criteria is met. This usually is that the gradient vector norm is smaller than a certain small positive scalar.
 
-In gradient descent, the direction $p_k$ in which the algorithm moves is the maximum descent direction, that is, the negative of the gradient $-\nabla L(\theta_k)$. So, in each iteration $\theta$ is updated as such
+In gradient descent, the direction $p_k$ in which the algorithm moves is the maximum descent direction, that is, the negative of the gradient $-\nabla L(\boldsymbol{\theta}_k)$. So, in each iteration $\boldsymbol{\theta}$ is updated as such
 \begin{equation}
   \label{eq:parameter_update_gd}
-  \theta_{k+1} = \theta_k - \alpha_k \nabla L(\theta_k).
+  \boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k - \alpha_k \nabla L(\boldsymbol{\theta}_k).
 \end{equation}
 
-Choosing the step length $\alpha_k$ is problematic because it is desirable to find a value such that the function $L$ decreases as much as possible, but it is not desirable to spend too much time choosing the value. The best option is the global minimizer of the auxiliary function $\phi(\alpha_k) = L(\theta_k + \alpha_k p_k)$, but it may be too expensive to compute \cite[p.~31]{nocedal2006numerical}. Generally, heuristics are used to choose the sequence of values for $\alpha_k$ and try which one satisfies those conditions. One of those conditions is called Armijo conditions, and finds the $\alpha_k$ that allows a sufficient descent in the function $L$, measured as
+Choosing the step length $\alpha_k$ is problematic because it is desirable to find a value such that the function $L$ decreases as much as possible, but it is not desirable to spend too much time choosing the value. The best option is the global minimizer of the auxiliary function $\phi(\alpha_k) = L(\boldsymbol{\theta}_k + \alpha_k p_k)$, but it may be too expensive to compute \cite[p.~31]{nocedal2006numerical}. Generally, heuristics are used to choose the sequence of values for $\alpha_k$ and try which one satisfies those conditions. One of those conditions is called Armijo conditions, and finds the $\alpha_k$ that allows a sufficient descent in the function $L$, measured as
 \begin{equation}
-    L(\theta_k + \alpha_k p_k) \leq L(\theta_k) + c_1 \alpha_k \nabla L(\theta_k)^T p_k,
+    L(\boldsymbol{\theta}_k + \alpha_k p_k) \leq L(\boldsymbol{\theta}_k) + c_1 \alpha_k \nabla L(\boldsymbol{\theta}_k)^T p_k,
 \end{equation}
 for a constant $c_1 \in (0, 1)$. Usually $c_1$ is small, such as $10^{-4}$. This condition may not be enough, because for very small values of $\alpha_k$ the condition can be met, and very small step lengths are not always desirable. One way to fix this is to use backtracking, which consists in choosing a big value of $\alpha_k$ (such as $\alpha_k = 1$), and then an iterative sub-algorithm is initiated to decrease the value of $\alpha_k$ until the Armijo condition is met. Another way to choose the step length $\alpha_k$ is using the outer product of the gradient with itself, as shown in \cite{duchi2011adaptive}.
 
@@ -239,13 +239,13 @@ In the following paragraphs, an example of logistic regression is shown to under
 The loss function to be minimized, defined in equation \eqref{eq:logistic_example_loss_function}, is
 \begin{equation}
   \begin{split}
-    L(\theta) & = - \sum_{i=1}^{n} \left[ y_i \log(\sigma(\theta^T x_i)) + (1-y_i) \log(1-\sigma(\theta^T x_i)) \right] \\
-    & = - \sum_{i=1}^{n}{\ell_i(\theta)}
+    L(\boldsymbol{\theta}) & = - \sum_{i=1}^{n} \left[ y_i \log(\sigma(\boldsymbol{\theta}^T x_i)) + (1-y_i) \log(1-\sigma(\boldsymbol{\theta}^T x_i)) \right] \\
+    & = - \sum_{i=1}^{n}{\ell_i(\boldsymbol{\theta})}
   \end{split}
 \end{equation}
-where $\sigma(\cdot)$ is the logistic sigmoid function, $\theta^T x_i = \sum_{j=0}^{p}{\theta_j x_{ij}}$, $x_{i1} = 1$ for all $i \in \left\{1, ..., n \right\}$ and $\ell_i(\theta)$ is defined as
+where $\sigma(\cdot)$ is the logistic sigmoid function, $\boldsymbol{\theta}^T x_i = \sum_{j=0}^{p}{\theta_j x_{ij}}$, $x_{i1} = 1$ for all $i \in \left\{1, ..., n \right\}$ and $\ell_i(\boldsymbol{\theta})$ is defined as
 \begin{equation}
-  \ell_i(\theta) = y_i \log(\sigma(\theta^T x_i)) + (1-y_i) \log(1-\sigma(\theta^T x_i)).
+  \ell_i(\boldsymbol{\theta}) = y_i \log(\sigma(\boldsymbol{\theta}^T x_i)) + (1-y_i) \log(1-\sigma(\boldsymbol{\theta}^T x_i)).
 \end{equation}
 
 Taking the partial derivatives of the loss function with respect to the parameters the result is
@@ -256,12 +256,12 @@ and, using the fact that $\sigma'(w) = \sigma(w)(1-\sigma(w))$, then each partia
 \begin{equation}
   \begin{split}
     \frac{\partial \ell_i}{\partial \theta_j} & =
-    \frac{y_i \sigma'(\theta^T x_i) x_{ij} }  {\sigma(\theta^T x_i)} + \frac{(1 - y_i) (-1) \sigma'(\theta^T x_i) x_{ij}} {1 - \sigma(\theta^T x_i)} \\
-    & = \frac{\sigma'(\theta^T x_i) x_{ij} y_i}{\sigma(\theta^T x_i)} - \frac{(1 - y_i) \sigma'(\theta^T x_i) x_{ij}}{1 - \sigma((\theta^T x_i))} \\
-    & = \sigma'(\theta^T x_i) x_{ij} \left(\frac{y_i}{\sigma(\theta^T x_i)} - \frac{1-y_i}{1-\sigma(\theta^T x_i)} \right) \\
-    & = \sigma'(\theta^T x_i) x_{ij} \left(\frac{y_i - y_i \sigma(\theta^T x_i) -
-    \sigma(\theta^T x_i) + y_i \sigma(\theta^T x_i)}{\sigma(\theta^T x_i)(1-\sigma(\theta^T x_i))} \right) \\
-    & = x_{ij}(y_i - \sigma(\theta^T x_i)).
+    \frac{y_i \sigma'(\boldsymbol{\theta}^T x_i) x_{ij} }  {\sigma(\boldsymbol{\theta}^T x_i)} + \frac{(1 - y_i) (-1) \sigma'(\boldsymbol{\theta}^T x_i) x_{ij}} {1 - \sigma(\boldsymbol{\theta}^T x_i)} \\
+    & = \frac{\sigma'(\boldsymbol{\theta}^T x_i) x_{ij} y_i}{\sigma(\boldsymbol{\theta}^T x_i)} - \frac{(1 - y_i) \sigma'(\boldsymbol{\theta}^T x_i) x_{ij}}{1 - \sigma((\boldsymbol{\theta}^T x_i))} \\
+    & = \sigma'(\boldsymbol{\theta}^T x_i) x_{ij} \left(\frac{y_i}{\sigma(\boldsymbol{\theta}^T x_i)} - \frac{1-y_i}{1-\sigma(\boldsymbol{\theta}^T x_i)} \right) \\
+    & = \sigma'(\boldsymbol{\theta}^T x_i) x_{ij} \left(\frac{y_i - y_i \sigma(\boldsymbol{\theta}^T x_i) -
+    \sigma(\boldsymbol{\theta}^T x_i) + y_i \sigma(\boldsymbol{\theta}^T x_i)}{\sigma(\boldsymbol{\theta}^T x_i)(1-\sigma(\boldsymbol{\theta}^T x_i))} \right) \\
+    & = x_{ij}(y_i - \sigma(\boldsymbol{\theta}^T x_i)).
   \end{split}
 \end{equation}
 
@@ -272,16 +272,16 @@ Finally, the partial derivative is
 
 Hence, the gradient descent direction for each iteration is
 \begin{equation}
-  \nabla_{\theta} L = \left( \frac{\partial L}{\partial \theta_1}, ..., \frac{\partial L}{\partial \theta_p} \right)^T.
+  \nabla_{\boldsymbol{\theta}} L = \left( \frac{\partial L}{\partial \theta_1}, ..., \frac{\partial L}{\partial \theta_p} \right)^T.
 \end{equation}
 
-To minimize the loss function, an initial vector of parameters $\theta^0 \in \mathbb{R}^p$ is chosen, and in each iteration this vector is updated using equation \eqref{eq:parameter_update_gd} until certain criteria are met.
+To minimize the loss function, an initial vector of parameters $\boldsymbol{\theta}^0 \in \mathbb{R}^p$ is chosen, and in each iteration this vector is updated using equation \eqref{eq:parameter_update_gd} until certain criteria are met.
 
 This algorithm was implemented in the R programming language \cite{R_manual} by generating a data matrix $X \in \mathbb{R}^{n \times 1}$ with $n = 1000$ such that $x_i \sim N(0, 1)$ for each $i \in \left\{1, ..., n \right\}$.
 Then an auxiliary vector was computed, $p_i = \frac{1}{\exp \left( - \theta_0 - \theta_1 x_i^{(1)} \right)}$, with $\theta_0 = -5$ and $\theta_1 = 5$. Finally, the response variable $y$ was built simulating Bernoulli random variables, such that $y_i \sim \mathrm{Bern}(p_i)$.
 The implementation is compared with the result of the \texttt{glm} package.
 
-The initial vector of parameters was $\theta^0 = (0, 0)^T$ and a constant value of $\alpha_k = 0.1$ was used. The stopping criteria was that the norm of the gradient, i.e. $\norm{\nabla_{\theta} L(\theta)}$, should be less than $10^{-16}$; or that the norm of the difference of the parameters from one iteration to the other, i.e. $\norm{\theta_{k+1} - \theta_k}$, should be less than $10^{-16}$. This was achieved after 16,102 iterations.
+The initial vector of parameters was $\boldsymbol{\theta}^0 = (0, 0)^T$ and a constant value of $\alpha_k = 0.1$ was used. The stopping criteria was that the norm of the gradient, i.e. $\norm{\nabla_{\boldsymbol{\theta}} L(\boldsymbol{\theta})}$, should be less than $10^{-16}$; or that the norm of the difference of the parameters from one iteration to the other, i.e. $\norm{\boldsymbol{\theta}_{k+1} - \boldsymbol{\theta}_k}$, should be less than $10^{-16}$. This was achieved after 16,102 iterations.
 
 Figure \ref{fig:GD_plots} shows the results of the implementation. On the left, the value of the loss function in each iteration can be seen. On the right, the parameter vector's value in each iteration. The red dot is the value of the estimate by the \texttt{glm} package. It can be seen that the implemented algorithm converges to this value.
 
@@ -296,21 +296,21 @@ Figure \ref{fig:GD_plots} shows the results of the implementation. On the left, 
 
 In machine learning it is common to assume that observations are independent and identically distributed, thus, it is also common to find the need to solve optimization problems of the form
 \begin{equation}
-  \min_{\theta \in \mathbb{R}^p} L(\theta), \quad \text{with} \, \,
-  L(\theta) = \frac{1}{n} \sum_{i = 1}^n { \ell_i(\theta) }.
+  \min_{\boldsymbol{\theta} \in \mathbb{R}^p} L(\boldsymbol{\theta}), \quad \text{with} \, \,
+  L(\boldsymbol{\theta}) = \frac{1}{n} \sum_{i = 1}^n { \ell_i(\boldsymbol{\theta}) }.
 \end{equation}
 
 That is, the loss function that needs to be minimized is usually a sum or average of several indexed functions in which each indexed function depends only on one observation of the data set. For example, in logistic regression, the loss function that is expressed in that way.
 
 Gradient descent uses iterations in the form
 \begin{equation}
-  \theta_{k+1} = \theta_k - \alpha_k \nabla L(\theta_k) :=\theta_k - \frac{\alpha_k}{n} \sum_{i = 1}^n \nabla \ell_i(\theta_k),
+  \boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k - \alpha_k \nabla L(\boldsymbol{\theta}_k) :=\boldsymbol{\theta}_k - \frac{\alpha_k}{n} \sum_{i = 1}^n \nabla \ell_i(\boldsymbol{\theta}_k),
 \end{equation}
 which involves evaluating $n$ gradients (one for each observation) and then taking an average. In some cases of machine learning, $n$ can be really big; hence computing all of those gradients in each iteration is expensive. That is why methods such as SGD are used, in which the number of gradients to compute does not depend on $n$ but instead it is constant. SGD uses iterations of the form
 \begin{equation}
-  \theta_{k+1} = \theta_k - \alpha_k \nabla \ell_{i_k}(\theta_k),
+  \boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k - \alpha_k \nabla \ell_{i_k}(\boldsymbol{\theta}_k),
 \end{equation}
-where $i_k \in \left\{1, 2, ..., n \right\}$ is randomly chosen. The gradient $\nabla \ell_{i_k}(\theta_k)$ is an unbiased estimator of $\nabla L(\theta_k)$. This way, each iteration is computationally inexpensive because it involves the computation of only one gradient. It can happen that some $\nabla \ell_{i_k}(\theta_k)$ in particular does not give a descent direction from $\theta_k$, but on average they yield descent directions, such that the sequence $\left\{ \theta_0, \theta_1, ... \right\}$ leads to a minimizer $\theta^*$.
+where $i_k \in \left\{1, 2, ..., n \right\}$ is randomly chosen. The gradient $\nabla \ell_{i_k}(\boldsymbol{\theta}_k)$ is an unbiased estimator of $\nabla L(\boldsymbol{\theta}_k)$. This way, each iteration is computationally inexpensive because it involves the computation of only one gradient. It can happen that some $\nabla \ell_{i_k}(\boldsymbol{\theta}_k)$ in particular does not give a descent direction from $\boldsymbol{\theta}_k$, but on average they yield descent directions, such that the sequence $\left\{ \boldsymbol{\theta}_0, \boldsymbol{\theta}_1, ... \right\}$ leads to a minimizer $\boldsymbol{\theta}^*$.
 
 \subsection{Mini-batch gradient descent}
 
@@ -318,7 +318,7 @@ An approach that lies between the two extremes of computing the gradients of all
 
 So, mini-batch gradient descent updates the value of the parameters in each iteration as such
 \begin{equation}
-  \theta_{k+1} = \theta_k - \frac{\alpha_k}{n} \sum_{i = 1}^l \nabla \ell_i(\theta_k).
+  \boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k - \frac{\alpha_k}{n} \sum_{i = 1}^l \nabla \ell_i(\boldsymbol{\theta}_k).
 \end{equation}
 
 We implemented mini-batch gradient descent for logistic regression in R and test it with the same simulated data set as in the previous example. Figure \ref{fig:Mini-batch_GD_plots} shows the results of the implementation. Each of the plots shows the values of the parameters in each iteration, but the difference in each plot is the size of the mini-batch $l$. It is clear that with bigger $l$, the descent directions are less noisy, but in the end they all converge to more or less the same value.
