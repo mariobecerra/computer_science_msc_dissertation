@@ -44,7 +44,7 @@ In the case of linear regression, it is commonly assumed that the error term in 
   %L(\boldsymbol{\theta}) = \sum_{i = 1}^n \log \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{(y_i - \boldsymbol{x_i}^T \boldsymbol{\theta})^2}{2\sigma^2}},
   L(\boldsymbol{\theta}) = \sum_{i = 1}^n \log \left[ \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(y_i - \boldsymbol{x_i}^T \boldsymbol{\theta})^2}{2\sigma^2}} \right],
 \end{equation}
-%where $\normalfunc{\boldsymbol{x_i}}{\mu}{\sigma^2}$ denotes the density function of a Gaussian random variable with mean $\mu$ and variance $\sigma^2$ evaluated in point $\boldsymbol{x_i}$.
+%where $\normalfunc{\boldsymbol{x_i}}{\boldsymbol{\boldsymbol{\mu}}}{\sigma^2}$ denotes the density function of a Gaussian random variable with mean $\boldsymbol{\boldsymbol{\mu}}$ and variance $\sigma^2$ evaluated in point $\boldsymbol{x_i}$.
 
 The \textbf{principle of maximum likelihood} states that the values for $\boldsymbol{\theta}$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \eqref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}.
 With some algebra, it is fairly easy to see that maximizing equation \eqref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
@@ -145,12 +145,12 @@ Hence, minimizing the loss function leads to choosing values of $\boldsymbol{\th
 
 The logistic regression model can be reformulated from a Bayesian approach. As before, it will be assumed that $y_i$ follows a Bernoulli distribution such that the probability of being 1 is $p_i(\boldsymbol{\theta}) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)})$, where $\sigma \left( \cdot \right)$ is the logistic sigmoid function. In the Bayesian paradigm, the unknown parameter vector $\boldsymbol{\boldsymbol{\theta}} = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ must have a joint prior distribution. A good idea is to assume a Gaussian distribution for the unknown unobservable parameter $\boldsymbol{\boldsymbol{\theta}}$. Furthermore, independence between the components of $\boldsymbol{\boldsymbol{\theta}}$ can be assumed which in turn allows one to write the prior distribution as
 \begin{equation}
-  %\boldsymbol{\theta} \sim \normaldist{\mu}{\frac{1}{\tau} I},
-  \boldsymbol{\theta} \sim \normaldist{\mu}{\sigma^2 I},
+  %\boldsymbol{\theta} \sim \normaldist{\boldsymbol{\mu}}{\frac{1}{\tau} \boldsymbol{I}},
+  \boldsymbol{\theta} \sim \normaldist{\boldsymbol{\mu}}{\sigma^2 \boldsymbol{I}},
 \end{equation}
-where $\mu \in \mathbb{R}^3$, $\sigma^2 \in \mathbb{R}^+$ and $I$ is a $3 \times 3$ identity matrix.
+where $\boldsymbol{\mu} \in \mathbb{R}^3$, $\sigma^2 \in \mathbb{R}^+$ and $\boldsymbol{I}$ is a $3 \times 3$ identity matrix.
 % In this context, $\tau$ is the inverse of the variance, and is called the \textbf{precision}.
-Assuming $\mu = \left[ \mu_0, \mu_1, \mu_2 \right]^T$, then the prior distribution takes the following form
+Assuming $\boldsymbol{\mu} = \left[ \mu_0, \mu_1, \mu_2 \right]^T$, then the prior distribution takes the following form
 \begin{equation}
   % \prob{\theta} = \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}}.
   \prob{\boldsymbol{\theta}} = \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}}.
