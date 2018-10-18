@@ -111,7 +111,7 @@ In this case, the mean-field variational distribution is
   \label{eq:mean_field_normal_prior}
   q(\boldsymbol{\theta} | \boldsymbol{\lambda}) = \prod_{j = 1}^p \normalfunc{\theta_j}{\mu_j}{\sigma_j^2}
  \end{equation}
-with $\boldsymbol{\lambda} = \left[ \mu_1, \hdots, \mu_p, \sigma_1^2, \hdots, \sigma_p^2 \right]^T$ and where $\normalfunc{\theta_j}{\mu_j}{\sigma_j^2}$ denotes the value of a normal density function at $\theta_j$ with mean $\mu_j$ and variance $\sigma_j^2$.
+with $\boldsymbol{\lambda} = \left[ \mu_1, \hdots, \mu_p, \sigma_1^2, \hdots, \sigma_p^2 \right]^T$ and where $\normalfunc{\theta_j}{\mu_j}{\sigma_j^2}$ denotes the value of a Gaussian density function at $\theta_j$ with mean $\mu_j$ and variance $\sigma_j^2$.
 
 According to equation \eqref{eq:ELBO_gradient}, to compute the gradient of the ELBO, we need to be able to compute $\nabla_{\boldsymbol{\lambda}} \log q(\boldsymbol{\theta} | \boldsymbol{\lambda})$, so we need that partial derivative of $\log q(\boldsymbol{\theta} | \boldsymbol{\lambda})$ with respect to each $\mu_j$ and $\sigma_j^2$, $j \in \left\{ 1, \hdots, p \right\}$. Let's start with $\mu_j$.
 \begin{equation}
