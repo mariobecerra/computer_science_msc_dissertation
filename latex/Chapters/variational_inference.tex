@@ -151,7 +151,7 @@ To compute the gradient in equation \eqref{eq:ELBO_gradient}, it is necessary to
   \end{split}
 \end{equation*}
 
-In the last line, $\log p(\boldsymbol{y} | \boldsymbol{X} | \boldsymbol{\theta})$ has been reduced to just a constant $c$. It can be seen that $\mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] = 0$ by using the dominated convergence theorem like it was done in \cite{ranganath2014black}.
+In the last line, $\log p(\boldsymbol{y} | \boldsymbol{X}, \boldsymbol{\theta})$ has been reduced to just a constant $c$. It can be seen that $\mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] = 0$ by using the dominated convergence theorem like it was done in \cite{ranganath2014black}.
 \begin{equation}
   \begin{split}
       \mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] &=
@@ -187,8 +187,8 @@ With these derivations, a gradient ascent approach can be taken in order to opti
 \end{equation}
 and then the $\boldsymbol{\lambda}$ parameter is updated as $\boldsymbol{\lambda}_{t+1} = \boldsymbol{\lambda}_{t} + \eta_t  \Delta_{\boldsymbol{\lambda}_t} \mathcal{L}$, with each $\eta_t$ chosen accordingly, until a certain stopping criteria is met.
 
-An implementation of this algorithm was made in R with a simulated data set of $n = 500$ data points and $p = 1$ feature. The response vector was created with the logistic sigmoid function as $y_i = \sigma(\theta_0 + \theta_1 \boldsymbol{x_i})$, with $\theta_0 = -5$ and $\theta_1 = 5$. The initial value for $\boldsymbol{\lambda} = \left[ \mu_1, \mu_2, \alpha_1, \alpha_2 ]^T \right]$ is zero, for each iteration $S = 50$ Monte Carlo samples are taken to compute the approximate gradient, and the step size $\eta_t$ is chosen using the AdaGrad method in which
-$\eta_t = \left( \mathrm{diag}(G_t) \right)^{\frac{1}{2}}$, where $\mathrm{diag}(G_t)$ refers to the diagonal of the matrix $G_t = \left( \Delta_{\boldsymbol{\lambda}_t} \right) \left( \Delta_{\boldsymbol{\lambda}_t} \right)^T$ \cite{duchi2011adaptive}. The stopping criterion is that
+An implementation of this algorithm was made in R with a simulated data set of $n = 500$ data points and $p = 1$ feature. The response vector was created with the logistic sigmoid function as $y_i = \sigma(\theta_0 + \theta_1 \boldsymbol{x_i})$, with $\theta_0 = -5$ and $\theta_1 = 5$. The initial value for $\boldsymbol{\lambda} = \left[ \mu_1, \mu_2, \alpha_1, \alpha_2 ]^T \right]$ is zero, for each iteration $S = 50$ Monte Carlo samples are taken to compute the approximate gradient, and the step size $\boldsymbol{\eta}_t$ is chosen using the AdaGrad method in which
+$\boldsymbol{\eta}_t = \left( \mathrm{diag}(\boldsymbol{G}_t) \right)^{\frac{1}{2}}$, where $\mathrm{diag}(\boldsymbol{G}_t)$ refers to the diagonal of the matrix $\boldsymbol{G}_t = \left( \Delta_{\boldsymbol{\lambda}_t} \right) \left( \Delta_{\boldsymbol{\lambda}_t} \right)^T$ \cite{duchi2011adaptive}. In this case, since $\boldsymbol{\eta}_t$ is a vector, the product $\boldsymbol{\eta}_t \Delta_{\boldsymbol{\lambda}_t}$ refers to an element-wise multiplication. The stopping criterion is that
 % $\frac{\norm{\mu_{t+1} - \mu_{t}}}{\norm{\mu_t}} < 0.00003$,
 $\norm{\boldsymbol{\mu}_{t+1} - \boldsymbol{\mu}_{t}} < 0.005$,
 with $\boldsymbol{\mu}_t$ being the vector containing the values of $\mu_1$ and $\mu_2$ in the $t$-th iteration of the algorithm.
