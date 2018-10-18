@@ -102,9 +102,9 @@ A family that is often used to approximate $p$ is the \textbf{mean-field variati
 
 To illustrate this, let's study a simple example in which the goal will be to try to approximate the posterior distribution of a two-class logistic regression. Assume a data matrix $\boldsymbol{y} | \boldsymbol{X} \in \mathbb{R}^{n \times p}$ and a response vector $\boldsymbol{y}$ with values 1 or 0. Each observation $y_i$ is modeled with a Bernoulli distribution such that
 \begin{equation}
-  y_i | x_i, \boldsymbol{\theta} \sim \mathrm{Bern}(\sigma(\boldsymbol{\theta}^T x_i))
+  y_i | \boldsymbol{x_i}, \boldsymbol{\theta} \sim \mathrm{Bern}(\sigma(\boldsymbol{\theta}^T \boldsymbol{x_i}))
 \end{equation}
-where $\sigma(\cdot)$ is the logistic sigmoid function. The prior distribution for $\boldsymbol{\theta}$ is a Gaussian $\boldsymbol{\theta} \sim \normaldist{0}{\sigma_0^2 \mathbb{I}_p}$ where $\mathbb{I}_p$ is the $p \times p$ identity matrix and $\sigma_0^2 \in \mathbb{R}^+$.
+where $\sigma(\cdot)$ is the logistic sigmoid function. The prior distribution for $\boldsymbol{\theta}$ is a Gaussian $\boldsymbol{\theta} \sim \normaldist{\boldsymbol{0}}{\sigma_0^2 \boldsymbol{I}_p}$ where $\boldsymbol{I}_p$ is the $p \times p$ identity matrix and $\sigma_0^2 \in \mathbb{R}^+$.
 
 In this case, the mean-field variational distribution is
 \begin{equation}
@@ -171,8 +171,8 @@ Since $\boldsymbol{y}$ is a Bernoulli random vector, then
 \begin{equation}
   \begin{split}
       \log p(\boldsymbol{y} | \boldsymbol{X}, \boldsymbol{\theta}) &=
-      \log \left( \prod_{i = 1}^n \sigma(\boldsymbol{\theta}^T x_i)^{y_i} (1 - \sigma(\boldsymbol{\theta}^T x_i))^{1-y_i} \right) \\
-      &= \sum_{i = 1}^n \left[ y_i \log \left( \sigma(\boldsymbol{\theta}^T x_i \right) + (1 - y_i) (1 - \sigma(\boldsymbol{\theta}^T x_i)) \right].
+      \log \left( \prod_{i = 1}^n \sigma(\boldsymbol{\theta}^T \boldsymbol{x_i})^{y_i} (1 - \sigma(\boldsymbol{\theta}^T \boldsymbol{x_i}))^{1-y_i} \right) \\
+      &= \sum_{i = 1}^n \left[ y_i \log \left( \sigma(\boldsymbol{\theta}^T \boldsymbol{x_i} \right) + (1 - y_i) (1 - \sigma(\boldsymbol{\theta}^T \boldsymbol{x_i})) \right].
   \end{split}
 \end{equation}
 
@@ -187,13 +187,13 @@ With these derivations, a gradient ascent approach can be taken in order to opti
 \end{equation}
 and then the $\boldsymbol{\lambda}$ parameter is updated as $\boldsymbol{\lambda}_{t+1} = \boldsymbol{\lambda}_{t} + \eta_t  \Delta_{\boldsymbol{\lambda}_t} \mathcal{L}$, with each $\eta_t$ chosen accordingly, until a certain stopping criteria is met.
 
-An implementation of this algorithm was made in R with a simulated data set of $n = 500$ data points and $p = 1$ feature. The response vector was created with the logistic sigmoid function as $y_i = \sigma(\theta_0 + \theta_1 x_i)$, with $\theta_0 = -5$ and $\theta_1 = 5$. The initial value for $\boldsymbol{\lambda} = \left[ \mu_1, \mu_2, \alpha_1, \alpha_2 ]^T \right]$ is zero, for each iteration $S = 50$ Monte Carlo samples are taken to compute the approximate gradient, and the step size $\eta_t$ is chosen using the AdaGrad method in which
+An implementation of this algorithm was made in R with a simulated data set of $n = 500$ data points and $p = 1$ feature. The response vector was created with the logistic sigmoid function as $y_i = \sigma(\theta_0 + \theta_1 \boldsymbol{x_i})$, with $\theta_0 = -5$ and $\theta_1 = 5$. The initial value for $\boldsymbol{\lambda} = \left[ \mu_1, \mu_2, \alpha_1, \alpha_2 ]^T \right]$ is zero, for each iteration $S = 50$ Monte Carlo samples are taken to compute the approximate gradient, and the step size $\eta_t$ is chosen using the AdaGrad method in which
 $\eta_t = \left( \mathrm{diag}(G_t) \right)^{\frac{1}{2}}$, where $\mathrm{diag}(G_t)$ refers to the diagonal of the matrix $G_t = \left( \Delta_{\boldsymbol{\lambda}_t} \right) \left( \Delta_{\boldsymbol{\lambda}_t} \right)^T$ \cite{duchi2011adaptive}. The stopping criterion is that
 % $\frac{\norm{\mu_{t+1} - \mu_{t}}}{\norm{\mu_t}} < 0.00003$,
 $\norm{\boldsymbol{\mu}_{t+1} - \boldsymbol{\mu}_{t}} < 0.005$,
 with $\boldsymbol{\mu}_t$ being the vector containing the values of $\mu_1$ and $\mu_2$ in the $t$-th iteration of the algorithm.
 
-Figure \ref{fig:BBVI_plots} shows the results of the implementation, and a comparison of the values estimated by the \texttt{glm} package in R is also shown. The top-left image shows the value of the objective function, i.e., the ELBO, in each iteration, slowly increasing and with a wiggly line because of the noise of the estimations. The top-right image shows the real values of $\boldsymbol{\theta}$ (-5 and 5) with gray dashed lines, the values of $\boldsymbol{\theta}$ estimated by the \texttt{glm} package with colored dotted lines, and the approximated values of the variational distribution $q(\boldsymbol{\theta} | \boldsymbol{\lambda})$. The bottom-left image shows the values of $\mu_1$ and $\mu_2$ in each iteration, with horizontal colored dotted lines showing the estimated values by the \texttt{glm}package; it can be seen how they slowly approach their real values. The bottom-right image shows the values of $\mu_1$ and $\mu_2$ in each iteration in the plane, where the noise of the gradient estimation is seen in the wiggliness of the line; the red dot shows once again the value estimated by the \texttt{glm} package. In general the results are pretty good for such a simple algorithm. There are ways to have better and less noisy estimates, but they are beyond the scope of this work. For more details about better approximations of the gradient, see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
+Figure \ref{fig:BBVI_plots} shows the results of the implementation, and a comparison of the values estimated by the \texttt{glm} package in R is also shown. The top-left image shows the value of the objective function, i.e., the ELBO, in each iteration, slowly increasing and with a wiggly line because of the noise of the estimations. The top-right image shows the real values of $\boldsymbol{\theta}$ (-5 and 5) with gray dashed lines, the values of $\boldsymbol{\theta}$ estimated by the \texttt{glm} package with colored dotted lines, and the approximated values of the variational distribution $q(\boldsymbol{\theta} | \boldsymbol{\lambda})$. The bottom-left image shows the values of $\mu_1$ and $\mu_2$ in each iteration, with horizontal colored dotted lines showing the estimated values by the \texttt{glm} package; it can be seen how they slowly approach their real values. The bottom-right image shows the values of $\mu_1$ and $\mu_2$ in each iteration in the plane, where the noise of the gradient estimation is seen in the wiggliness of the line; the red dot shows once again the value estimated by the \texttt{glm} package. In general the results are pretty good for such a simple algorithm. There are ways to have better and less noisy estimates, but they are beyond the scope of this work. For more details about better approximations of the gradient, see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
 
 \begin{figure}[H]
     \centering
