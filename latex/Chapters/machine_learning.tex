@@ -141,6 +141,7 @@ The new objective function that needs to be minimized is
   \label{eq:logistic_example_loss_function}
   L(\boldsymbol{\theta}) = - \sum_{i = 1}^n \left[ y_i \log\left( p_i(\boldsymbol{\theta}) \right) + (1 - y_i) \log \left( 1 - p_i(\boldsymbol{\theta}) \right) \right].
 \end{equation}
+This loss function is commonly called in the literature the \textbf{cross-entropy} loss.
 
 Intuitively, this is an error function because if $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and what is left remaining is $\log\left( p_i(\boldsymbol{\theta}) \right)$. Now, when $p_i(\boldsymbol{\theta})$ is big, that is, close to 1, then $\log\left( p_i(\boldsymbol{\theta}) \right) \to 0$. However, if $p_i(\boldsymbol{\theta})$ is small, that is, close to 0, then $\log\left( p_i(\boldsymbol{\theta}) \right) \to -\infty$, and so the overall loss function tends to infinity. This means that when the real value of $y_i$ is 1 and a low probability is assigned to it, then the loss function is large; but if a high probability is assigned to it, then the loss function is small. The same reasoning works for when $y_i = 0$.
 % The same reasoning works for when $y_i = 0$: if a low probability is assigned, then the loss function is small; but if a high probability is assigned, then the loss function is large.
