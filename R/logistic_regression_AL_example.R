@@ -5,7 +5,7 @@ library(purrr)
 library(ggplot2)
 library(gridExtra)
 
-theme_set(theme_bw(base_size = 12))
+theme_set(theme_bw(base_size = 14))
 seed = 1958
 
 # Functions ---------------------------------------------------------------
@@ -92,13 +92,18 @@ real_theta = c(1, 1)
 dat_1 = create_data_ex_1(1000, real_theta, seed = seed) %>% 
   mutate(ix = 1:nrow(.))
 
+mod_0 = glm(y ~ x1+x2-1, data = dat_1, family = "binomial")
+
 gg_1.1 = dat_1 %>% 
   mutate(y = as.character(dat_1$y)) %>% 
   ggplot() +
   geom_point(aes(x1, x2, color = y, shape = y), size = 1.2, alpha = 0.8) +
   geom_abline(slope = -real_theta[1]/real_theta[2], size = 0.3) +
+  geom_abline(slope = - mod_0$coefficients[1]/mod_0$coefficients[2], linetype = "F1", size = 0.7) +
   scale_color_manual(values = c("red", "blue")) +
-  theme(legend.position='none')
+  theme(legend.position='none') +
+  xlab("") +
+  ylab(expression(x[2]))
 
 # Random sample
 
@@ -109,14 +114,16 @@ mod_1 = glm(y ~ x1+x2-1, data = sample_n(dat_1, 30), family = "binomial")
 
 gg_1.2 = dat_1 %>% 
   ggplot() +
-  geom_point(aes(x1, x2), size = 0.1, alpha = 0.1) +
+  geom_point(aes(x1, x2), size = 0.1, alpha = 0.4, color = "dark grey") +
   geom_point(data = dat_1_random %>% 
                mutate(y = as.character(y)),
              aes(x1, x2, color = y, shape = y), size = 1.2, alpha = 1) +
   geom_abline(slope = -real_theta[1]/real_theta[2], size = 0.3) +
   geom_abline(slope = - mod_1$coefficients[1]/mod_1$coefficients[2], linetype = "F1", size = 0.7) +
   scale_color_manual(values = c("red", "blue")) +
-  theme(legend.position='none') 
+  theme(legend.position='none') +
+  xlab(expression(x[1])) +
+  ylab("")
 
 # Active learning
 
@@ -142,14 +149,16 @@ mod_2.2 = glm(y ~ x1+x2-1, data = dat_1_AL, family = "binomial")
 
 gg_1.3 = dat_1 %>% 
   ggplot() +
-  geom_point(aes(x1, x2), size = 0.1, alpha = 0.1) +
+  geom_point(aes(x1, x2), size = 0.1, alpha = 0.4, color = "dark grey") +
   geom_point(data = dat_1_AL %>% 
                mutate(y = as.character(y)),
              aes(x1, x2, color = y, shape = y), size = 1.2, alpha = 1) +
   geom_abline(slope = -real_theta[1]/real_theta[2], size = 0.3) +
   geom_abline(slope = - mod_2.2$coefficients[1]/mod_2.2$coefficients[2], linetype = "F1", size = 0.7) +
   scale_color_manual(values = c("red", "blue")) +
-  theme(legend.position = 'none') 
+  theme(legend.position = 'none') +
+  xlab("") +
+  ylab("")
 
 
 out_plot_1 = arrangeGrob(gg_1.1, gg_1.2, gg_1.3, 
@@ -274,19 +283,20 @@ out_plot_2 = accuracies_random_all %>%
       summarize(accuracy = mean(acc), p25 = quantile(acc, 0.25), p75 = quantile(acc, 0.75)) %>% 
       ungroup()
   ) %>% 
-  ggplot() +
-  geom_ribbon(aes(iter, ymin = p25, ymax = p75, fill = type), alpha = 0.1) +
-  geom_line(aes(iter, accuracy, color = type)) +
+  mutate(n_examples = initial_n + iter) %>% 
+  ggplot(aes(x = n_examples)) +
+  geom_ribbon(aes(ymin = p25, ymax = p75, fill = type), alpha = 0.1) +
+  geom_line(aes(y = accuracy, color = type)) +
   scale_fill_manual(values = plot_colors, 
                      name = plot_legend_name,
                      labels = plot_labels) +
   scale_color_manual(values = plot_colors, 
                     name = plot_legend_name,
                     labels = plot_labels) +
-  xlab("Iteration") +
+  xlab("Number of data points") +
   ylab("Accuracy")
   
 
-ggsave(out_plot_2, filename = "log_reg_AL_accuracies_plot.pdf", dpi = 250, width = 24, height = 16, units = "cm")
+ggsave(out_plot_2, filename = "log_reg_AL_accuracies_plot.pdf", dpi = 250, width = 24, height = 12, units = "cm")
 
 
