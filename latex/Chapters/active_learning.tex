@@ -11,28 +11,57 @@
 
 % \section{Active Learning}
 
-An active learning problem is one in which the learner selects its own training data. For example, in a supervised learning problem where we are given a data set with features $\boldsymbol{X}$ and response variable $\boldsymbol{y}$. First we train a model $\hat{f}$ with the data that we have, afterwards the learner can choose new data $\boldsymbol{x}^*$ from an unlabeled pool of data, ask to an \textit{oracle} what the corresponding output $y^*$ is, and then add the pair $(\boldsymbol{x}^*, {y}^*)$ to the training data. The main goal of active learning is to select which $\boldsymbol{x}^*$ to incorporate to the training data \cite{cohn1996active}.
+An active learning problem is one in which the learner is able to select its own training data so that the performance will be better with less training data. This is attractive because many times, labeled data is expensive or hard to acquire, hence the desire to use the labeled data as efficiently as possible.
 
-The new example is chosen using an \textbf{acquisition function} $a(x, \hat{f})$ that is usually based on the model's uncertainty about the prediction. The new observation $\boldsymbol{x}^*$ is chosen so that it maximizes the acquisition function of all the observations in the pool set. In practice, the oracle is usually a human that gives the corresponding label ${y}^*$. After the new observation is added to the training data, the model is retrained with the updated data set. This process is iteratively repeated, with the training set increasing in size with every iteration. In the end, it is expected that this procedure leads to a better predictive performance than randomly selecting new observations to add to the training data.
+For example, in supervised learning, a modeler may have access to a lot of unlabeled data and few labeled data which are expensive to label my human annotators. An active learning task would be to train a model $\hat{f}$ with an initial set of labeled data $\mathcal{L}$. Afterwards, the learner can choose new data points $\boldsymbol{x}^*$ from an unlabeled pool of data $\mathcal{U}$, ask to an \textit{oracle} (e.g., a human annotator) what the corresponding output $y^*$ is, and then add the pair $(\boldsymbol{x}^*, {y}^*)$ to the training data, and this process may be repeated until a certain criteria are met, with the training set increasing in size in every iteration. Figure \ref{fig:Active_Learning_Cycle} shows this cycle in a diagram. The main goal of active learning is to select which $\boldsymbol{x}^*$ to incorporate to the training data \cite{cohn1996active}. In the end, it is expected that this procedure leads to a better predictive performance than randomly selecting new observations to add to the training data.
 
-The acquisition functions that will be used and compared in this work are four, and three of them use the posterior predictive distribution, particularly, the posterior predictive probability of an observation $\boldsymbol{x}^*$ having a label $y^*$ belonging to a class $c$, denoted as  $p(y^* = c | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*)$. Naturally, because of the definition of these acquisition functions, they only work in classification problems.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Active_Learning_Cycle}
+    \caption{Active Learning cycle. A model is trained from the labeled data $\mathcal{L}$, data points are taken from the unlabeled pool of data $\mathcal{U}$, labeled by an oracle and then added to the training set of labeled data $\mathcal{L}$ in order to retrain the model and continue the cycle. Image taken from \cite{settles.tr09}.}
+    \label{fig:Active_Learning_Cycle}
+\end{figure}
+
+% For example, in a supervised learning problem where there is a data set with features $\boldsymbol{X}$ and response variable $\boldsymbol{y}$. First we train a model $\hat{f}$ with the data that we have, afterwards the learner can choose new data $\boldsymbol{x}^*$ from an unlabeled pool of data, ask to an \textit{oracle} what the corresponding output $y^*$ is, and then add the pair $(\boldsymbol{x}^*, {y}^*)$ to the training data. The main goal of active learning is to select which $\boldsymbol{x}^*$ to incorporate to the training data \cite{cohn1996active}.
+
+The type of active learning described before, in which there is a large collection of unlabeled data $\mathcal{U}$ and a small set of labeled data $\mathcal{L}$, is usually called \textit{pool-based sampling} \cite{settles.tr09}, and will be the main focus of this work. There are other types of Active Learning but, since they are not of interest to this work, they will not be discussed.
+
+As mentioned before, in pool-based sampling, a model is trained with labeled training data from $\mathcal{L}$, and then, new data points are chosen to be labeled from the unlabeled data pool $\mathcal{U}$. The new data points are chosen using an \textbf{acquisition function} $a(x, \hat{f})$ that is usually based on the model's uncertainty about the prediction. The new observation $\boldsymbol{x}^*$ is chosen so that it maximizes the acquisition function of all the observations in the pool set. The role of the acquisition function is to evaluate the informativeness of each unlabeled data point.
+
+The acquisition functions that will be used and compared in this work are four, and three of them use the posterior predictive distribution, particularly, the posterior predictive probability of an observation $\boldsymbol{x}^*$ having a label $y^*$ belonging to a class $c$, denoted as $p(y^* = c | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*)$. Naturally, because of the definition of these acquisition functions, they only work in classification problems.
 
 \begin{enumerate}
   \item Predictive entropy:
 
-  $ \mathbb{H} \left[ y^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^* \right] = - \sum_c p(y^* = c | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*) \log p(y^* = c | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*)$.
-
-  \item Bayesian Active Learning by Disagreement (BALD):
-
-  $ \mathbb{H} \left[ y^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^* \right] - \mathbb{E}_{p(\boldsymbol{\theta} | \boldsymbol{X}, \boldsymbol{y})} \left[ \mathbb{H} \left[ y^* | \boldsymbol{x}^*, \boldsymbol{\theta} \right] \right]$.
+  $\mathbb{H} \left[ y^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^* \right] = - \sum_c p(y^* = c | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*) \log p(y^* = c | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*)$.
 
   \item Variation ratios: $1 - \max_y p(y^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*)$.
 
-  \item Random: Choosing an observation uniformly random from the pool of unlabeled data.
+  \item Bayesian Active Learning by Disagreement (BALD):
+
+  $\mathbb{H} \left[ y^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^* \right] - \mathbb{E}_{p(\boldsymbol{\theta} | \boldsymbol{X}, \boldsymbol{y})} \left[ \mathbb{H} \left[ y^* | \boldsymbol{x}^*, \boldsymbol{\theta} \right] \right]$.
+
+  \item Random: Choosing an observation uniformly random from the pool of unlabeled data $\mathcal{U}$.
 
 \end{enumerate}
 
+Note that predictive entropy and variation ratios can be used with a frequentist classifier because instead of using the posterior predictive distribution, one can use the predicted probability of each class. The BALD acquisition function, however, can only be used with a Bayesian classifier because in the case of a frequentist classifier, the result of this function is always zero. This is easy to see given the definition of the acquisition function
+\begin{equation}
+	\label{eq:bald_acq_func_def}
+	% \mathbb{I}[y^*, \mathcal{W} | x, \mathcal{D}] =
+  \mathbb{H} \left[ y^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^* \right] -
+    \mathbb{E}_{p(\boldsymbol{\theta} | \boldsymbol{X}, \boldsymbol{y})} \left[ \mathbb{H} \left[ y^* | \boldsymbol{x}^*, \boldsymbol{\theta} \right] \right],
+\end{equation}
+where $\mathbb{H} \left[ y^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^* \right]$ is the predictive entropy, previously defined as
+\begin{equation}
+	\label{eq:entropy_acq_func_def}
+  \mathbb{H} \left[ y^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^* \right] = - \sum_c p(y^* = c | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*) \log p(y^* = c | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*).
+\end{equation}
 
+In the Bayesian case, one has a positive number of samples from the posterior predictive distribution, so the second part of equation \eqref{eq:bald_acq_func_def}, i.e., the expected value
+$\mathbb{E}_{p(\boldsymbol{\theta} | \boldsymbol{X}, \boldsymbol{y})} \left[ \mathbb{H} \left[ y^* | \boldsymbol{x}^*, \boldsymbol{\theta} \right] \right]$
+is approximated by averaging the predictive entropy of each predictive sample; this way the BALD acquisition function is computed by taking the difference of this quantity and the first part of equation \eqref{eq:bald_acq_func_def}.
+In the frequentist case, there is only one point estimate, so that difference is zero, hence the BALD acquisition function is always zero.
 
 \begin{figure}[H]
     \centering
