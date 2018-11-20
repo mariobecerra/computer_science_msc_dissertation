@@ -85,21 +85,21 @@ create_initial_pool_train_val <- function(y_all, n = 5, seed = 2018){
 # Decision boundary example -----------------------------------------------
 
 # Create and plot data
-final_n = 40
+final_n = 80
 
 real_theta = c(1, 1)
 
 dat_1 = create_data_ex_1(1000, real_theta, seed = seed) %>% 
   mutate(ix = 1:nrow(.))
 
-mod_0 = glm(y ~ x1+x2-1, data = dat_1, family = "binomial")
+# mod_0 = glm(y ~ x1+x2-1, data = dat_1, family = "binomial")
 
 gg_1.1 = dat_1 %>% 
   mutate(y = as.character(dat_1$y)) %>% 
   ggplot() +
   geom_point(aes(x1, x2, color = y, shape = y), size = 1.2, alpha = 0.8) +
   geom_abline(slope = -real_theta[1]/real_theta[2], size = 0.3) +
-  geom_abline(slope = - mod_0$coefficients[1]/mod_0$coefficients[2], linetype = "F1", size = 0.7) +
+  # geom_abline(slope = - mod_0$coefficients[1]/mod_0$coefficients[2], linetype = "F1", size = 0.7) +
   scale_color_manual(values = c("red", "blue")) +
   theme(legend.position='none') +
   xlab("") +
@@ -109,17 +109,17 @@ gg_1.1 = dat_1 %>%
 
 set.seed(seed)
 dat_1_random = sample_n(dat_1, final_n)
-mod_1 = glm(y ~ x1+x2-1, data = sample_n(dat_1, 30), family = "binomial")
+mod_1 = glm(y ~ x1+x2-1, data = dat_1_random, family = "binomial")
 
 
 gg_1.2 = dat_1 %>% 
   ggplot() +
   geom_point(aes(x1, x2), size = 0.1, alpha = 0.4, color = "dark grey") +
+  geom_abline(slope = -real_theta[1]/real_theta[2], size = 0.3) +
+  geom_abline(slope = - mod_1$coefficients[1]/mod_1$coefficients[2], linetype = "F1", size = 0.6) +
   geom_point(data = dat_1_random %>% 
                mutate(y = as.character(y)),
-             aes(x1, x2, color = y, shape = y), size = 1.2, alpha = 1) +
-  geom_abline(slope = -real_theta[1]/real_theta[2], size = 0.3) +
-  geom_abline(slope = - mod_1$coefficients[1]/mod_1$coefficients[2], linetype = "F1", size = 0.7) +
+             aes(x1, x2, color = y, shape = y), size = 1.8, alpha = 1) +
   scale_color_manual(values = c("red", "blue")) +
   theme(legend.position='none') +
   xlab(expression(x[1])) +
@@ -132,17 +132,42 @@ initial_pool_train_val = create_initial_pool_train_val(dat_1$y, 5, seed)
 ix_train = initial_pool_train_val$ix_train
 ix_pool =  initial_pool_train_val$ix_pool
 
-mod_2.1 = glm(y ~ x1+x2-1, data = slice(dat_1, ix_train), family = "binomial")
+# mod_2.1 = glm(y ~ x1+x2-1, data = slice(dat_1, ix_train), family = "binomial")
+# 
+# preds_pool = predict(mod_2.1, newdata = slice(dat_1, ix_pool), type = "response")
+# 
+# ix_new_data = tibble(ix = ix_pool, p = preds_pool) %>% 
+#   mutate(var_rat = ifelse(p > 0.5, 1 - p, p)) %>% 
+#   arrange(desc(var_rat)) %>% 
+#   slice(1:(final_n - length(ix_train))) %>% 
+#   pull(ix)
 
-preds_pool = predict(mod_2.1, newdata = slice(dat_1, ix_pool), type = "response")
+n_iter_1 = final_n - length(ix_train)
 
-ix_new_data = tibble(ix = ix_pool, p = preds_pool) %>% 
-  mutate(var_rat = ifelse(p > 0.5, 1 - p, p)) %>% 
-  arrange(desc(var_rat)) %>% 
-  slice(1:(final_n - length(ix_train))) %>% 
-  pull(ix)
+initial_pool_train_val = create_initial_pool_train_val(dat_1$y, 15, seed)
+ix_train = initial_pool_train_val$ix_train
+ix_pool =  initial_pool_train_val$ix_pool
 
-dat_1_AL = slice(dat_1, c(ix_train, ix_new_data))
+for(i in 1:n_iter_1){
+  mod = glm(y ~ . -1, data = slice(dat_1, ix_train), family = "binomial")
+  
+  preds_pool = predict(mod, newdata = slice(dat_1, ix_pool), type = "response")
+  
+  ix_new_data = tibble(ix = ix_pool, p = preds_pool) %>% 
+    mutate(var_rat = ifelse(p > 0.5, 1 - p, p)) %>% 
+    arrange(desc(var_rat)) %>% 
+    slice(1) %>% 
+    pull(ix)
+  
+  ix_pool = setdiff(ix_pool, ix_new_data)
+  ix_train = c(ix_train, ix_new_data)
+  
+}
+
+# Only the points chosen by the acquisition function
+chosen_AL_points = setdiff(ix_train, initial_pool_train_val$ix_train)
+
+dat_1_AL = slice(dat_1, ix_train)
 
 mod_2.2 = glm(y ~ x1+x2-1, data = dat_1_AL, family = "binomial")
 
@@ -150,11 +175,12 @@ mod_2.2 = glm(y ~ x1+x2-1, data = dat_1_AL, family = "binomial")
 gg_1.3 = dat_1 %>% 
   ggplot() +
   geom_point(aes(x1, x2), size = 0.1, alpha = 0.4, color = "dark grey") +
-  geom_point(data = dat_1_AL %>% 
-               mutate(y = as.character(y)),
-             aes(x1, x2, color = y, shape = y), size = 1.2, alpha = 1) +
   geom_abline(slope = -real_theta[1]/real_theta[2], size = 0.3) +
-  geom_abline(slope = - mod_2.2$coefficients[1]/mod_2.2$coefficients[2], linetype = "F1", size = 0.7) +
+  geom_abline(slope = - mod_2.2$coefficients[1]/mod_2.2$coefficients[2], linetype = "F1", size = 0.6) +
+  geom_point(data = dat_1 %>% 
+               slice(chosen_AL_points) %>% 
+               mutate(y = as.character(y)),
+             aes(x1, x2, color = y, shape = y), size = 1.8, alpha = 1) +
   scale_color_manual(values = c("red", "blue")) +
   theme(legend.position = 'none') +
   xlab("") +
