@@ -63,18 +63,27 @@ $\mathbb{E}_{p(\boldsymbol{\theta} | \boldsymbol{X}, \boldsymbol{y})} \left[ \ma
 is approximated by averaging the predictive entropy of each predictive sample; this way the BALD acquisition function is computed by taking the difference of this quantity and the first part of equation \eqref{eq:bald_acq_func_def}.
 In the frequentist case, there is only one point estimate, so that difference is zero, hence the BALD acquisition function is always zero.
 
+If the data points in the pool of unlabeled data points $\mathcal{U}$ are in random order, then using BALD as an acquisition function with a frequentist classifier is equivalent to a random acquisition function because all data points in $\mathcal{U}$ have the same acquisition function value.
+
+An example of the active learning cycle can be seen in figure \ref{fig:log_reg_AL_accuracies_plot}. This figure summarizes the results of a two class classification problem using a logistic regression model. Similarly to what was done in chapter \ref{ch:machine_learning}, a data set was generated with a data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times 10}$ with $n = 1000$ such that $\boldsymbol{x_i^{(k)}} \sim N(0, 1)$ for each $i \in \left\{1, ..., n \right\}$ and $k \in \left\{1, ..., 10 \right\}$.
+Then an auxiliary vector was computed, $p_i = \frac{1}{1 + \exp \left( - \sum_{k = 1}^{10} \theta_k x_i^{(k)}  \right)}$, with each $\theta_k$ created at random from a continuous uniform distribution from -5 to 5. Finally, the response variable $\boldsymbol{y}$ was built simulating Bernoulli random variables, such that $y_i \sim \mathrm{Bern}(p_i)$.
+
+For the example, an initial random training set of 20 observations $\mathcal{L}$ was created, with 10 examples of each class. Of the 980 points that were not used, 300 were used as a validation set, and the remaining 680 points were used as the unlabeled pool set $\mathcal{U}$.
+Then, 180 acquisition iterations were made, in each iteration training a logistic regression model, making predictions on the pool set $\mathcal{U}$, and use these predictions to compute the frequentist variation ratios and choose the data point with the highest value so that it would be added to the training set set $\mathcal{L}$. In order to remove sampling noise, this process was repeated 50 times, each time choosing different initial random training, validation and pool sets. The same was done using a random acquisition function to compare with the Active Learning setting.
+
+Figure \ref{fig:log_reg_AL_accuracies_plot} shows the mean accuracy on the validation set in each acquisition iteration, with the light colors showing the 25-th and 75-th percentiles of the accuracies in each iteration. It is clear that using Active Learning leads to a better performance of the model with less data compared to a random sample from $\mathcal{U}$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{log_reg_AL_accuracies_plot}
+    \caption{Accuracies of a logistic regression model using a variation ratios acquisition function (blue) and a random acquisition function (red).}
+    \label{fig:log_reg_AL_accuracies_plot}
+\end{figure}
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{log_reg_AL_decision_boundary_plot}
     \caption{AL example 1.}
     \label{fig:log_reg_AL_decision_boundary_plot}
-\end{figure}
-
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{log_reg_AL_accuracies_plot}
-    \caption{AL example 1.}
-    \label{fig:log_reg_AL_accuracies_plot}
 \end{figure}
