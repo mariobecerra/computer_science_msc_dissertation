@@ -80,10 +80,13 @@ Figure \ref{fig:log_reg_AL_accuracies_plot} shows the mean accuracy on the valid
     \label{fig:log_reg_AL_accuracies_plot}
 \end{figure}
 
+To see what kind of points the acquisition function chooses, another example was implemented. This example is very similar to the last one, but in this case the parameter vector $\boldsymbol{\theta}$ is a two-dimensional vector such that $\boldsymbol{\theta} = \left[ 1, 1 \right]^T$. Again, 1000 points were generated and an initial random training set of 10 training examples (5 of each class), followed by 70 active learning iterations, using variation ratios and random acquisition functions.
+
+Figure \ref{fig:log_reg_AL_decision_boundary_plot} shows the results of this process. On the left, the generated data are shown, with the thin black line representing the real decision boundary of the generated data. The center image highlights the data points selected by the random acquisition function. Again, the thin black line is the real decision boundary, whilst the bold dashed black line is the decision boundary of the trained model. The right image highlights the data points selected by the variation ratios acquisition function, where the black lines represent the same as in the center image. It can be seen that when using the variation ratios acquisition function, the selected data points lie close to the decision boundary, whilst using the random acquisition function, points from all the domain are chosen. In the end, the variation ratios acquisition function helped choose the points that lead to a better approximation to the real decision boundary.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{log_reg_AL_decision_boundary_plot}
-    \caption{AL example 1.}
+    \caption{Comparison of points chosen by a random acquisition function and a variation ratios acquisition function.}
     \label{fig:log_reg_AL_decision_boundary_plot}
 \end{figure}
