@@ -144,9 +144,6 @@ ix_pool =  initial_pool_train_val$ix_pool
 
 n_iter_1 = final_n - length(ix_train)
 
-initial_pool_train_val = create_initial_pool_train_val(dat_1$y, 15, seed)
-ix_train = initial_pool_train_val$ix_train
-ix_pool =  initial_pool_train_val$ix_pool
 
 for(i in 1:n_iter_1){
   mod = glm(y ~ . -1, data = slice(dat_1, ix_train), family = "binomial")
