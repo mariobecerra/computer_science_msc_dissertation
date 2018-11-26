@@ -3,7 +3,13 @@
 \chapter{Experimental results}
 \label{ch:results}
 
-In this section, the results of the experiments run are shown. Everything was done in Keras using Tensorflow as backend and mainly through R, although some Python code was used via the \texttt{reticulate} package.
+In the previous chapters, the theory of different subjects was presented, including machine learning, ANNs, active learning, Bayesian statistics, variational inference, and how they are all related. In this chapter, the results of a series of experiments with three different data sets are shown. These datasets are the MNIST dataset \cite{lecun1998gradient}, the CIFAR-10 dataset \cite{krizhevsky2009learning}, and a dataset of cat and dog pictures \cite{elson2007asirra}.
+
+In all experiments, a deep convolutional network was trained to classify the images in each data set. The experiment setup was very similar to the one in chapter \ref{ch:active_learning} in the sense that each model was trained with an initial small random set of images, and then an acquisition function was used to select new images from a pool set $\mathcal{U}$ so that they would be added to the training set $mathcal{L}$ and a new model would be trained with this new bigger data set of labeled images.
+
+Six acquisition functions were used: Bayesian predictive entropy, frequentist predictive entropy, Bayesian variation ratios, frequentist variation ratios, BALD, and random. ∫The Bayesian CNNs were created using the dropout variational approximation mentioned in chapter \ref{ch:ann}.
+
+All models were trained using Keras\cite{chollet2015keras} with Tensorflow \cite{tensorflow2015-whitepaper} as backend. Most of the code is in R with some Python scripts called from R using the \texttt{reticulate} package \cite{reticulate_package}.
 
 \section{MNIST dataset}
 
@@ -38,14 +44,15 @@ Even when my implementation achieved the goal of outperforming a random acquisit
   \label{fig:mnist_var_ratios_AL}
 \end{figure}
 
-One more thing that should be mentioned is that I could not implement the BALD acquisition in the frequentist setting because of the way it is defined. The BALD uncertainty for a prediction $y$ given model parameters $\mathcal{W}$, features $x$ and training data $\mathcal{D}$ is defined as
 
-\begin{equation}
-	\label{eq:bald_def}
-	\mathbb{I}[y, \mathcal{W} | x, \mathcal{D}] = \mathbb{H}[y | x, \mathcal{D}] - \mathbb{E}_{p(\mathcal{W} | \mathcal{D})}[\mathbb{H}[y | x, \mathcal{W}]]
-\end{equation}
-
-with $\mathbb{H}[y | x, \mathcal{D}]$ is the predictive entropy and is defined as $-\sum_c p(y = c | x, \mathcal{D}) \log p(y = c | x, \mathcal{D})$. In the Bayesian case, we have a set of $T$ dropout samples that approximate the predictive distribution, so the second part of equation \ref{eq:bald_def}, i.e., the expected value $\mathbb{E}_{p(\mathcal{W} | \mathcal{D})}[\mathbb{H}[y | x, \mathcal{W}]]$ is approximated by averaging the predictive entropy of each predictive sample; this way $\mathbb{I}[y, \mathcal{W} | x, \mathcal{D}]$ is computed by taking the difference of this quantity and the first part of equation \ref{eq:bald_def}. In the frequentist case, we only have one point estimate, so that difference is zero, so $\mathbb{I}[y, \mathcal{W} | x, \mathcal{D}]$ is zero for all points in the pool set. To this day, I don't know how the paper's authors computed it because their Github code is not clear and they haven't answered my email where I asked them that.
+% One more thing that should be mentioned is that I could not implement the BALD acquisition in the frequentist setting because of the way it is defined. The BALD uncertainty for a prediction $y$ given model parameters $\mathcal{W}$, features $x$ and training data $\mathcal{D}$ is defined as
+%
+% \begin{equation}
+% 	\label{eq:bald_def}
+% 	\mathbb{I}[y, \mathcal{W} | x, \mathcal{D}] = \mathbb{H}[y | x, \mathcal{D}] - \mathbb{E}_{p(\mathcal{W} | \mathcal{D})}[\mathbb{H}[y | x, \mathcal{W}]]
+% \end{equation}
+%
+% with $\mathbb{H}[y | x, \mathcal{D}]$ is the predictive entropy and is defined as $-\sum_c p(y = c | x, \mathcal{D}) \log p(y = c | x, \mathcal{D})$. In the Bayesian case, we have a set of $T$ dropout samples that approximate the predictive distribution, so the second part of equation \ref{eq:bald_def}, i.e., the expected value $\mathbb{E}_{p(\mathcal{W} | \mathcal{D})}[\mathbb{H}[y | x, \mathcal{W}]]$ is approximated by averaging the predictive entropy of each predictive sample; this way $\mathbb{I}[y, \mathcal{W} | x, \mathcal{D}]$ is computed by taking the difference of this quantity and the first part of equation \ref{eq:bald_def}. In the frequentist case, we only have one point estimate, so that difference is zero, so $\mathbb{I}[y, \mathcal{W} | x, \mathcal{D}]$ is zero for all points in the pool set. To this day, I don't know how the paper's authors computed it because their Github code is not clear and they haven't answered my email where I asked them that.
 
 \section{Cats and dogs dataset}
 
@@ -58,12 +65,12 @@ with $\mathbb{H}[y | x, \mathcal{D}]$ is the predictive entropy and is defined a
 \end{figure}
 
 
-\section{CIFAR10 dataset}
+\section{CIFAR-10 dataset}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{cifar10_accuracy.png}
-    \caption{Accuracy of models in each acquisition step in the CIFAR10 dataset.}
+    \caption{Accuracy of models in each acquisition step in the CIFAR-10 dataset.}
     \label{fig:cifar10_comparison_active_learning_random}
 \end{figure}
 
