@@ -13,6 +13,8 @@ All models were trained using Keras\cite{chollet2015keras} with Tensorflow \cite
 
 \section{MNIST dataset}
 
+The MNIST dataset is a collection of images representing \numprint{70000} handwritten digits
+
 The first goal was to replicate \citeauthor{Gal2016Active}'s work done with MNIST dataset in \citetitle{Gal2016Active}. The results can be seen in figure \ref{fig:mnist_comparison_active_learning_random}, where I compare my results (on the left) with the original paper's results (right). The results are pretty similar overall, although the mean STD acquisition function was not implemented in the replication due to the bad performance shown in the paper.
 
 Even when my implementation achieved the goal of outperforming a random acquisition function, when comparing Bayesian and frequentist approaches the results differ. The paper's authors claim that the use of a Bayesian approach in the acquisition process of Active Learning leads to better accuracy with fewer images, but in my implementation there is virtually no distinction between both approaches. This can be seen in figures in \ref{fig:mnist_pred_entropy_AL} and \ref{fig:mnist_var_ratios_AL} that show my results (left) and the paper's authors results (right). In the paper, the frequentist acquisition functions show a worse performance than their Bayesian counterparts, but in my implementation there is no distinction. For example, with predictive entropy in figure \ref{fig:mnist_pred_entropy_AL}, the frequentist acquisition function in the original paper achieve a 90\% accuracy with around 300 images, while in my implementation this accuracy is first achieved with around 200 images.
