@@ -7,7 +7,7 @@ In the previous chapters, the theory of different subjects was presented, includ
 
 In all experiments, a deep convolutional network was trained to classify the images in each data set. The experiment setup was very similar to the one in chapter \ref{ch:active_learning} in the sense that each model was trained with an initial small random set of images, and then an acquisition function was used to select new images from a pool set $\mathcal{U}$ so that they would be added to the training set $mathcal{L}$ and a new model would be trained with this new bigger data set of labeled images.
 
-Six acquisition functions were used: Bayesian predictive entropy, frequentist predictive entropy, Bayesian variation ratios, frequentist variation ratios, BALD, and random. ∫The Bayesian CNNs were created using the dropout variational approximation mentioned in chapter \ref{ch:ann}.
+Six acquisition functions were used: Bayesian predictive entropy, frequentist predictive entropy, Bayesian variation ratios, frequentist variation ratios, BALD, and random. The Bayesian CNNs were created using the dropout variational approximation mentioned in chapter \ref{ch:ann}.
 
 All models were trained using Keras\cite{chollet2015keras} with Tensorflow \cite{tensorflow2015-whitepaper} as backend. Most of the code is in R with some Python scripts called from R using the \texttt{reticulate} package \cite{reticulate_package}.
 
