@@ -30,9 +30,7 @@ The acquisition functions used in the original article are the ones mentioned me
 
 The architecture of the neural network used to train the model convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-softmax, with 32 convolution kernels, $4 \times 4$ kernel size, $2 \times 2$ pooling, dense layer with 128 units, and dropout probabilities $0.25$ and $0.5$. For the Bayesian acquisition functions, the posterior predictive distribution samples were obtained by using the dropout trick mentioned in chapter \ref{ch:ann}.
 
-The results can be seen in figure \ref{fig:mnist_comparison_active_learning_random}, where the results of our implementation are on the left and the original article's results are shown on the right. Our implementation achieved the goal of outperforming a random acquisition function, but the results differ when one compares the Bayesian and the frequentist approach. The article's authors claim that the use of a Bayesian approach in the acquisition process of Active Learning leads to better accuracy with fewer images, but in our implementation this does not happen.
-
-This can be seen with more detail in figures in \ref{fig:mnist_pred_entropy_AL} and \ref{fig:mnist_var_ratios_AL} that show our results on the left and the article's results on the right. In the article, the frequentist acquisition functions show a worse performance than their Bayesian counterparts, while in our implementation there is virtually no distinction. For example, with predictive entropy in figure \ref{fig:mnist_pred_entropy_AL}, the frequentist acquisition function in the original article achieve a 90\% accuracy with around 300 images, while in our implementation this accuracy is first achieved with around 200 images.
+The results can be seen in figure \ref{fig:mnist_comparison_active_learning_random}, where the results of our implementation are shown on the left and the original article's results are shown on the right. Our implementation achieved the goal of outperforming a random acquisition function, but the results differ when one compares the Bayesian and the frequentist approach. The article's authors claim that the use of a Bayesian approach in the acquisition process of Active Learning leads to better accuracy with fewer images, but in our implementation this does not happen.
 
 \begin{figure}[H]
     \centering
@@ -40,6 +38,10 @@ This can be seen with more detail in figures in \ref{fig:mnist_pred_entropy_AL} 
     \caption{Accuracy of models in each acquisition step. The left picture shows our implementation and the right picture shows \citeauthor{Gal2016Active}'s implementation.}
     \label{fig:mnist_comparison_active_learning_random}
 \end{figure}
+
+This can be seen with more detail in figures in \ref{fig:mnist_pred_entropy_AL} and \ref{fig:mnist_var_ratios_AL} that show our results on the left and the article's results on the right. In the article, the frequentist acquisition functions show a worse performance than their Bayesian counterparts, while in our implementation there is virtually no distinction.
+
+For example, with predictive entropy in figure \ref{fig:mnist_pred_entropy_AL}, the frequentist acquisition function in the original article achieves a 90\% accuracy with around 300 images, while in our implementation this accuracy is first achieved with around 200 images.
 
 \begin{figure}[H]
   \centering
@@ -50,6 +52,7 @@ This can be seen with more detail in figures in \ref{fig:mnist_pred_entropy_AL} 
   \label{fig:mnist_pred_entropy_AL}
 \end{figure}
 
+Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios acquisition functions. In the original article, a 90\% accuracy is first achieved using the frequentist acquisition function with a little below 300 images, while in our implementation this accuracy is first achieved with around 180 images.
 
 \begin{figure}[H]
   \centering
@@ -60,15 +63,6 @@ This can be seen with more detail in figures in \ref{fig:mnist_pred_entropy_AL} 
   \label{fig:mnist_var_ratios_AL}
 \end{figure}
 
-
-% One more thing that should be mentioned is that I could not implement the BALD acquisition in the frequentist setting because of the way it is defined. The BALD uncertainty for a prediction $y$ given model parameters $\mathcal{W}$, features $x$ and training data $\mathcal{D}$ is defined as
-%
-% \begin{equation}
-% 	\label{eq:bald_def}
-% 	\mathbb{I}[y, \mathcal{W} | x, \mathcal{D}] = \mathbb{H}[y | x, \mathcal{D}] - \mathbb{E}_{p(\mathcal{W} | \mathcal{D})}[\mathbb{H}[y | x, \mathcal{W}]]
-% \end{equation}
-%
-% with $\mathbb{H}[y | x, \mathcal{D}]$ is the predictive entropy and is defined as $-\sum_c p(y = c | x, \mathcal{D}) \log p(y = c | x, \mathcal{D})$. In the Bayesian case, we have a set of $T$ dropout samples that approximate the predictive distribution, so the second part of equation \ref{eq:bald_def}, i.e., the expected value $\mathbb{E}_{p(\mathcal{W} | \mathcal{D})}[\mathbb{H}[y | x, \mathcal{W}]]$ is approximated by averaging the predictive entropy of each predictive sample; this way $\mathbb{I}[y, \mathcal{W} | x, \mathcal{D}]$ is computed by taking the difference of this quantity and the first part of equation \ref{eq:bald_def}. In the frequentist case, we only have one point estimate, so that difference is zero, so $\mathbb{I}[y, \mathcal{W} | x, \mathcal{D}]$ is zero for all points in the pool set. To this day, I don't know how the paper's authors computed it because their Github code is not clear and they haven't answered my email where I asked them that.
 
 \section{Cats and dogs dataset}
 
