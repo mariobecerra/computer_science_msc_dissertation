@@ -24,33 +24,26 @@ The MNIST dataset is a collection of \numprint{70000} labeled images representin
 
 The MNIST dataset was used in the article \citetitle{Gal2016Active} by \citeauthor{Gal2016Active} to compare the performance of Bayesian CNNs with frequentist CNNs in the context of Active Learning. This experiment was replicated in this work by using the same architecture that was explained in the article.
 
-The experiment consists in starting with a random but balanced sample of 20 images from the MNIST dataset and acquiring the 10 images that maximize each acquisition function in every iteration, doing 100 acquisition steps for each acquisition function.
+The experiment consists in starting with a random but balanced sample of 20 images from the MNIST dataset and acquiring the 10 images that maximize each acquisition function in every iteration, doing 100 acquisition steps for each acquisition function. This whole process was repeated 3 times with different initial images and the results were averaged.
 
 The acquisition functions used in the original article are the ones mentioned mentioned in chapter \ref{ch:active_learning}, i.e., Bayesian predictive entropy, frequentist predictive entropy, Bayesian variation ratios, frequentist variation ratios, BALD, random, and an additional one called ``Mean STD'' which was not implemented in this work because of its bad performance in the original article.
 
 The architecture of the neural network used to train the model convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-softmax, with 32 convolution kernels, $4 \times 4$ kernel size, $2 \times 2$ pooling, dense layer with 128 units, and dropout probabilities $0.25$ and $0.5$. For the Bayesian acquisition functions, the posterior predictive distribution samples were obtained by using the dropout trick mentioned in chapter \ref{ch:ann}.
 
-The results can be seen in figure \ref{fig:mnist_comparison_active_learning_random}, where the results of our implementation are shown on the left and the original article's results are shown on the right. Our implementation achieved the goal of outperforming a random acquisition function, but the results differ when one compares the Bayesian and the frequentist approach. The article's authors claim that the use of a Bayesian approach in the acquisition process of Active Learning leads to better accuracy with fewer images, but in our implementation this does not happen.
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{mnist_bayesian_accuracy.png}
-%     \caption{Accuracy of models in each acquisition step. The left picture shows our implementation and the right picture shows \citeauthor{Gal2016Active}'s implementation.}
-%     \label{fig:mnist_comparison_active_learning_random}
-% \end{figure}
+The results of the Bayesian and random acquisition functions can be seen in figure \ref{fig:mnist_comparison_active_learning_random}, where the results of our implementation are shown on the left and the original article's results are shown on the right. Our results are very similar with the article's results: apparently, using the variation ratios results in a slightly better performance than BALD or predictive entropy, and more importantly, using the Bayesian acquisition functions results in a much better performance than using a random acquisition function.
 
 \begin{figure}[H]
     \centering
     \subfloat[Our results.]{\includegraphics[width=0.5\textwidth]{MNIST_accuracies_bayesian}}
     \hfill
     \subfloat[Paper's results.]{\includegraphics[width=0.5\textwidth]{MNIST_all_gal_islam}}
-    \caption{Accuracy of models in each acquisition step. The left picture shows our implementation and the right picture shows \citeauthor{Gal2016Active}'s implementation.}
+    \caption{Accuracy of models in each acquisition step. The left picture shows our implementation and the right picture shows \citeauthor{Gal2016Active}'s implementation. The $x$ axis is the number of images.}
     \label{fig:mnist_comparison_active_learning_random}
 \end{figure}
 
-This can be seen with more detail in figures in \ref{fig:mnist_pred_entropy_AL} and \ref{fig:mnist_var_ratios_AL} that show our results on the left and the article's results on the right. In the article, the frequentist acquisition functions show a worse performance than their Bayesian counterparts, while in our implementation there is virtually no distinction.
+Our implementation achieved the goal of outperforming a random acquisition function, however, the results differ when one compares the Bayesian and the frequentist approach. The article's authors claim that the use of a Bayesian approach in the acquisition process of Active Learning leads to better accuracy with fewer images, but in our implementation this does not happen. This can be seen with more detail in figures in \ref{fig:mnist_pred_entropy_AL} and \ref{fig:mnist_var_ratios_AL} that show our results on the left and the article's results on the right. In the article, the frequentist acquisition functions lead to a worse performance than their Bayesian counterparts, while in our implementation there is virtually no distinction.
 
-For example, with predictive entropy in figure \ref{fig:mnist_pred_entropy_AL}, the frequentist acquisition function in the original article achieves a 90\% accuracy with around 300 images, while in our implementation this accuracy is first achieved with around 200 images.
+For example, with predictive entropy in figure \ref{fig:mnist_pred_entropy_AL}, the results seem to be backward and the frequentist acquisition function seems to have a slightly better performance that the Bayesian one. Another difference is that the frequentist acquisition function in the original article achieves a 90\% accuracy with around 300 images, while in our implementation this accuracy is first achieved with around 200 images.
 
 \begin{figure}[H]
   \centering
@@ -61,7 +54,7 @@ For example, with predictive entropy in figure \ref{fig:mnist_pred_entropy_AL}, 
   \label{fig:mnist_pred_entropy_AL}
 \end{figure}
 
-Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios acquisition functions. In the original article, a 90\% accuracy is first achieved using the frequentist acquisition function with a little below 300 images, while in our implementation this accuracy is first achieved with around 180 images.
+Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios acquisition functions. While the roles of the frequentist and Bayesian acquisition functions are not reversed as in the previous case, there is apparently no distinction between the two acquisition functions. Moreover, in the original article, a 90\% accuracy is first achieved using the frequentist acquisition function with a little below 300 images, while in our implementation this accuracy is first achieved with around 200 images. Another difference is that with 1000 images and using the frequentist acquisition function, the authors' accuracy is close to 96\%, while in our implementation it is close to 98\%.
 
 \begin{figure}[H]
   \centering
