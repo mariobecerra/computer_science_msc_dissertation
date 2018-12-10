@@ -32,9 +32,18 @@ The architecture of the neural network used to train the model convolution-relu-
 
 The results can be seen in figure \ref{fig:mnist_comparison_active_learning_random}, where the results of our implementation are shown on the left and the original article's results are shown on the right. Our implementation achieved the goal of outperforming a random acquisition function, but the results differ when one compares the Bayesian and the frequentist approach. The article's authors claim that the use of a Bayesian approach in the acquisition process of Active Learning leads to better accuracy with fewer images, but in our implementation this does not happen.
 
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{mnist_bayesian_accuracy.png}
+%     \caption{Accuracy of models in each acquisition step. The left picture shows our implementation and the right picture shows \citeauthor{Gal2016Active}'s implementation.}
+%     \label{fig:mnist_comparison_active_learning_random}
+% \end{figure}
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{mnist_bayesian_accuracy.png}
+    \subfloat[Our results.]{\includegraphics[width=0.5\textwidth]{MNIST_accuracies_bayesian}}
+    \hfill
+    \subfloat[Paper's results.]{\includegraphics[width=0.5\textwidth]{MNIST_all_gal_islam}}
     \caption{Accuracy of models in each acquisition step. The left picture shows our implementation and the right picture shows \citeauthor{Gal2016Active}'s implementation.}
     \label{fig:mnist_comparison_active_learning_random}
 \end{figure}
@@ -45,9 +54,9 @@ For example, with predictive entropy in figure \ref{fig:mnist_pred_entropy_AL}, 
 
 \begin{figure}[H]
   \centering
-  \subfloat[Our results.]{\includegraphics[width=0.5\textwidth]{mnist_pred_entropy_mine.png}}
+  \subfloat[Our results.]{\includegraphics[width=0.5\textwidth]{MNIST_accuracies_pred_ent_ribbon}}
   \hfill
-  \subfloat[Paper's results.]{\includegraphics[width=0.5\textwidth]{mnist_pred_entropy_islam.png}}
+  \subfloat[Paper's results.]{\includegraphics[width=0.5\textwidth]{MNIST_pred_ent_gal_islam}}
   \caption{Accuracy of Bayesian and frequentist models in each acquisition step using predictive entropy as acquisition function. The left picture shows our implementation and the right picture shows \citeauthor{Gal2016Active}'s implementation.}
   \label{fig:mnist_pred_entropy_AL}
 \end{figure}
@@ -56,9 +65,9 @@ Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios a
 
 \begin{figure}[H]
   \centering
-  \subfloat[Our results.]{\includegraphics[width=0.5\textwidth]{mnist_var_ratio_mine.png}}
+  \subfloat[Our results.]{\includegraphics[width=0.5\textwidth]{MNIST_accuracies_var_ratios_ribbon}}
   \hfill
-  \subfloat[Paper's results.]{\includegraphics[width=0.5\textwidth]{mnist_var_ratio_islam.png}}
+  \subfloat[Paper's results.]{\includegraphics[width=0.5\textwidth]{MNIST_var_ratios_gal_islam}}
   \caption{Accuracy of Bayesian and frequentist models in each acquisition step using variation ratios as acquisition function. The left picture shows our implementation and the right picture shows \citeauthor{Gal2016Active}'s implementation.}
   \label{fig:mnist_var_ratios_AL}
 \end{figure}
