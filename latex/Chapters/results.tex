@@ -71,10 +71,44 @@ Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios a
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{cats_dogs_accuracy.png}
+    \includegraphics[width=\textwidth]{cats_dogs_accuracies_bayesian}
     \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
-    \label{fig:cats_dogs_comparison_active_learning_random}
+    \label{fig:cats_dogs_accuracies_bayesian}
 \end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \subfloat[Our Predictive entropy.]{\includegraphics[width=0.5\textwidth]{cats_dogs_accuracies_pred_ent_ribbon}}
+    \hfill
+    \subfloat[Variation ratios.]{\includegraphics[width=0.5\textwidth]{cats_dogs_accuracies_var_ratios_ribbon}}
+    \caption{Accuracy of models in each acquisition step.}
+    \label{fig:cats_dogs_bayesian_vs_freq}
+\end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{cats_dogs_accuracies_pred_ent_ribbon}
+%     \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
+%     \label{fig:cats_dogs_accuracies_pred_ent_ribbon}
+% \end{figure}
+%
+%
+%
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{cats_dogs_accuracies_var_ratios_ribbon}
+%     \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
+%     \label{fig:cats_dogs_accuracies_var_ratios_ribbon}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{cats_dogs_accuracy.png}
+%     \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
+%     \label{fig:cats_dogs_comparison_active_learning_random}
+% \end{figure}
 
 
 \section{CIFAR-10 dataset}
