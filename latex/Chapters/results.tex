@@ -11,15 +11,19 @@ Six acquisition functions were used: Bayesian predictive entropy, frequentist pr
 
 All models were trained using Keras\cite{chollet2015keras} with Tensorflow \cite{tensorflow2015-whitepaper} as backend. Most of the code is in R with some Python scripts called from R using the \texttt{reticulate} package \cite{reticulate_package}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{MNIST dataset}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The MNIST dataset is a collection of \numprint{70000} labeled images representing handwritten digits in black and white. The dataset has a pre-selected test set consisting of \numprint{10000} images. Figure \ref{fig:mnist_data_examples} shows an example of how these images look. The image shows 100 randomly chosen digits from the train set.
+The MNIST dataset is a collection of \numprint{70000} labeled images representing handwritten digits in black and white. The dataset has a pre-selected test set consisting of \numprint{10000} images. Figure \ref{fig:MNIST_data_examples} shows an example of how these images look. The image shows 100 randomly chosen digits from the train set.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{mnist_data_examples}
-    \caption{Example of 100 randomly chosen digits from the MNIST train set.}
-    \label{fig:mnist_data_examples}
+    \includegraphics[width=\textwidth]{MNIST_data_examples}
+    \caption{Example of 225 randomly chosen digits from the MNIST train set.}
+    \label{fig:MNIST_data_examples}
 \end{figure}
 
 The MNIST dataset was used in the article \citetitle{Gal2016Active} by \citeauthor{Gal2016Active} to compare the performance of Bayesian CNNs with frequentist CNNs in the context of Active Learning. This experiment was replicated in this work by using the same architecture that was explained in the article.
@@ -66,7 +70,21 @@ Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios a
 \end{figure}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Cats and dogs dataset}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The cats and dogs dataset is a collection of \numprint{25000} pictures, of which half are cats and half are dogs.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{cats_dogs_data_examples}
+    \caption{Example of 30 randomly chosen cats and 30 randomly chosen dogs from the dataset.}
+    \label{fig:cats_dogs_data_examples}
+\end{figure}
 
 
 \begin{figure}[H]
@@ -111,7 +129,21 @@ Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios a
 % \end{figure}
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{CIFAR-10 dataset}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{CIFAR10_data_examples}
+    \caption{Example of 200 randomly chosen images from the dataset.}
+    \label{fig:CIFAR10_data_examples}
+\end{figure}
+
 
 \begin{figure}[H]
     \centering
@@ -120,7 +152,13 @@ Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios a
     \label{fig:cifar10_comparison_active_learning_random}
 \end{figure}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \begin{figure}[H]
     \centering
