@@ -147,10 +147,29 @@ The cats and dogs dataset is a collection of \numprint{25000} pictures, of which
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{cifar10_accuracy.png}
-    \caption{Accuracy of models in each acquisition step in the CIFAR-10 dataset.}
-    \label{fig:cifar10_comparison_active_learning_random}
+    \includegraphics[width=\textwidth]{CIFAR10_accuracies_bayesian}
+    \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
+    \label{fig:CIFAR10_accuracies_bayesian}
 \end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \subfloat[Our Predictive entropy.]{\includegraphics[width=0.5\textwidth]{CIFAR10_accuracies_pred_ent_ribbon}}
+    \hfill
+    \subfloat[Variation ratios.]{\includegraphics[width=0.5\textwidth]{CIFAR10_accuracies_var_ratios_ribbon}}
+    \caption{Accuracy of models in each acquisition step.}
+    \label{fig:CIFAR10_bayesian_vs_freq}
+\end{figure}
+
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{cifar10_accuracy.png}
+%     \caption{Accuracy of models in each acquisition step in the CIFAR-10 dataset.}
+%     \label{fig:cifar10_comparison_active_learning_random}
+% \end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -162,7 +181,31 @@ The cats and dogs dataset is a collection of \numprint{25000} pictures, of which
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{probs_iterations.png}
-    \caption{Probabilities of each model in each acquisition iteration.}
-    \label{fig:probs_iterations}
+    \includegraphics[width=\textwidth]{MNIST_probs_plot}
+    \caption{Predicted probabilities in each acquisition iteration.}
+    \label{fig:MNIST_probs_plot}
 \end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{cats_dogs_probs_plot}
+    \caption{Predicted probabilities in each acquisition iteration.}
+    \label{fig:cats_dogs_probs_plot}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{CIFAR10_probs_plot}
+    \caption{Predicted probabilities in each acquisition iteration.}
+    \label{fig:CIFAR10_probs_plot}
+\end{figure}
+
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{probs_iterations.png}
+%     \caption{Probabilities of each model in each acquisition iteration.}
+%     \label{fig:probs_iterations}
+% \end{figure}
