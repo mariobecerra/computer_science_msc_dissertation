@@ -17,7 +17,7 @@ All models were trained using Keras\cite{chollet2015keras} with Tensorflow \cite
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The MNIST dataset is a collection of \numprint{70000} labeled images representing handwritten digits in black and white. The dataset has a pre-selected test set consisting of \numprint{10000} images. Figure \ref{fig:MNIST_data_examples} shows an example of how these images look. The image shows 100 randomly chosen digits from the train set.
+The MNIST dataset is a collection of \numprint{70000} labeled images of size $32 \times 32$ representing handwritten digits in black and white. The dataset has a pre-selected test set consisting of \numprint{10000} images. Figure \ref{fig:MNIST_data_examples} shows an example of how these images look. The image shows 100 randomly chosen digits from the training set.
 
 \begin{figure}[H]
     \centering
@@ -76,13 +76,12 @@ Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios a
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The cats and dogs dataset is a collection of \numprint{25000} pictures, of which half are cats and half are dogs.
-
+The cats and dogs dataset was first used for a CAPTCHA developed by Microsoft Research called Asirra \cite{elson2007asirra}. It is a collection of \numprint{25000} pictures, of which half are cats and half are dogs. Figure \ref{fig:cats_dogs_data_examples} shows 30 randomly chosen cats and 30 randomly chosen dogs from the training set.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{cats_dogs_data_examples}
-    \caption{Example of 30 randomly chosen cats and 30 randomly chosen dogs from the dataset.}
+    \caption{Example of 60 randomly chosen cats and 30 randomly chosen dogs from the dataset.}
     \label{fig:cats_dogs_data_examples}
 \end{figure}
 
@@ -105,28 +104,6 @@ The cats and dogs dataset is a collection of \numprint{25000} pictures, of which
     \label{fig:cats_dogs_bayesian_vs_freq}
 \end{figure}
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{cats_dogs_accuracies_pred_ent_ribbon}
-%     \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
-%     \label{fig:cats_dogs_accuracies_pred_ent_ribbon}
-% \end{figure}
-%
-%
-%
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{cats_dogs_accuracies_var_ratios_ribbon}
-%     \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
-%     \label{fig:cats_dogs_accuracies_var_ratios_ribbon}
-% \end{figure}
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{cats_dogs_accuracy.png}
-%     \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
-%     \label{fig:cats_dogs_comparison_active_learning_random}
-% \end{figure}
 
 
 
@@ -135,6 +112,8 @@ The cats and dogs dataset is a collection of \numprint{25000} pictures, of which
 \section{CIFAR-10 dataset}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The CIFAR10 was introduced in \citeyear{krizhevsky2009learning}, and the name comes from the Canadian Institute for Advanced Research, who funded the project in which it was first used \cite{krizhevsky2009learning}. It consists of \numprint{60000} color images of size $32 \times 32$ representing 10 different types of objects, these being \textit{airplane}, \textit{automobile}, \textit{bird}, \textit{cat}, \textit{deer}, \textit{dog}, \textit{frog}, \textit{horse}, \textit{ship} and \textit{truck}. The classes are balanced in the dataset, meaning that each class has the same number of images. Of the \numprint{60000} images, \numprint{50000} are used as a training set and the rest as test set. The training set and the test are also balanced. Figure \ref{fig:CIFAR10_data_examples} shows 200 randomly chosen images from the training set.
 
 
 \begin{figure}[H]
@@ -164,13 +143,6 @@ The cats and dogs dataset is a collection of \numprint{25000} pictures, of which
 \end{figure}
 
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{cifar10_accuracy.png}
-%     \caption{Accuracy of models in each acquisition step in the CIFAR-10 dataset.}
-%     \label{fig:cifar10_comparison_active_learning_random}
-% \end{figure}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -182,7 +154,7 @@ The cats and dogs dataset is a collection of \numprint{25000} pictures, of which
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{MNIST_probs_plot}
-    \caption{Predicted probabilities in each acquisition iteration.}
+    \caption{Predicted probabilities in each acquisition iteration for the MNIST dataset.}
     \label{fig:MNIST_probs_plot}
 \end{figure}
 
@@ -190,7 +162,7 @@ The cats and dogs dataset is a collection of \numprint{25000} pictures, of which
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{cats_dogs_probs_plot}
-    \caption{Predicted probabilities in each acquisition iteration.}
+    \caption{Predicted probabilities in each acquisition iteration for the cats and dogs dataset.}
     \label{fig:cats_dogs_probs_plot}
 \end{figure}
 
@@ -198,14 +170,6 @@ The cats and dogs dataset is a collection of \numprint{25000} pictures, of which
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{CIFAR10_probs_plot}
-    \caption{Predicted probabilities in each acquisition iteration.}
+    \caption{Predicted probabilities in each acquisition iteration for the CIFAR10 dataset.}
     \label{fig:CIFAR10_probs_plot}
 \end{figure}
-
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{probs_iterations.png}
-%     \caption{Probabilities of each model in each acquisition iteration.}
-%     \label{fig:probs_iterations}
-% \end{figure}
