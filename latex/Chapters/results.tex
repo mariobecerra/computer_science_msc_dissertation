@@ -28,11 +28,11 @@ The MNIST dataset is a collection of \numprint{70000} labeled images of size $32
 
 The MNIST dataset was used in the article \citetitle{Gal2016Active} by \citeauthor{Gal2016Active} to compare the performance of Bayesian CNNs with frequentist CNNs in the context of Active Learning. This experiment was replicated in this work by using the same architecture that was explained in the article.
 
-The experiment consists in starting with a random but balanced sample of 20 images from the MNIST dataset and acquiring the 10 images that maximize each acquisition function in every iteration, doing 100 acquisition steps for each acquisition function. This whole process was repeated 3 times with different initial images and the results were averaged.
+The experiment consists in starting with a random but balanced sample of 20 images from the MNIST dataset, training a CNN with these images, then take a random sample of 5000 images from the pool set (to save computation time), subsequently computing the probabilities of belonging to each class for each image, afterward acquiring the 10 images that maximize the acquisition function, adding these 10 images to the training set, and repeating this process. In the end, 100 acquisition steps are taken for each acquisition function. This whole process is repeated 3 times with different initial images and the results were averaged.
 
 The acquisition functions used in the original article are the ones mentioned mentioned in chapter \ref{ch:active_learning}, i.e., Bayesian predictive entropy, frequentist predictive entropy, Bayesian variation ratios, frequentist variation ratios, BALD, random, and an additional one called ``Mean STD'' which was not implemented in this work because of its bad performance in the original article.
 
-The architecture of the neural network used to train the model convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-softmax, with 32 convolution kernels, $4 \times 4$ kernel size, $2 \times 2$ pooling, dense layer with 128 units, and dropout probabilities $0.25$ and $0.5$. For the Bayesian acquisition functions, the posterior predictive distribution samples were obtained by using the dropout trick mentioned in chapter \ref{ch:ann}.
+The architecture of the CNN used was convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-softmax, with 32 convolution kernels, $4 \times 4$ kernel size, $2 \times 2$ pooling, dense layer with 128 units, and dropout probabilities $0.25$ and $0.5$. The CNNs were trained for 50 epochs. For the Bayesian acquisition functions, 100 posterior predictive distribution samples were obtained by using the dropout trick mentioned in chapter \ref{ch:ann}.
 
 The results of the Bayesian and random acquisition functions can be seen in figure \ref{fig:mnist_comparison_active_learning_random}, where the results of our implementation are shown on the left and the original article's results are shown on the right. Our results are very similar with the article's results: apparently, using the variation ratios results in a slightly better performance than BALD or predictive entropy, and more importantly, using the Bayesian acquisition functions results in a much better performance than using a random acquisition function.
 
@@ -76,15 +76,20 @@ Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios a
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The cats and dogs dataset was first used for a CAPTCHA developed by Microsoft Research called Asirra \cite{elson2007asirra}. It is a collection of \numprint{25000} pictures, of which half are cats and half are dogs. Figure \ref{fig:cats_dogs_data_examples} shows 30 randomly chosen cats and 30 randomly chosen dogs from the training set.
+The cats and dogs dataset was first used for a CAPTCHA developed by Microsoft Research called Asirra \cite{elson2007asirra}. It is a collection of \numprint{25000} pictures of size $64 \times 64$, of which half are cats and half are dogs. Figure \ref{fig:cats_dogs_data_examples} shows 30 randomly chosen cats and 30 randomly chosen dogs from the training set.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{cats_dogs_data_examples}
     \caption{Example of 60 randomly chosen cats and 30 randomly chosen dogs from the dataset.}
     \label{fig:cats_dogs_data_examples}
 \end{figure}
 
+The process of this experiment is very similar to the one followed in the MNIST dataset. First, a balanced set of 100 images was randomly chosen and used to train a first model. Then a random sample of 2000 images was chosen from the pool set, from which the predicted probabilities of belonging to each class were computed, subsequently the 50 images with the highest acquisition function value were chosen and added to the training set. The final number of acquisition steps was 50 and, once more, the whole process was repeated 3 times with different initial images.
+
+The architecture used was convolution-relu-convolution-relu-max pooling-dropout-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-softmax with 32 convolution kernels, $3 \times 3$ kernel size, $2 \times 2$ pooling, dense layer with 64 units, and dropout probabilities $0.25$, $0.25$ and $0.5$. The CNNs were trained for 200 epochs. Once more, for the Bayesian acquisition functions 100 posterior predictive distribution samples were obtained by using the dropout trick.
+
+The results of the Bayesian and random acquisition functions can be seen in figure \ref{fig:cats_dogs_accuracies_bayesian}. In this case, it is difficult to say that using any of the Bayesian acquisition functions results in a better performance than using a random acquisition function. In the last steps it is clear that the variation ratios acquisition function results in a better accuracy, but the difference is not as abrupt as it was in the MNIST dataset.
 
 \begin{figure}[H]
     \centering
@@ -93,11 +98,11 @@ The cats and dogs dataset was first used for a CAPTCHA developed by Microsoft Re
     \label{fig:cats_dogs_accuracies_bayesian}
 \end{figure}
 
-
+Figure \ref{fig:cats_dogs_bayesian_vs_freq} shows the comparison of the frequentist and Bayesian acquisition functions, with predictive entropy on the left and variation ratios on the right. As with the MNIST dataset, there is no clear distinction between the frequentist and the Bayesian acquisition functions.
 
 \begin{figure}[H]
     \centering
-    \subfloat[Our Predictive entropy.]{\includegraphics[width=0.5\textwidth]{cats_dogs_accuracies_pred_ent_ribbon}}
+    \subfloat[Predictive entropy.]{\includegraphics[width=0.5\textwidth]{cats_dogs_accuracies_pred_ent_ribbon}}
     \hfill
     \subfloat[Variation ratios.]{\includegraphics[width=0.5\textwidth]{cats_dogs_accuracies_var_ratios_ribbon}}
     \caption{Accuracy of models in each acquisition step.}
