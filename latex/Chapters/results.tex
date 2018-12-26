@@ -78,7 +78,7 @@ Figure \ref{fig:mnist_var_ratios_AL} shows the results of the variation ratios a
 
 The cats and dogs dataset was first used for a CAPTCHA developed by Microsoft Research called Asirra \cite{elson2007asirra}. It is a collection of \numprint{25000} pictures of size $64 \times 64$, of which half are cats and half are dogs. Figure \ref{fig:cats_dogs_data_examples} shows 30 randomly chosen cats and 30 randomly chosen dogs from the training set.
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{cats_dogs_data_examples}
     \caption{Example of 60 randomly chosen cats and 30 randomly chosen dogs from the dataset.}
@@ -91,7 +91,7 @@ The architecture used was convolution-relu-convolution-relu-max pooling-dropout-
 
 The results of the Bayesian and random acquisition functions can be seen in figure \ref{fig:cats_dogs_accuracies_bayesian}. In this case, it is difficult to say that using any of the Bayesian acquisition functions results in a better performance than using a random acquisition function. In the last steps it is clear that the variation ratios acquisition function results in a better accuracy, but the difference is not as abrupt as it was in the MNIST dataset.
 
-\begin{figure}[htb]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{cats_dogs_accuracies_bayesian}
     \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
@@ -100,7 +100,7 @@ The results of the Bayesian and random acquisition functions can be seen in figu
 
 Figure \ref{fig:cats_dogs_bayesian_vs_freq} shows the comparison of the frequentist and Bayesian acquisition functions, with predictive entropy on the left and variation ratios on the right. As with the MNIST dataset, there is no clear distinction between the frequentist and the Bayesian acquisition functions.
 
-\begin{figure}[htb]
+\begin{figure}[H]
     \centering
     \subfloat[Predictive entropy.]{\includegraphics[width=0.5\textwidth]{cats_dogs_accuracies_pred_ent_ribbon}}
     \hfill
@@ -136,7 +136,7 @@ The results of the Bayesian and random acquisition functions can be seen in figu
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{CIFAR10_accuracies_bayesian}
-    \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
+    \caption{Accuracy of models in each acquisition step in the CIFAR10 dataset.}
     \label{fig:CIFAR10_accuracies_bayesian}
 \end{figure}
 
@@ -144,10 +144,10 @@ Figure \ref{fig:CIFAR10_bayesian_vs_freq} shows the comparison of the frequentis
 
 \begin{figure}[H]
     \centering
-    \subfloat[Our Predictive entropy.]{\includegraphics[width=0.5\textwidth]{CIFAR10_accuracies_pred_ent_ribbon}}
+    \subfloat[Predictive entropy.]{\includegraphics[width=0.5\textwidth]{CIFAR10_accuracies_pred_ent_ribbon}}
     \hfill
     \subfloat[Variation ratios.]{\includegraphics[width=0.5\textwidth]{CIFAR10_accuracies_var_ratios_ribbon}}
-    \caption{Accuracy of models in each acquisition step.}
+    \caption{Accuracy of models in each acquisition step in the CIFAR10 dataset.}
     \label{fig:CIFAR10_bayesian_vs_freq}
 \end{figure}
 
@@ -159,26 +159,27 @@ Figure \ref{fig:CIFAR10_bayesian_vs_freq} shows the comparison of the frequentis
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+In this chapter, the results of several Active Learning experiments using different acquisition functions in three different datasets were shown. In the MNIST dataset there is a clear improvement in using the predicted probabilities of a trained model to select the images to add to a training set when compared to a random selection. In the CIFAR10 dataset there seems to be a small performance improvement when using the non-random acquisition functions. In the cats and dogs dataset there is an even smaller performance improvement, but it is not as clear as in the MNIST dataset. In all cases, there is no clear distinction between using a Bayesian model against a frequentist one, as the accuracies did not seem to be different.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{MNIST_probs_plot}
-    \caption{Predicted probabilities in each acquisition iteration for the MNIST dataset.}
-    \label{fig:MNIST_probs_plot}
-\end{figure}
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{cats_dogs_probs_plot}
-    \caption{Predicted probabilities in each acquisition iteration for the cats and dogs dataset.}
-    \label{fig:cats_dogs_probs_plot}
-\end{figure}
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{CIFAR10_probs_plot}
-    \caption{Predicted probabilities in each acquisition iteration for the CIFAR10 dataset.}
-    \label{fig:CIFAR10_probs_plot}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{MNIST_probs_plot}
+%     \caption{Predicted probabilities in each acquisition iteration for the MNIST dataset.}
+%     \label{fig:MNIST_probs_plot}
+% \end{figure}
+%
+%
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{cats_dogs_probs_plot}
+%     \caption{Predicted probabilities in each acquisition iteration for the cats and dogs dataset.}
+%     \label{fig:cats_dogs_probs_plot}
+% \end{figure}
+%
+%
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{CIFAR10_probs_plot}
+%     \caption{Predicted probabilities in each acquisition iteration for the CIFAR10 dataset.}
+%     \label{fig:CIFAR10_probs_plot}
+% \end{figure}
