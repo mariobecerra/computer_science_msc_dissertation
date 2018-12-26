@@ -91,7 +91,7 @@ The architecture used was convolution-relu-convolution-relu-max pooling-dropout-
 
 The results of the Bayesian and random acquisition functions can be seen in figure \ref{fig:cats_dogs_accuracies_bayesian}. In this case, it is difficult to say that using any of the Bayesian acquisition functions results in a better performance than using a random acquisition function. In the last steps it is clear that the variation ratios acquisition function results in a better accuracy, but the difference is not as abrupt as it was in the MNIST dataset.
 
-\begin{figure}[H]
+\begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth]{cats_dogs_accuracies_bayesian}
     \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
@@ -100,12 +100,12 @@ The results of the Bayesian and random acquisition functions can be seen in figu
 
 Figure \ref{fig:cats_dogs_bayesian_vs_freq} shows the comparison of the frequentist and Bayesian acquisition functions, with predictive entropy on the left and variation ratios on the right. As with the MNIST dataset, there is no clear distinction between the frequentist and the Bayesian acquisition functions.
 
-\begin{figure}[H]
+\begin{figure}[htb]
     \centering
     \subfloat[Predictive entropy.]{\includegraphics[width=0.5\textwidth]{cats_dogs_accuracies_pred_ent_ribbon}}
     \hfill
     \subfloat[Variation ratios.]{\includegraphics[width=0.5\textwidth]{cats_dogs_accuracies_var_ratios_ribbon}}
-    \caption{Accuracy of models in each acquisition step.}
+    \caption{Accuracy of models in each acquisition step in the cats and dogs dataset.}
     \label{fig:cats_dogs_bayesian_vs_freq}
 \end{figure}
 
@@ -120,7 +120,6 @@ Figure \ref{fig:cats_dogs_bayesian_vs_freq} shows the comparison of the frequent
 
 The CIFAR10 was introduced in \citeyear{krizhevsky2009learning}, and the name comes from the Canadian Institute for Advanced Research, who funded the project in which it was first used \cite{krizhevsky2009learning}. It consists of \numprint{60000} color images of size $32 \times 32$ representing 10 different types of objects, these being \textit{airplane}, \textit{automobile}, \textit{bird}, \textit{cat}, \textit{deer}, \textit{dog}, \textit{frog}, \textit{horse}, \textit{ship} and \textit{truck}. The classes are balanced in the dataset, meaning that each class has the same number of images. Of the \numprint{60000} images, \numprint{50000} are used as a training set and the rest as test set. The training set and the test are also balanced. Figure \ref{fig:CIFAR10_data_examples} shows 200 randomly chosen images from the training set.
 
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{CIFAR10_data_examples}
@@ -128,6 +127,11 @@ The CIFAR10 was introduced in \citeyear{krizhevsky2009learning}, and the name co
     \label{fig:CIFAR10_data_examples}
 \end{figure}
 
+The process of this last experiment is very similar to the ones followed in the two previous datasets. First, as in the cats and dogs dataset, a balanced set of 100 images was randomly chosen and used to train a first model. Then a random sample of 5000 images was chosen from the pool set, from which the predicted probabilities of belonging to each class were computed, subsequently the 1000 images with the highest acquisition function value were chosen and added to the training set. The final number of acquisition steps was 40 and, again, the whole process was repeated 3 times with different initial images.
+
+The architecture used was convolution-relu-convolution-relu-max pooling-dropout-convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-softmax with 32 convolution kernels, $3 \times 3$ kernel size, $2 \times 2$ pooling, dense layer with 512 units, and dropout probabilities $0.25$, $0.25$ and $0.5$. The CNNs were trained for 100 epochs. Like in the previous experiments, for the Bayesian acquisition functions 100 posterior predictive distribution samples were obtained by using the dropout trick.
+
+The results of the Bayesian and random acquisition functions can be seen in figure \ref{fig:CIFAR10_accuracies_bayesian}. Here, the difference between the random acquisition function and the rest is a little clearer than in the cats and dogs dataset, especially from the \numprint{13000} image mark onward, but it is not as clear as in the MNIST dataset.
 
 \begin{figure}[H]
     \centering
@@ -136,7 +140,7 @@ The CIFAR10 was introduced in \citeyear{krizhevsky2009learning}, and the name co
     \label{fig:CIFAR10_accuracies_bayesian}
 \end{figure}
 
-
+Figure \ref{fig:CIFAR10_bayesian_vs_freq} shows the comparison of the frequentist and Bayesian acquisition functions, with predictive entropy on the left and variation ratios on the right. As with the MNIST and with the cats and dogs datasets, the distinction between the frequentist and the Bayesian acquisition functions is not clear.
 
 \begin{figure}[H]
     \centering
