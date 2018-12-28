@@ -1,6 +1,13 @@
 %!TEX root = ../msc_thesis.tex
 
-\chapter{Conclusions and future work}
+\chapter{Conclusions}
 \label{ch:conclusions}
 
-Some cool conclusions here.
+
+In this work, three Bayesian acquisition functions were compared with two frequentist acquisition functions were compared through a series of experiments in three different image datasets: the MNIST, the CIFAR10 and a cats and dogs dataset. An attempt was made to replicate the experiments performed with the MNIST dataset in the article \citetitle{Gal2016Active} by \citeauthor{Gal2016Active} but failed in obtaining the same results in the comparison of Bayesian and frequentist acquisition functions, however, the attempt was successful in achieving a better performance using a non-random acquisition function. In the CIFAR10 dataset there seems to be a small performance improvement when using the non-random acquisition functions and in the cats and dogs dataset there is an even smaller performance improvement. As in the MNIST dataset, in these two other datasets there is no clear distinction between using a Bayesian model against a frequentist one.
+
+Even though no apparent gain was gotten from the Bayesian paradigm in terms of accuracy in these experiments, the use of a full posterior predictive distribution is still of use in many different areas, such as autonomous vehicles in which a knowledge of the model's predictive uncertainty can help prevent accidents because if a model is uncertain about a prediction, then human assistance can be asked \cite{gal2016uncertainty} \cite{kendall2017uncertainties} \cite{michelmore2018evaluating}. Another area of opportunity lies in adversarial attacks, in which the use of Bayesian CNNs helps in having less confident prediction in adversarial examples \cite{li2017dropout} \cite{rawat2017adversarial} \cite{smith2018understanding}. An additional area is the use of uncertainty for Reinforcement Learning to accelerate the learning \cite{gal2016uncertainty}. One more general and very broad area of opportunity is in automatic classification systems using machine learning to make decisions, such as a post office automatically sorting letters according to a zip code, high frequency trading or face recognition; in which the model can decide to ask for the help of a human when the it is uncertain about certain predictions \cite{gal2016uncertainty}.
+
+The code used to write this document is available in \url{https://github.com/mariobecerra/msc_thesis}.
+
+And the code used for the experiments is available in \url{https://github.com/mariobecerra/Active_Learning_CNNs}.
