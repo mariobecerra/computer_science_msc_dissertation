@@ -41,18 +41,20 @@ The linear regression model belongs to a type of methods called \textbf{parametr
 
 An approach to the estimation of parameters that is different to the concept of error function minimization is the one of \textbf{maximum likelihood estimation}.
 This is a probabilistic approach in which a certain probability distribution for the data is assumed.
+
 In the case of linear regression, it is commonly assumed that the error term in \eqref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon_i \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{\boldsymbol{x_i}^T \boldsymbol{\theta}}{\sigma^2}$ for $i \in \left\{ 1, \ldots, n \right\}$. It is also usually assumed that the observations $y_i$ come from a random sample and are independent of each other. Therefore, the log-probability of the sample is
 \begin{equation}
   \label{eq:gaussian_likelihood}
-  %L(\boldsymbol{\theta}) = \sum_{i = 1}^n \log \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{(y_i - \boldsymbol{x_i}^T \boldsymbol{\theta})^2}{2\sigma^2}},
-  L(\boldsymbol{\theta}) = \sum_{i = 1}^n \log \left[ \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(y_i - \boldsymbol{x_i}^T \boldsymbol{\theta})^2}{2\sigma^2}} \right].
+  L(\boldsymbol{\theta}) = \sum_{i = 1}^n \log \left[ \frac{1}{\sqrt{2 \pi \sigma^2}} \exp \left({- \frac{(y_i - \boldsymbol{x_i}^T \boldsymbol{\theta})^2}{2\sigma^2}}\right) \right].
 \end{equation}
-%where $\normalfunc{\boldsymbol{x_i}}{\boldsymbol{\boldsymbol{\mu}}}{\sigma^2}$ denotes the density function of a Gaussian random variable with mean $\boldsymbol{\boldsymbol{\mu}}$ and variance $\sigma^2$ evaluated in point $\boldsymbol{x_i}$.
 
 %The \textbf{principle of maximum likelihood} states that the values for $\boldsymbol{\theta}$ should be chosen so that the observed probability of the random sample is the highest, i.e., so that they maximize equation \eqref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}.
-The \textbf{principle of maximum likelihood} states that the values for $\boldsymbol{\theta}$ should be chosen so that they maximize the likelihood of the data, i.e., equation \eqref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}.
-%The \textbf{principle of maximum likelihood} states that the values for $\boldsymbol{\theta}$ should be chosen so that the data of the random sample is most likely, i.e., so that they maximize equation \eqref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}.
-With some algebra, it is fairly easy to see that maximizing equation \eqref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
+
+Maximum likelihood estimation uses the \textbf{likelihood principle}, which states that all the information given by a sample of data is entirely held within the likelihood function \cite{gelman2013bayesian} \cite{robert2007bayesian}. Maximum likelihood estimation is just an implementation of the likelihood principle which consists in choosing the values for $\boldsymbol{\theta}$ so that they maximize the likelihood of the data, i.e., equation \eqref{eq:gaussian_likelihood} \cite{robert2007bayesian}. Informally, this is choosing the values that maximize the probability of observing the given data \cite[p.~31]{friedman2001elements} \cite{robert2007bayesian}. With some algebra, it is fairly easy to see that maximizing equation \eqref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
+
+%The \textbf{principle of maximum likelihood} states that the values for $\boldsymbol{\theta}$ should be chosen so that they maximize the likelihood of the data, i.e., equation \eqref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}. With some algebra, it is fairly easy to see that maximizing equation \eqref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
+
+%The \textbf{principle of maximum likelihood} states that the values for $\boldsymbol{\theta}$ should be chosen so that the data of the random sample is most likely, i.e., so that they maximize equation \eqref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}. With some algebra, it is fairly easy to see that maximizing equation \eqref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
 
 In the case of a binary classification problem, assuming that $y_i$ follows a Bernoulli distribution, such that the probability of $y_i$ of being 1 is $p_i(\boldsymbol{\theta})$, where $\boldsymbol{\theta}$ is the parameter that indexes the probability, then the likelihood function in this case is $\prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i}$ and thus, the log-likelihood is
 \begin{equation}
