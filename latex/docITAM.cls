@@ -86,7 +86,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Portada  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \renewcommand\maketitle{%
-	\InputIfFileExists {cover.tex} {\ClassInfo {docITAM} {Loaded cover.tex}} {\ClassError{docITAM}{No cover.tex found!}}
+	\InputIfFileExists {cover_itam.tex} {\ClassInfo {docITAM} {Loaded cover_itam.tex}} {\ClassError{docITAM}{No cover_itam.tex found!}}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% Permisos  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
