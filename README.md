@@ -1,6 +1,7 @@
 # Computer Science master thesis
 
-Latex code for my computer science master thesis.
+Latex code for my computer science master thesis. Supervised by [Alfredo Garbuno Iñigo](https://github.com/agarbuno).
+
 
 ### To compile document locally
 
@@ -22,7 +23,7 @@ Go to https://v2.overleaf.com/read/dscncbsfvjvf and compile. This version may no
 
 - File `mini_batch_gradient_descent_example.R` implements mini-batch gradient descent for logistic regression in simulated data. Uses `mini_batch_gd_log_reg.cpp` file to compile C++ code via `Rcpp` package. Generates file `Mini-batch_GD_plots.png`.
 
-- File `BBVI_logistic_regression.R` implements gradient ascent for Mean-fild Variational Approximation of posterior distribution of logistic regression in simulated data. Generates file `BBVI_plots.pdf`.
+- File `BBVI_logistic_regression.R` implements gradient ascent for Mean-field Variational Approximation of posterior distribution of logistic regression in simulated data. Generates file `BBVI_plots.pdf`.
 
 - File `plot_ANN.R` creates ANN diagrams. Generates files `plot_ANN_01.pdf`, `plot_ANN_02.pdf` and `plot_ANN_03.pdf`.
 
