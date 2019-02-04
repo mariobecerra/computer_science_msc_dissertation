@@ -3,46 +3,51 @@
 \chapter{Machine learning}
 \label{ch:machine_learning}
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \section{Machine learning}
 
-Machine learning is a research field that focuses on learning patterns in data and then use these patterns to take decisions, such as making predictions about new unseen data,  clustering, or have an agent taking actions based on a reward signal \cite{murphy2012machine} \cite{sutton1998reinforcement}. With the amount of data available nowadays, it has become a fruitful and demanded field in many areas. Machine learning has exploded lately mainly thanks to the advanced in computing power, without which most of modern techniques wouldn't be feasible. Computer power has been increasing exponentially since the 1960s, and this growth earned itself a term called Moore's law, stated in 1965, which says that the number of transistors in an integrated computer circuit doubles about every two years for half the cost \cite{moore2006cramming} \cite{moore1975progress}. Moore's law has helped the development of faster computers, but also to make these computers common in all areas of life, which has also led to an exponential increase in data storage.
+Machine learning is a research field that focuses on learning patterns in data and then use these patterns to take decisions. Such decisions include making predictions about new unseen data, clustering, or have an agent taking actions based on a reward signal \cite{murphy2012machine} \cite{sutton1998reinforcement}.
+% With the amount of data available nowadays, it has become a fruitful and demanded field in many areas.
+Machine learning has seen an increasing interest from the scientific and industry thanks to the advance of computing abilities. Such computing abilities have made possible most modern techniques. Computer power has been increasing exponentially since the 1960s, and this growth is known as Moore's law. It was first stated in 1965 \cite{moore2006cramming} \cite{moore1975progress}, and it says that the number of transistors in an integrated computer circuit doubles about every two years for half the cost. Moore's law has helped the development of faster computers, but also to make these computers common in all areas of life, which has also led to an exponential increase in data storage.
 
-Machine learning is usually divided in supervised learning, unsupervised learning and reinforcement learning. The first one involves building a model to predict a response variable from certain explanatory variables (or features). The second one involves a set of variables without a response in which one wishes to learn relationships and structure of the data. The third one involves mapping situations to actions to maximize a reward signal. Reinforcement learning (RL) is similar to supervised learning, but the biggest difference is that in RL, the learner is not told which actions it should take, it learns through trial and error.
+However, Moore's law is said to be at its limit nowadays. Meaning that it has been increasingly difficult to double the number of transistors in that two year time frame while also being inexpensive. This has led to different research directions in the field of computer architecture to find new ways in which computing power can be enhanced without sacrificing the cost. The limit of Moore's law is an important factor in machine learning because, even if computers have been getting faster and better, there is a need to efficiently use the resources that are available.
 
-An example of supervised learning is to estimate the income of a home from a set of variables such as zip code, size of home, number of cars they own, etc. An example of unsupervised learning is to find groups of homes that naturally come up in the data, such that there is high similarity within each group and little between groups. An example of RL is to learn to play the arcade game Pong. Recently, supervised learning and reinforcement learning have been combined to achieve harder goals, such as beating the Go world champion \cite{silver2017mastering} In this work, only supervised learning is presented and studied.
+Machine learning is usually divided in supervised learning, unsupervised learning and reinforcement learning. The first involves building a model to predict a response variable from certain explanatory variables (or features). The second involves a set of variables without a response in which one wishes to learn relationships and structure of the data. The third involves mapping situations to actions to maximize a reward signal. Reinforcement learning (RL) is similar to supervised learning, but the biggest difference is that in RL, the learner is not told which actions it should take, it learns through trial and error. That is, in supervised learning there is an oracle that tells the learner the right answer, whereas in RL the oracle only tells it how to perform relative to past actions.
 
-As previously mentioned, in supervised learning there is a response variable denoted as vector $\boldsymbol{y}$ with $n$ elements, and each feature is denoted by $\boldsymbol{x}^{(k)} \in \mathbb{R}^n$ for $k$ from 1 to $p$. All features can be summarized in notation in a single data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times p}$. It is assumed that there exists a relationship between $\boldsymbol{y}$ and $\boldsymbol{X}$, which can be written as
+An example of supervised learning would be to estimate the income of a household given a dataset that includes the target quantity and a set of predictors, such as zip code, size of home, number of cars they own, etc.
+An example of unsupervised learning would be to use the information in the dataset to be able to group together similar households in terms of such features that are naturally in the structure of the data, such as in stratified datasets, where there is high similarity within each group and little between groups.
+An example of RL would be to have an agent learn how to invest in real state, and observing its rewards after the investment period.
+Recently, supervised learning and reinforcement learning have been combined to achieve harder goals for computers, such as beating the Go world champion \cite{silver2017mastering} In this work, only supervised learning is presented and studied.
+
+As written above, in supervised learning there is a response variable denoted as vector $\boldsymbol{y}$ with $n$ elements, and each feature is denoted by $\boldsymbol{x}^{(k)} \in \mathbb{R}^n$ for $k$ from 1 to $p$. All features can be summarized in notation in a single data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times p}$. It is assumed that there exists a relationship between $\boldsymbol{y}$ and $\boldsymbol{X}$, which can be written as
 \begin{equation}
   \label{eq:general_learning_model}
   \boldsymbol{y} = f(\boldsymbol{X}) + \boldsymbol{\varepsilon},
 \end{equation}
 where $f$ is a fixed but unknown function and $\boldsymbol{\varepsilon}$ is a random error term, independent from $\boldsymbol{X}$ and with zero mean \cite[p.~16]{james2013introduction}.
-The goal is usually to estimate function $f$, which is done with an estimate $\hat{f}$ \cite[p.~17]{james2013introduction}.
-%In this work, the focus will be on the prediction goal.
-This estimate $\hat{f}$ is chosen from a family of functions $\mathcal{F}$, which is usually assumed to be completely characterized by a single parameter vector $\boldsymbol{\theta}$.
-The goal is for $\hat{f}$ to have as little generalization error as possible. This is done using an error or loss function that needs to be minimized and a set of training data $\left\{ (\boldsymbol{x_1}, y_1), ..., (\boldsymbol{x_n}, y_n) \right\}$, where each $y_i$ and $\boldsymbol{x_i}$ denote the $i$-th entry of $\boldsymbol{y}$ and $i$-th row of $\boldsymbol{X}$, respectively, for $i \in \left\{1, \ldots, n \right\}$.
-Examples of $\mathcal{F}$ are the linear regression model, the general additive model, and the neural network.
+The goal is to find the best approximation to function $f$, which is done with an estimate $\hat{f}$ \cite[p.~17]{james2013introduction}.
+This estimate $\hat{f}$ is chosen from a family of functions $\mathcal{F}$.
+
+For practical convenience, the family $\mathcal{F}$ is assumed to be indexed by a parameter vector $\boldsymbol{\theta}$, thus allowing to think of $\mathcal{F}_{\boldsymbol{\theta}}$ as the family of approximations indexed by a finite set of unknown parameters. This changes the task of finding an approximation in an infinite dimensional space to a problem in a finite dimensional space such as $\mathbb{R}^d$.
+% which is usually assumed to be completely characterized by a single parameter vector $\boldsymbol{\theta}$.
+It is desirable for $\hat{f}$ to keep the generalization error to a minimum, where the generalization error is defined by the error of predicting for an unseen vector $\boldsymbol{x}^*$. In other terms, the error is usually expressed as the cost (loss) of making a wrong prediction. This loss function needs a set of training data $\left\{ (\boldsymbol{x_1}, y_1), ..., (\boldsymbol{x_n}, y_n) \right\}$, where each $y_i$ and $\boldsymbol{x_i}$ denote the $i$-th entry of $\boldsymbol{y}$ and $i$-th row of $\boldsymbol{X}$, respectively, for $i \in \left\{1, \ldots, n \right\}$.
+% The goal is for $\hat{f}$ to have as little generalization error as possible. This is done using an error or loss function that needs to be minimized and a set of training data $\left\{ (\boldsymbol{x_1}, y_1), ..., (\boldsymbol{x_n}, y_n) \right\}$, where each $y_i$ and $\boldsymbol{x_i}$ denote the $i$-th entry of $\boldsymbol{y}$ and $i$-th row of $\boldsymbol{X}$, respectively, for $i \in \left\{1, \ldots, n \right\}$.
+Examples of $\mathcal{F}$ are the linear regression model, the general additive model, the logistic regression model and the neural network.
 
 For example, in the linear regression case, it is common to minimize the squared error function
 \begin{equation}
   \hat{f} = \argmin_{f \in \mathcal{F}} \frac{1}{n} \sum_{i = 1}^n{ ( y_i - f(\boldsymbol{x_i}) ) ^ 2},
 \end{equation}
-where $\mathcal{F}$ is the family of functions of the form $f(\boldsymbol{X}) = \boldsymbol{X}\boldsymbol{\theta}$ with $\boldsymbol{\theta} \in \mathbb{R}^p$. Thus, the  estimate $\hat{f}$ is $\hat{f}(\boldsymbol{X}) = \boldsymbol{X} \hat{\boldsymbol{\theta}}$, where $\hat{\boldsymbol{\theta}}$ minimizes the error function.
+where $\mathcal{F}$ is the family of functions of the form $f_{\boldsymbol{\theta}}(\boldsymbol{X}) = \boldsymbol{X}\boldsymbol{\theta}$ with $\boldsymbol{\theta} \in \mathbb{R}^p$. Thus, the  estimate $\hat{f}$ is $\hat{f}(\boldsymbol{X}) = \boldsymbol{X} \hat{\boldsymbol{\theta}}$, where $\hat{\boldsymbol{\theta}}$ minimizes the error function.
 
-The linear regression model belongs to a type of methods called \textbf{parametric methods}, in which the modeler first makes an assumption about the functional form of $f$, which depends on a vector of parameters $\boldsymbol{\theta}$, and then trains the model by choosing the parameters that minimize a previously selected loss function \cite[p.~21]{james2013introduction}. In the case of linear regression, the form of $f$ is assumed to be $f(\boldsymbol{X}) = \boldsymbol{X}\boldsymbol{\theta}$, and the parameters chosen are the elements of the $\hat{\boldsymbol{\theta}}$ vector that minimize the squared error function of the model.
+The linear regression model belongs to a type of methods called \textbf{parametric methods}. In these methods, the modeler makes an assumption about the functional form of $f$, which depends on a vector of parameters $\boldsymbol{\theta}$. After this, the modeler proceeds to train the model by choosing the parameters that minimize a previously selected loss function \cite[p.~21]{james2013introduction}. In the case of linear regression, the form of $f$ is assumed to be $f(\boldsymbol{X}) = \boldsymbol{X}\boldsymbol{\theta}$, and the parameters chosen are the elements of the $\hat{\boldsymbol{\theta}}$ vector that minimize the squared error function of the model.
 
 An approach to the estimation of parameters that is different to the concept of error function minimization is the one of \textbf{maximum likelihood estimation}.
 This is a probabilistic approach in which a certain probability distribution for the data is assumed.
 
-In the case of linear regression, it is commonly assumed that the error term in \eqref{eq:general_learning_model} has a Gaussian distribution such that $\varepsilon_i \sim \normaldist{0}{\sigma^2}$, then $y_i \sim \normaldist{\boldsymbol{x_i}^T \boldsymbol{\theta}}{\sigma^2}$ for $i \in \left\{ 1, \ldots, n \right\}$. It is also usually assumed that the observations $y_i$ come from a random sample and are independent of each other. Therefore, the log-probability of the sample is
+In the case of linear regression, it is commonly assumed that the error term in \eqref{eq:general_learning_model} has a Gaussian distribution such that
+$\varepsilon_i \sim \normaldist{0}{\sigma^2}$,
+then $y_i \sim \normaldist{\boldsymbol{x_i}^T \boldsymbol{\theta}}{\sigma^2}$ for $i \in \left\{ 1, \ldots, n \right\}$.
+It is also usually assumed that the observations $y_i$ come from a random sample and are independent of one another. Therefore, the log-likelihood of the sample is
 \begin{equation}
   \label{eq:gaussian_likelihood}
   L(\boldsymbol{\theta}) = \sum_{i = 1}^n \log \left[ \frac{1}{\sqrt{2 \pi \sigma^2}} \exp \left({- \frac{(y_i - \boldsymbol{x_i}^T \boldsymbol{\theta})^2}{2\sigma^2}}\right) \right].
@@ -61,7 +66,7 @@ In the case of a binary classification problem, assuming that $y_i$ follows a Be
   L(\boldsymbol{\theta}) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\boldsymbol{\theta}) \right) + (1 - y_i) \log \left( 1 - p_i(\boldsymbol{\theta}) \right) \right].
 \end{equation}
 
-Another approach to the learning problem is the \textbf{Bayesian approach}, in which a prior distribution on the parameters $\boldsymbol{\theta}$ is assumed, and then the knowledge about them is updated with data. That is, the modeler first quantifies the knowledge that they may have about $\boldsymbol{\theta}$ using a prior distribution $\prob{\boldsymbol{\theta}}$ and then computes the posterior distribution of $\boldsymbol{\theta}$ given $\boldsymbol{X}$ and $\boldsymbol{y}$ using Bayes' theorem as such
+Another approach to the learning problem is the \textbf{Bayesian approach}, in which a prior distribution on the parameters $\boldsymbol{\theta}$ is assumed, and then the knowledge about them is updated with data. That is, the modeler first uses a prior distribution $\prob{\boldsymbol{\theta}}$ to quantify the knowledge that they may have about $\boldsymbol{\theta}$, and then computes the posterior distribution of $\boldsymbol{\theta}$ given $\boldsymbol{X}$ and $\boldsymbol{y}$ using Bayes' theorem as such
 \begin{equation}
   \label{eq:bayes_theorem}
   \prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X} } =
@@ -69,24 +74,24 @@ Another approach to the learning problem is the \textbf{Bayesian approach}, in w
   \frac{\prob{\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{X}} \prob{\boldsymbol{\theta} | \boldsymbol{X}}}{\int \prob{\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{X}} \prob{\boldsymbol{\theta} | \boldsymbol{X}} d\boldsymbol{\theta}}.
 \end{equation}
 
-The posterior distribution represents the knowledge about $\boldsymbol{\theta}$ after the data has been seen. It is a compromise between the prior beliefs and the data. Note that the likelihood of the data $\prob{\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{X}}$ is used in the numerator of equation \eqref{eq:bayes_theorem}. In fact, the Bayesian paradigm permits another implementation of the likelihood principle, just like maximum likelihood, but with the added benefit of including decision related requirements \cite{robert2007bayesian}.
+The posterior distribution represents the knowledge about $\boldsymbol{\theta}$ after the data has been observed. It is a compromise between the prior beliefs and the data. Note that the likelihood of the data $\prob{\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{X}}$ is used in the numerator of equation \eqref{eq:bayes_theorem}. In fact, the Bayesian paradigm permits another implementation of the likelihood principle, just like maximum likelihood, but with the added benefit of including decision-related requirements \cite{robert2007bayesian}.
 
-An advantage of the Bayesian approach is that uncertainty can be mathematically described by using probability. In addition, Bayesian statistics is logically consistent while dealing with this uncertainty \cite{cox1946probability} \cite{cox1963algebra} \cite{jaynes2003probability} \cite{o2004advanced}. A philosophical difference between the frequentist and the Bayesian approach is that in the latter, the degree of belief of the researcher is represented in the distribution of the parameters and hence, they are treated as random variables, whereas in the former approach, they are treated as a fixed but unknown value \cite{o2004advanced}.
+An advantage of the Bayesian approach is that uncertainty can be mathematically described by using probability. In addition, Bayesian inference is logically consistent while dealing with this uncertainty \cite{cox1946probability} \cite{cox1963algebra} \cite{jaynes2003probability} \cite{o2004advanced}. A philosophical difference between the frequentist and the Bayesian approach is that in the latter, the degree of belief of the researcher is represented in the distribution of the parameters and hence, they are treated as random variables. Whereas in the former, they are treated as a fixed but unknown value \cite{o2004advanced}.
 % The multiplier $\prob{\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{X}}$ is called the likelihood, and is the probability of the data given the parameters.
 
-Since the denominator of equation \eqref{eq:bayes_theorem} does not depend on $\boldsymbol{\theta}$ because it is only a normalizing constant, it is just usually described as a proportion
+Since the denominator of equation \eqref{eq:bayes_theorem} does not depend on $\boldsymbol{\theta}$, as it is only a normalizing constant, it is just usually described as a proportion
 \begin{equation}
   \label{eq:bayes_theorem_prop}
     \prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}} \propto \prob{\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{X}} \prob{\boldsymbol{\theta} | \boldsymbol{X}}.
 \end{equation}
 
-The posterior distribution is also used to predict the values of unseen data. Let $\boldsymbol{x}^*$ be a vector of features for which a prediction $\hat{\boldsymbol{y}}^*$ is desired, then the \textbf{posterior predictive distribution} must be used, defined as
+The posterior distribution is also used to predict the values of unobserved data. Let $\boldsymbol{x}^*$ be a vector of features for which a prediction of $\hat{\boldsymbol{y}}^*$ is desired, then the \textbf{posterior predictive distribution} must be used, defined as
 \begin{equation}
   \label{eq:post_pred_dist}
   \prob{\boldsymbol{y}^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*} = \int \prob{\boldsymbol{y}^* | \boldsymbol{\theta}, \boldsymbol{x}^*} \prob{\boldsymbol{\theta} | \boldsymbol{X}, \boldsymbol{y}} d\boldsymbol{\theta}.
 \end{equation}
 
-Note that this posterior distribution is, as it name implies, a distribution, i.e., it is not a single prediction but many predictions, possibly an infinite number, weighted by how probable each value is to be. If the goal is to have a point prediction $\hat{\boldsymbol{y}}^*$ for $\boldsymbol{x}^*$, then the modeler could use decision theory to find a point estimate. The idea is to specify a loss function $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*)$ that quantifies the loss of having an estimate $\hat{\boldsymbol{y}}^*$ when the real value is $\boldsymbol{y}^*$, and have the point estimate be the $\hat{\boldsymbol{y}}^*$ that minimizes this loss function. The optimal value for the squared loss $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*) = (\boldsymbol{y}^* - \hat{\boldsymbol{y}}^*)^2$ is the expected value of the posterior predictive distribution, that is,
+Note that this posterior distribution is, as it name implies, a distribution, i.e., it is not a single prediction but infinitely many predictions, weighted by how probable each value is to be. If the goal is to have a point prediction $\hat{\boldsymbol{y}}^*$ for $\boldsymbol{x}^*$, then the modeler could use Decision Theory to find a point estimate. The idea is to specify a loss function $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*)$ that quantifies the loss of having an estimate $\hat{\boldsymbol{y}}^*$ when the real value is $\boldsymbol{y}^*$, and have the point estimate be the $\hat{\boldsymbol{y}}^*$ that minimizes this loss function. The optimal value for the squared loss $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*) = (\boldsymbol{y}^* - \hat{\boldsymbol{y}}^*)^2$ is the expected value of the posterior predictive distribution, that is,
 \begin{equation}
   \hat{\boldsymbol{y}}^* = \mathbb{E}_{\boldsymbol{y}^* | \boldsymbol{x}^*, \boldsymbol{y}, \boldsymbol{X}} \left[ \prob{\boldsymbol{y}^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*} \right].
 \end{equation}
@@ -103,7 +108,6 @@ is a widely used link function for this type of problems \cite[p.~114]{christoph
 \begin{equation}
   \sigma(w) = \frac{e^w}{1 + e^w} = \frac{1}{1 + e^{-w}}.
 \end{equation}
-
 It is easy to see that $\lim_{w \to -\infty} \sigma(w) = 0$ and $\lim_{w \to \infty} \sigma(w) = 1$.
 
 %There is more reasoning behind the logistic sigmoid function, and some of it has to be that it belongs to the exponential family of functions. For more details about this, see \cite{christopher2006pattern}.
@@ -140,16 +144,16 @@ where $p_i(\boldsymbol{\theta}) = \sigma(\theta_0 + \theta_1 x_i^{(1)} + \theta_
 
 The maximum likelihood estimator of $\boldsymbol{\theta} = \left[ \theta_0, \theta_1, \theta_2 \right]^T$ is the vector $\hat{\boldsymbol{\theta}}$ that maximizes $L(\boldsymbol{\theta})$ in equation \eqref{eq:log_likelihood_logistic_example}; that is $\hat{\boldsymbol{\theta}} = \argmax L(\boldsymbol{\theta})$.
 
-Another way to interpret the problem of binary classification, is to consider the learning problem from an optimization perspective in which the goal is to minimize a certain loss function. It has been shown above that maximizing equation \eqref{eq:log_likelihood_logistic_example} leads to the maximum likelihood estimate. However, if the sign is changed, the result is a loss function that can be minimized, and it is the exact same problem as before.
+Another way to interpret the problem of binary classification, is to consider the learning problem from an optimization perspective in which the goal is to minimize an appropriate loss function. It has been shown above that maximizing equation \eqref{eq:log_likelihood_logistic_example} leads to the maximum likelihood estimate. However, if the sign is changed, the result is a loss function that can be minimized, and it provides the exact same solution as before.
 
 The new objective function that needs to be minimized is
 \begin{equation}
   \label{eq:logistic_example_loss_function}
   L(\boldsymbol{\theta}) = - \sum_{i = 1}^n \left[ y_i \log\left( p_i(\boldsymbol{\theta}) \right) + (1 - y_i) \log \left( 1 - p_i(\boldsymbol{\theta}) \right) \right].
 \end{equation}
-This loss function is commonly called in the literature the \textbf{cross-entropy} loss.
+This loss function is commonly called in the literature the \textbf{binary entropy} loss.
 
-Intuitively, this is an error function because if $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and what is left remaining is $\log\left( p_i(\boldsymbol{\theta}) \right)$. Now, when $p_i(\boldsymbol{\theta})$ is big, that is, close to 1, then $\log\left( p_i(\boldsymbol{\theta}) \right) \to 0$. However, if $p_i(\boldsymbol{\theta})$ is small, that is, close to 0, then $\log\left( p_i(\boldsymbol{\theta}) \right) \to -\infty$, and so the overall loss function tends to infinity. This means that when the real value of $y_i$ is 1 and a low probability is assigned to it, then the loss function is large; but if a high probability is assigned to it, then the loss function is small. The same reasoning works for when $y_i = 0$.
+Intuitively, this is an error function because if $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and what is left remaining is $\log\left( p_i(\boldsymbol{\theta}) \right)$. Now, when $p_i(\boldsymbol{\theta})$ is big, that is, close to 1, then $\log\left( p_i(\boldsymbol{\theta}) \right) \to 0$. However, if $p_i(\boldsymbol{\theta})$ is small, that is, close to 0, then $\log\left( p_i(\boldsymbol{\theta}) \right) \to -\infty$, and so the overall loss function tends to infinity. This means that when the real value of $y_i$ is 1 and a low probability is assigned to it, then the loss function is large; but if a high probability is assigned to it, then the loss function is small. The same reasoning works for when $y_i = 0$. So, when there is an incorrect classification with very high probability, the loss function takes a large value.
 % The same reasoning works for when $y_i = 0$: if a low probability is assigned, then the loss function is small; but if a high probability is assigned, then the loss function is large.
 Hence, minimizing the loss function leads to choosing values of $\boldsymbol{\theta}$ that yield a high probability to the cases when $y_i = 1$ and a low one when $y_i = 0$.
 
@@ -172,7 +176,7 @@ The likelihood can be written as
 \begin{equation}
   \prob{\boldsymbol{X} | \boldsymbol{\theta}} = \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i},
 \end{equation}
-which follows from the independence assumption in the data-generating mechanism. Furthermore, Bayes' theorem in equation \eqref{eq:bayes_theorem_prop} allows one to write the posterior distribution as
+which follows from the independence assumption in the data-generating mechanism. Moreover, Bayes' theorem in equation \eqref{eq:bayes_theorem_prop} allows one to write the posterior distribution as
 %so, following Bayes' theorem in equation \eqref{eq:bayes_theorem_prop}, the posterior distribution is
 \begin{equation}
   \prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}} =
@@ -183,7 +187,7 @@ which follows from the independence assumption in the data-generating mechanism.
       % \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right]
     }{
       \int \left[ \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i} \right]
-      \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right]
+      \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right] d\boldsymbol{\theta}
       % \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} d\theta
     }.
 \end{equation}
@@ -197,9 +201,9 @@ It should be noted that the integral in the denominator is a constant with respe
   %\left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right].
 \end{equation}
 
-Unfortunately, for most practical problems the integral in the denominator cannot be solved analytically, therefore numerical methods are used. One class of widely used algorithms is Markov Chain Monte Carlo (MCMC), which includes Metropolis-Hastings and Hamiltonian Monte Carlo. The main goal of MCMC methods is to approximate samples from the posterior distribution. Another class of numerical methods is Variational Inference, which is discussed in chapter \ref{ch:variational_inference}.
+Unfortunately, for most practical problems the integral in the denominator cannot be solved analytically, therefore numerical methods are used. One class of widely used algorithms is Markov Chain Monte Carlo (MCMC), which includes Metropolis-Hastings and Hamiltonian Monte Carlo. The main goal of MCMC methods is to generate samples from the posterior distribution. Another class of numerical methods is Variational Inference, which is discussed in chapter \ref{ch:variational_inference}.
 
-Whether one chooses to follow the function minimization, frequentist or Bayesian paradigm when training a model for prediction, in general it is not the main goal to minimize training error, but prediction error. That is, one wants to minimize the error of any future observation $(\boldsymbol{x}^*, \boldsymbol{y}^*)$. This is because these models are trained to be used with data that has not been seen before, therefore, it is desirable to have a model that generalizes well to future observations. This means that one wants to minimize the expected prediction error, hence, it is common to divide the data set $(\boldsymbol{X}, \boldsymbol{y})$ in two: the training set and the test set. To do this, from the original data set, a random sample of observations is assigned to be part of the training set and the rest are part of the test set. The idea is that the test set should be used to measure the predictive performance of the model, and this also helps to diagnose an overfitted model, a concept which is discussed later in this chapter. A third set is sometimes added and is called the validation set, in which predictive performance is measured to select certain hyperparameters, such as regularization parameter values, discussed further in this document.
+In general, when training a model for prediction, it is not the main goal to minimize training error, but prediction error. It does not matter whether one chooses to follow the function minimization, frequentist or Bayesian paradigm. That is, one wants to minimize the error of any future observation $(\boldsymbol{x}^*, \boldsymbol{y}^*)$. This is because these models are trained to be used with data that has not been seen before, therefore, it is desirable to have a model that generalizes well to future observations. This means that one wants to minimize the expected prediction error, hence, it is common to divide the data set $(\boldsymbol{X}, \boldsymbol{y})$ in two: the training set and the test set. To do this, from the original data set, a random sample of observations is assigned to be part of the training set and the rest are part of the test set. The idea is that the test set should be used to measure the predictive performance of the model, and this also helps to diagnose an overfitted model, a concept which is discussed later in this chapter. The data is sometimes divided in three different sets. This third set is called the validation set, and it is used to measure the generalization performance when tuning hyper parameters, such as regularization parameter values, discussed further in this document.
 
 The idea of separating the data in different sets comes from the \textbf{bias-variance trade-off}, a property of learning models. The idea of the bias-variance trade-off is that the expected prediction mean squared error of a learned model $\hat{f}$ can be decomposed in the sum of three quantities: the squared bias of $\hat{f}$, the variance of $\hat{f}$, and an irreducible error. The bias of the model refers to the error that comes from approximating a complicated phenomenon with a simpler model, the variance refers to how much the estimated model $\hat{f}$ would change with a different data set, and the irreducible error refers to the noise that comes from the problem itself which cannot be decreased \cite{friedman2001elements} \cite{james2013introduction}. In general, a modeler wants to have models with low bias and low variance, so that the expected prediction mean squared error is low, but as the name implies, there is a trade-off. Flexible models tend to have low bias but high variance, and rigid models tend to have low variance but high bias.
 
@@ -227,7 +231,7 @@ The sufficient second order conditions are used in numerical optimization. Suppo
 
 Many numerical optimization algorithms are iterative, such as coordinate descent, Newton and quasi-Newton methods, gradient free methods, and gradient descent. Coordinate descent algorithms work by fixing all but one parameter in each iteration and then minimizing the loss function with respect to the remaining parameter \cite{friedman2007pathwise} \cite{wright2015coordinate}.
 Newton methods use a second-order Taylor series approximation to the loss function and iteratively descend by computing the Hessian matrix \cite[p.~22]{nocedal2006numerical}. Quasi-Newton methods use this same idea, but instead of computing the Hessian matrix exactly, they use some approximation to it \cite{byrd1995limited} \cite[p.~23]{nocedal2006numerical}.
-Gradient free algorithms are used when the gradient of the loss function is not available, which could be for computational reasons, for unavailability, or some other reason \cite{rios2013derivative}. They include simulated annealing, swarm algorithms and genetic algorithms.
+Gradient free algorithms are used when the gradient of the loss function is not available, which could be for computational reasons, for unavailability, or practical reasons \cite{rios2013derivative}. They include simulated annealing, swarm algorithms and genetic algorithms.
 Gradient descent is explained in the next subsection.
 
 \subsection{Gradient descent (GD)}
@@ -322,11 +326,12 @@ which involves evaluating $n$ gradients (one for each observation) and then taki
 \begin{equation}
   \boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k - \alpha_k \nabla \ell_{i_k}(\boldsymbol{\theta}_k),
 \end{equation}
-where $i_k \in \left\{1, 2, ..., n \right\}$ is randomly chosen. The gradient $\nabla \ell_{i_k}(\boldsymbol{\theta}_k)$ is an unbiased estimator of $\nabla L(\boldsymbol{\theta}_k)$. This way, each iteration is computationally inexpensive because it involves the computation of only one gradient. It can happen that some $\nabla \ell_{i_k}(\boldsymbol{\theta}_k)$ in particular does not give a descent direction from $\boldsymbol{\theta}_k$, but on average they yield descent directions, such that the sequence $\left\{ \boldsymbol{\theta}_0, \boldsymbol{\theta}_1, ... \right\}$ leads to a minimizer $\boldsymbol{\theta}^*$.
+where $i_k \in \left\{1, 2, ..., n \right\}$ is randomly chosen. The gradient $\nabla \ell_{i_k}(\boldsymbol{\theta}_k)$ is an unbiased estimator of $\nabla L(\boldsymbol{\theta}_k)$. This way, each iteration is computationally inexpensive because it involves the computation of only one gradient.
+It can happen that some $\nabla \ell_{i_k}(\boldsymbol{\theta}_k)$ in particular does not give a descent direction from $\boldsymbol{\theta}_k$, but on average they yield descent directions. Thus, the sequence $\left\{ \boldsymbol{\theta}_0, \boldsymbol{\theta}_1, ... \right\}$, under certain conditions, leads to a minimizer $\boldsymbol{\theta}^*$.
 
 \subsection{Mini-batch gradient descent}
 
-An approach that lies between the two extremes of computing the gradients of all observations and the gradient of just one observation is \textbf{mini-batch gradient descent}. In mini-batch gradient descent, one chooses a fixed integer $l$, then the data set is divided in batches if size $l$, where the values in each batch are randomly chosen. Then, each of these batches is used to compute the gradient and update the values of the parameters. Usually $l$ is a small number compared to the size of a big data set, but big enough so that the gradient estimation is not too noisy, such as $l = 32$ or $l = 100$. This way, each iteration is cheaper because it involves the computation of only $l$ gradients instead of $n$. Stochastic gradient descent (SGD) is just mini-batch gradient descent with $l = 1$.
+An approach that lies between the two extremes of computing the gradients of all observations and the gradient of just one observation is \textbf{mini-batch gradient descent}. In mini-batch gradient descent, one chooses a fixed integer $l$, then the data set is divided in batches of size $l$, where the values in each batch are randomly chosen. Then, each of these batches is used to compute the gradient and update the values of the parameters. Usually $l$ is a small number compared to the size of the data set, but big enough so that the gradient estimation is not too noisy, such as $l = 32$ or $l = 100$. This way, each iteration is cheaper because it involves the computation of only $l$ gradients instead of $n$, with $l << n$. Stochastic gradient descent (SGD) is just mini-batch gradient descent with $l = 1$.
 
 So, mini-batch gradient descent updates the value of the parameters in each iteration as such
 \begin{equation}
