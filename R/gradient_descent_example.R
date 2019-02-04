@@ -50,7 +50,7 @@ deviance <- function(thetas, data = data){
   return(d)
 }
 
-
+alpha = 0.1
 max_it <- 50000
 data_gradient_descent <- tibble(it = 1:max_it,
                                 theta_0 = rep(0, max_it),
@@ -78,8 +78,8 @@ while(i < max_it){
   thetas <- thetas - alpha*g
   # Compute the norm of the theta differences
   dif_thetas_norm <- sum((thetas - thetas_old)^2)
-  flag_1 = g_norm < 1e-16
-  flag_2 = dif_thetas_norm < 1e-16
+  flag_1 = g_norm < 1e-8
+  flag_2 = dif_thetas_norm < 1e-8
   if(flag_1 | flag_2) {
     if(flag_1) cat("\n\nEnded because of convergence in gradient.\n\n")
     if(flag_2) cat("\n\nEnded because of convergence in thetas values.\n\n")
