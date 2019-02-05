@@ -11,18 +11,18 @@
 
 % \section{Variational Inference}
 
-As mentioned in chapter \ref{ch:machine_learning}, when doing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$, which is very often intractable, so one must resort to numerical approximations. In this chapter, we give a brief overview of one several possible numerical approximations, called variational inference (VI). The idea of VI is to use optimization to approximate the target distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$ with some other approximate distribution $q(\boldsymbol{\theta})$ that minimizes the Kullback-Leibler (KL) divergence to the real posterior \cite{blei2017variational}. This divergence is defined as
+As mentioned in chapter \ref{ch:machine_learning}, when doing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$, which is usually intractable, so one must resort to numerical approximations. In this chapter, a brief overview of variational inference (VI) is given, which is one of several such numerical approximations. The idea of VI is to use optimization to approximate the target distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$ with some other approximate distribution $q(\boldsymbol{\theta})$ that minimizes the Kullback-Leibler (KL) divergence to the real posterior \cite{blei2017variational}. The KL divergence is defined as
 \begin{equation}
   \label{eq:kl_divergence}
   \kl{q}{p} = \mathbb{E}_q \left[ \log \left( \frac{q(\boldsymbol{\theta})}{\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}} \right) \right] = \int_{-\infty}^{\infty} q(\boldsymbol{\theta}) \left[ \log \left( \frac{q(\boldsymbol{\theta})}{\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}} \right) \right] d\boldsymbol{\theta}.
 \end{equation}
 
-Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$, and that is why it is called a divergence instead of a distance. The former is called the reverse KL divergence and the latter is called the forward KL divergence, and each one of them prioritizes different aspects of the approximation. Reverse KL is said to be ``zero-forcing'' because it ensures that $q$ is zero in the areas in which $p$ is zero. On the contrary, forward KL is said to be ``zero-avoiding'' because $q$ avoids areas whose value is zero when $p$ also takes zero values.
+Note that the KL divergence is not symmetrical, i.e., $\kl{q}{p} \neq \kl{p}{q}$. That is the reason it is called a divergence and not a distance. The former is called the \textbf{reverse KL divergence} and the latter is called the \textbf{forward KL divergence}, and each one of them prioritizes different aspects of the approximation. Reverse KL is said to be ``zero-forcing'' because it ensures that $q$ is zero in the areas in which $p$ is zero. On the contrary, forward KL is said to be ``zero-avoiding'' because $q$ avoids areas whose value is zero when $p$ also takes zero values.
 
 This behavior can be appreciated in figure \ref{fig:KL_example}, which shows forward and reverse KL divergence of a mixture of Gaussians, denoted by $p$, and three different unimodal Gaussian distributions, each denoted by $q$. The blue distribution in the figure is the mixture of Gaussians, and the red distributions are the unimodal Gaussians.
 % I cringe when I see this, but I didn't have time to make appropriate labels for the subfigures
 In subfigure (a), the zero-forcing behavior can be appreciated because the red distribution $q$ has a mode where the blue distribution $p$ has zero values, and the reverse KL divergence is lower than the forward KL divergence.
-In subfigures (b) and (c), the zero-avoiding behavior is evident because $q$ avoids the areas in which the mixture $p$ takes zero values, and because it has a lower forward KL divergence. These two figures also show the two local optima gotten from minimizing the reverse KL divergence, each being placed in the two modes of the $p$ distribution. In fact, both forward and reverse KL divergence on subfigure (b) are equal to the ones on subfigure (c).
+In subfigures (b) and (c), the zero-avoiding behavior is evident because $q$ avoids the areas in which the mixture $p$ takes zero values, and because it has a lower forward KL divergence. These two subfigures also show the two local optima gotten from minimizing the reverse KL divergence, each being placed in the two modes of the $p$ distribution. In fact, both forward and reverse KL divergence on subfigure (b) are equal to the ones on subfigure (c).
 
 \begin{figure}[H]
   \centering
@@ -35,15 +35,15 @@ In subfigures (b) and (c), the zero-avoiding behavior is evident because $q$ avo
   \label{fig:KL_example}
 \end{figure}
 
-In VI, the goal is more commonly to minimize the reverse KL divergence $\kl{q}{p}$ instead of the forward KL $\kl{p}{q}$ because the latter requires averaging with respect to $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$, which is what the modeler is trying to approximate in the first place. Methods to deal with this type of KL divergence exist, such as expectation propagation, but they are not of concern in this work.
+In VI, the goal is to minimize the reverse KL divergence $\kl{q}{p}$ instead of the forward KL divergence $\kl{p}{q}$ because the latter requires averaging with respect to $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$, which is what the modeler is trying to approximate in the first place. Methods to deal with forward KL divergence exist, such as expectation propagation, but they are not of concern in this work.
 
-Although the main goal of VI methods is to minimize the reverse KL divergence in \eqref{eq:kl_divergence}, in practice what is usually done is to maximize a related quantity called the ELBO (Evidence Lower BOund), defined as
+Although the main goal of VI methods is to minimize the reverse KL divergence defined in equation \eqref{eq:kl_divergence}, in practice what is usually done is to maximize a related quantity called the ELBO (Evidence Lower BOund), defined as
 \begin{equation}
   \label{eq:elbo_def}
   \mathcal{L}(q) = \mathbb{E}_q\left[ \log p(\boldsymbol{y}, \boldsymbol{X}, \boldsymbol{\theta}) \right] - \mathbb{E}_q\left[ \log q(\boldsymbol{\theta}) \right].
 \end{equation}
 
-The relationship between ELBO and KL divergence is easy to see. Starting from the KL divergence definition, using the quotient rule of the logarithm, and using the fact that the expected value is a linear operator, then
+The relationship between ELBO and KL divergence is easy to see. Starting from the KL divergence definition in \eqref{eq:kl_divergence}, using the quotient rule of the logarithm, and using the fact that the expected value is a linear operator, then
 \begin{equation}
     \kl{q}{p} =
     \mathbb{E}_q \left[ \log \left( \frac{q(\boldsymbol{\theta})}{\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}} \right) \right] =
@@ -56,14 +56,14 @@ Then, using the definition of conditional probability,
     \mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log \frac{p(\boldsymbol{\theta}, \boldsymbol{y} | \boldsymbol{X})}{p(\boldsymbol{y} | \boldsymbol{X})}  \right].
 \end{equation}
 
-Using the definition of conditional probability again,
+Using the definition of conditional probability again leads to
 \begin{equation}
     %\mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log p(\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X})  \right] =
     \kl{q}{p} =
     \mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log \frac{p(\boldsymbol{\theta}, \boldsymbol{y}, \boldsymbol{X})}{p(\boldsymbol{y} | \boldsymbol{X}) p(\boldsymbol{X})}  \right].
 \end{equation}
 
-Using the quotient rule of the logarithm one more time,
+Using the quotient rule of the logarithm one more time results in
 \begin{equation}
   \kl{q}{p} =
   \mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log p(\boldsymbol{\theta}, \boldsymbol{y}, \boldsymbol{X}) - \log p(\boldsymbol{y} | \boldsymbol{X}) - \log p(\boldsymbol{X})  \right].
@@ -80,16 +80,16 @@ Since the goal is to find the optimal $q$, then $\log p(\boldsymbol{X})$ and $\l
 \begin{equation}
   \mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log p(\boldsymbol{\theta}, \boldsymbol{y}, \boldsymbol{X}) \right],
 \end{equation}
-which is the negative of the ELBO. Therefore, minimizing the KL divergence is equivalent to maximizing the ELBO.
+which is the negative of the ELBO, defined in equation \eqref{eq:elbo_def}. Therefore, minimizing the KL divergence is equivalent to maximizing the ELBO.
 
-Let $\boldsymbol{\lambda}$ be the parameters of the variational distribution $q(\boldsymbol{\theta})$. The objective is to approximate $p(\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X})$ by finding the values of the $\boldsymbol{\lambda}$ vector that maximize equation \eqref{eq:elbo_def}, which could be done in several ways, for example, coordinate ascent, or gradient ascent. In order to perform gradient ascent, is it necessary to compute the gradient of the objective function with respect to the parameters, that is, $\nabla_{\boldsymbol{\lambda}} \mathcal{L}(q, \boldsymbol{\lambda})$. It is not very hard to prove that
+Let $\boldsymbol{\lambda}$ be the parameter vector of the variational distribution $q(\boldsymbol{\theta})$. The objective is to approximate $p(\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X})$ by finding the values of $\boldsymbol{\lambda}$ that maximize equation \eqref{eq:elbo_def}. For this, several techniques could be used, such as coordinate ascent and gradient ascent. In order to perform gradient ascent, it is necessary to compute the gradient of the objective function with respect to the parameters, that is, $\nabla_{\boldsymbol{\lambda}} \mathcal{L}(q, \boldsymbol{\lambda})$. This gradient is
 \begin{equation}
   \label{eq:ELBO_gradient}
   \nabla_{\boldsymbol{\lambda}} \mathcal{L}(q, \boldsymbol{\lambda}) =
   \mathbb{E}_q \left[ \left( \nabla_{\boldsymbol{\lambda}} \log q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right) \left( \log p(\boldsymbol{y}, \boldsymbol{X}, \boldsymbol{\theta}) - \log q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right) \right].
 \end{equation}
 
-There are models for which this gradient can be computed analytically, but for many other models, this cannot be done because it may not be possible to analytically take the expectation, hence some approximation must be made. A good approach is to approximate the expected value with Monte Carlo simulation. Let $\left\{ \boldsymbol{z}_1, ..., \boldsymbol{z}_S \right\}$ be samples taken from $q(\boldsymbol{\theta} | \boldsymbol{\lambda})$, then one can approximate the expected value with an arithmetic mean as such,
+In general, this gradient cannot be computed analytically because it may not be possible to analytically take the expectation. It may be possible to take the expectation for some models, but for most cases, some approximation must be made. A good approach is to approximate the expected value with Monte Carlo simulation. Let $\left\{ \boldsymbol{z}_1, ..., \boldsymbol{z}_S \right\}$ be samples taken from $q(\boldsymbol{\theta} | \boldsymbol{\lambda})$, then one can approximate the expected value with an arithmetic mean as such,
 \begin{equation}
   \begin{split}
   \nabla_{\boldsymbol{\lambda}} \mathcal{L}(q, \boldsymbol{\lambda}) &=
@@ -98,16 +98,16 @@ There are models for which this gradient can be computed analytically, but for m
   \end{split}
 \end{equation}
 
-This approach gives noisy but unbiased estimates of the expected value. A Monte Carlo approach can also be taken to compute the value of the ELBO. For more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
+This approach gives noisy but unbiased estimates of the expected value. For more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
 
-A family that is often used to approximate $p$ is the \textbf{mean-field variational family}, where each parameter is independent from the rest, such that
+A family that is often used to approximate $p$ is the \textbf{mean-field variational family}, where each parameter is independent from on another, such that
 \begin{equation}
-  q(\boldsymbol{\theta}) = \prod_{i = 1} q(\theta_i | \lambda_i).
+  q(\boldsymbol{\theta}) = \prod_{i} q(\theta_i | \lambda_i).
 \end{equation}
 
 % \section{Example}
 
-To illustrate how Monte-Carlo based gradient ascent works, a simple example will be studied. In this example, the goal is to approximate the posterior distribution of a two-class logistic regression. Assume a data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times p}$ and a response vector $\boldsymbol{y}$ with values 1 or 0. Each observation $y_i$ is modeled as a Bernoulli distribution such that
+Next, a simple example will be studied to illustrate the logic behind Monte-Carlo based gradient ascent using the mean-field variational family. In this example, the goal is to approximate the posterior distribution of a two-class logistic regression. Assume a data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times p}$ and a response vector $\boldsymbol{y}$ with values 1 or 0. Each observation $y_i$ is modeled as a Bernoulli distribution such that
 \begin{equation}
   y_i | \boldsymbol{x_i}, \boldsymbol{\theta} \sim \mathrm{Bern}(\sigma(\boldsymbol{\theta}^T \boldsymbol{x_i}))
 \end{equation}
@@ -163,10 +163,9 @@ Note that in order to compute the gradient, $\log p(\boldsymbol{X} | \boldsymbol
       &= \mathbb{E}_q \left[ \left( \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right) \left( \log p(\boldsymbol{y} | \boldsymbol{X}, \boldsymbol{\theta}) + \log p(\boldsymbol{\theta}) - \log q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right) \right] +  c \mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right].
   \end{split}
 \end{equation*}
-
 In the last line, $\log p(\boldsymbol{X} | \boldsymbol{\theta})$ has been reduced to just a constant $c$.
 
-Furthermore, $\mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] = 0$. This is because
+Furthermore, $\mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] = 0$ because
 \begin{equation}
   \mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] =
       \int \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) d\boldsymbol{\theta}.
@@ -187,7 +186,7 @@ And finally,
   \end{split}
 \end{equation}
 
-Hence, the derivative of the ELBO can be written as
+Therefore, the derivative of the ELBO can be written as
 \begin{equation}
   \nabla_{\boldsymbol{\lambda}} \mathcal{L} = \mathbb{E}_q \left[ \left( \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right) \left( \log p(\boldsymbol{y} | \boldsymbol{X}, \boldsymbol{\theta}) + \log p(\boldsymbol{\theta}) - \log q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right) \right].
 \end{equation}
@@ -206,27 +205,27 @@ And since $\boldsymbol{\theta}$ was assumed to have Gaussian prior, then
   \log p(\boldsymbol{\theta}) = \log \prod_{j = 1}^p \phi(\theta_j) = \sum_{j = 1}^p \log \phi(\theta_j) = \frac{1}{\sqrt{2 \pi}} e^{\left( -\frac{\theta_j^2}{2} \right)}.
 \end{equation}
 
-With these derivations, a gradient ascent approach can be taken in order to optimize the ELBO. This is the same as gradient descent presented in chapter \ref{ch:machine_learning}, except that instead of taking the negative of the gradient to move in the direction of maximum descent, the gradient is taken as it is so that the algorithm moves in the direction of maximum ascent. As in gradient descent, the modeler starts with a random $\boldsymbol{\lambda}$ vector, but in this case where the gradient must be approximated with Monte Carlo simulation, in each step $t$ the algorithm takes $S$ samples $\boldsymbol{z}_k$, with $\boldsymbol{z}_k \sim q(\boldsymbol{\theta} | \boldsymbol{\lambda})$ for $k \in \left\{1, \cdots, S \right\}$. This way, the approximate gradient is computed as
+With these derivations, a gradient ascent approach can be taken in order to optimize the ELBO. This is the same as gradient descent presented in chapter \ref{ch:machine_learning}, except that instead of taking the negative of the gradient to move in the direction of maximum descent, the gradient is taken as it is so that the algorithm moves in the direction of maximum ascent. Like in gradient descent, the modeler starts with a random initial $\boldsymbol{\lambda}$ vector, and this vector is updated in each iteration using the gradient of the loss function. However, in this case, the gradient must be approximated with Monte Carlo simulation, so in each step $t$ the algorithm takes $S$ samples $\boldsymbol{z}_k$, with $\boldsymbol{z}_k \sim q(\boldsymbol{\theta} | \boldsymbol{\lambda})$ for $k \in \left\{1, \cdots, S \right\}$. This way, the approximate gradient is computed as
 \begin{equation}
   \nabla_{\boldsymbol{\lambda}} \mathcal{L} \approx \Delta_{\boldsymbol{\lambda}} \mathcal{L} = \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\boldsymbol{\lambda}} \log q(\boldsymbol{z}_k | \boldsymbol{\lambda}) \right) \left( \log p(\boldsymbol{y}, \boldsymbol{X}, \boldsymbol{z}_k) - \log q(\boldsymbol{z}_k | \boldsymbol{\lambda}) \right),
 \end{equation}
 and then the $\boldsymbol{\lambda}$ parameter is updated as $\boldsymbol{\lambda}_{t+1} = \boldsymbol{\lambda}_{t} + \eta_t  \Delta_{\boldsymbol{\lambda}_t} \mathcal{L}$ until a certain stopping criteria is met, with each $\eta_t$ chosen accordingly.
 
-An implementation of this algorithm was made in R with a simulated data set of $n = 500$ data points and $p = 1$ feature. The response vector was created with the logistic sigmoid function as $y_i = \sigma(\theta_0 + \theta_1 \boldsymbol{x_i})$, with $\theta_0 = -5$ and $\theta_1 = 5$.
+An implementation of this algorithm was made in the R programming language with a simulated data set of $n = 500$ data points and $p = 1$ feature. The response vector was created with the logistic sigmoid function as $y_i = \sigma(\theta_0 + \theta_1 \boldsymbol{x_i})$, with $\theta_0 = -5$ and $\theta_1 = 5$.
 
-The initial value for $\boldsymbol{\lambda} = \left[ \mu_1, \mu_2, \alpha_1, \alpha_2 \right]^T$ was chosen to be zero, and for each iteration $S = 50$ Monte Carlo samples are taken to compute the approximate gradient. The step size $\boldsymbol{\eta}_t$ is chosen using the AdaGrad method in which
+The initial value for $\boldsymbol{\lambda} = \left[ \mu_1, \mu_2, \alpha_1, \alpha_2 \right]^T$ was chosen to be zero, and in each iteration, $S = 50$ Monte Carlo samples are taken to compute the approximate gradient. The step size $\boldsymbol{\eta}_t$ is chosen using the AdaGrad method \cite{duchi2011adaptive} in which
 $\boldsymbol{\eta}_t = \left( \mathrm{diag}(\boldsymbol{G}_t) \right)^{\frac{1}{2}}$, where $\mathrm{diag}(\boldsymbol{G}_t)$
-refers to the diagonal of the matrix $\boldsymbol{G}_t = \left( \Delta_{\boldsymbol{\lambda}_t} \right) \left( \Delta_{\boldsymbol{\lambda}_t} \right)^T$ \cite{duchi2011adaptive}.
+refers to the diagonal of the matrix $\boldsymbol{G}_t = \left( \Delta_{\boldsymbol{\lambda}_t} \right) \left( \Delta_{\boldsymbol{\lambda}_t} \right)^T$.
 In this case $\boldsymbol{\eta}_t$ is a vector, hence the product $\boldsymbol{\eta}_t \Delta_{\boldsymbol{\lambda}_t}$ refers to an element-wise multiplication.
 The stopping criterion was chosen to be
 $\norm{\boldsymbol{\mu}_{t+1} - \boldsymbol{\mu}_{t}} < 0.005$,
 with $\boldsymbol{\mu}_t$ being the vector containing the values of $\mu_1$ and $\mu_2$ in the $t$-th iteration of the algorithm.
 
-Figure \ref{fig:BBVI_plots} shows the results of the implementation, and the values estimated by the \texttt{glm} package in R are also shown for comparison. The top-left image shows the value of the objective function, i.e., the ELBO, in each iteration, slowly increasing and with a wiggly line because of the noise of the estimations.
-The top-right image shows the real values of $\boldsymbol{\theta}$ (-5 and 5) with gray dashed lines, the values of $\boldsymbol{\theta}$ estimated by the \texttt{glm} package with colored dotted lines, and the approximated values of the variational distribution $q(\boldsymbol{\theta} | \boldsymbol{\lambda})$.
+Figure \ref{fig:BBVI_plots} shows the results of the implementation, and the values estimated by the \texttt{glm} package in R are also shown for comparison. The top-left image shows the value of the objective function, i.e., the ELBO, in each iteration, slowly increasing and with a wiggly line because of the noise of the estimations. The top-right image shows the real values of $\boldsymbol{\theta}$ (-5 and 5) with gray dashed lines, the values of $\boldsymbol{\theta}$ estimated by the \texttt{glm} package with colored dotted lines, and the approximated values of the variational distribution $q(\boldsymbol{\theta} | \boldsymbol{\lambda})$.
 The bottom-left image shows the values of $\mu_1$ and $\mu_2$ in each iteration, with horizontal colored dotted lines showing the estimated values by the \texttt{glm} package; it can be seen how they slowly approach their real values.
 The bottom-right image shows the values of $\mu_1$ and $\mu_2$ in each iteration in the plane, where the noise of the gradient estimation is seen in the wiggliness of the line; the red dot shows once again the value estimated by the \texttt{glm} package.
-In general the results are pretty good for such a simple algorithm. There are ways to have better and less noisy estimates, but they are beyond the scope of this work. For more details about better approximations of the gradient, see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
+% The results are decent for such a simple algorithm.
+There are ways to have better and less noisy estimates, but they are beyond the scope of this work. For more details about better approximations of the gradient, see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
 
 \begin{figure}[H]
     \centering
@@ -240,5 +239,4 @@ The posterior predictive distribution of $y^*$ for a new vector of features $\bo
   \item Sample a vector $\boldsymbol{\theta}_j \sim q(\boldsymbol{\theta} | \boldsymbol{\lambda})$
   \item Use that value to sample $y_j^* \sim p(y^* | \boldsymbol{\theta}_j, \boldsymbol{x}^*)$
 \end{enumerate}
-
 Then $\left\{ y_j^* \right\}_{j = 1}^T$ is a set of $T$ independent samples from the posterior predictive distribution $\prob{y^* | \boldsymbol{y}, \boldsymbol{X}, \boldsymbol{x}^*}$.
