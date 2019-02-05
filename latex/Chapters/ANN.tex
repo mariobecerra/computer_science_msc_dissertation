@@ -9,9 +9,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In chapter \ref{ch:machine_learning} it was mentioned that in supervised learning we have a response variable $\boldsymbol{y} \in \mathbb{R}^n$ and a data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times p}$, and that it is assumed that there exists a relationship between $\boldsymbol{y}$ and $\boldsymbol{X}$ such that
+In chapter \ref{ch:machine_learning} it was mentioned that in supervised learning there is a response variable $\boldsymbol{y} \in \mathbb{R}^n$ and a data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times p}$. It is assumed that there exists a relationship between $\boldsymbol{y}$ and $\boldsymbol{X}$ such that
 $\boldsymbol{y} = f(\boldsymbol{X}) + \boldsymbol{\varepsilon}$,
-with $f$ being a fixed but unknown function. It was also mentioned that since $f$ is unknown, it is estimated with a function $\hat{f}$ that is chosen from a parameterized family of functions $\mathcal{F}$. Artificial neural networks (ANNs) belong to one of the many possible families from which $\mathcal{F}$ can be chosen. In this chapter, two types of ANNs will be studied, feed-forward neural networks and convolutional neural networks (CNNs).
+with $f$ being a fixed but unknown function. Since $f$ is unknown, it is estimated with a function $\hat{f}$ that is chosen from a parameterized family of functions $\mathcal{F}_{\boldsymbol{\theta}}$. Artificial neural networks (ANNs) belong to one of the families from which $\mathcal{F}_{\boldsymbol{\theta}}$ can be chosen. In this chapter, two types of ANNs will be studied, feed-forward neural networks and convolutional neural networks (CNNs).
 
 \section{Artificial Neural Networks}
 
@@ -23,7 +23,7 @@ or the hyperbolic tangent $\sigma(x) = \tanh(x)$.
 %The values of parameters $\theta_k^{[0]}$ and $\theta_k^{[1]}$ for $k \in \left\{ 0, \ldots, m \right\}$ are also chosen to minimize certain error function.
 
 Figure \ref{fig:theory_ANN_diagram_01} shows these relationships in a graphic way for a model with $m = 3$ and where $a_{k, i}$ is defined as $a_{k, i} = \sigma \left( \theta_0^{[0]} + \theta_k^{[0]} x_i \right)$ for $k \in \left\{ 1, 2, 3 \right\}$.
-For simplicity, this image does not explicitly show the parameters $\theta_0^{[0]}$ and $\theta_0^{[1]}$, which are usually called the \textbf{bias} parameters.
+For simplicity, this image does not explicitly show the parameters $\theta_0^{[0]}$ and $\theta_0^{[1]}$, which are called the \textbf{bias} parameters.
 
 \begin{figure}[H]
     \centering
@@ -69,7 +69,7 @@ After these two introductory examples of MLPs, they can be defined in a more for
 As before, $\boldsymbol{y}$ denotes the response variable, and $y_i$ denotes the $i$-th element of $\boldsymbol{y}$.
 Once again, $\boldsymbol{X} \in \mathbb{R}^{n \times p}$ denotes the data matrix; $\boldsymbol{x}_i \in \mathbb{R}^p$ denotes the $i$-th row in $\boldsymbol{X}$, representing the values of the features for the $i$-th element in the data; $\boldsymbol{x}^{(k)} \in \mathbb{R}^n$ denotes the $k$-th column in $\boldsymbol{X}$; and $x_i^{(k)}$ denotes the $k$-th column-wise element and the $i$-th row-wise element.
 
-A multilayer perceptron can have any integer number of layers, and this number will be denoted by $L$; the number of nodes of each layer $l$ by $n^{[l]}$; and the activation function for each layer $l$ by $\sigma^{[l]}(\cdot)$, for $l \in \left\{ 1, \ldots, L \right\}$. The activation function for the last layer will be denoted by $\phi(\cdot)$, as in the binary classification example. The parameter that connects the $j$-th node from the $(l-1)$-th layer with the $k$-th node in the $l$-th layer is denoted by $\theta_{j,k}^{[l]}$ and, as before, $a_{k,i}^{[l]}$ denotes the result of the activation function corresponding to the $l$-th layer and the $i$-th observation, for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$; where $\theta_{0,k}^{[l]}$ is the bias term of the $k$-th node in the $l$-th layer. This notation can be summarized as follows,
+A multilayer perceptron can have any integer number of layers, and this number will be denoted by $L$. The number of nodes of each layer $l$ will be denoted by $n^{[l]}$. And the activation function for each layer $l$ will be denoted by $\sigma^{[l]}(\cdot)$, for $l \in \left\{ 1, \ldots, L \right\}$. The activation function for the last layer will be denoted by $\phi(\cdot)$, as in the binary classification example. The parameter that connects the $j$-th node from the $(l-1)$-th layer with the $k$-th node in the $l$-th layer is denoted by $\theta_{j,k}^{[l]}$ and, as before, $a_{k,i}^{[l]}$ denotes the result of the activation function corresponding to the $l$-th layer and the $i$-th observation, for $k \in \left\{ 1, \ldots, n^{[l]} \right\}$; where $\theta_{0,k}^{[l]}$ is the bias term of the $k$-th node in the $l$-th layer. This notation can be summarized as follows,
 \begin{equation}
   \label{eq:ann_act_funct_def}
   a_{k,i}^{[l]} = \sigma^{[l]} \left( \theta_{0,k}^{[l-1]} + \sum_{j = 1}^{n^{[l-1]}} \theta_{j,k}^{[l-1]} a_{j,i}^{[l-1]} \right)
@@ -93,7 +93,9 @@ Figure \ref{fig:theory_ANN_diagram_03} shows an example of an architecture with 
     \label{fig:theory_ANN_diagram_03}
 \end{figure}
 
-In ANN literature, the most common approach to the estimation of parameters is the one of loss function minimization, which in most cases results in the same estimate as in the maximum likelihood approach because of the way in which loss functions are defined. As mentioned in chapter \ref{ch:machine_learning}, when the response variable is continuous, squared loss is often used, and it is equivalent to the maximization of a Gaussian likelihood function. In the case of a binary classification problem, cross-entropy loss defined in \eqref{eq:logistic_example_loss_function}, is usually used, and it is equivalent to maximizing the likelihood of independent Bernoulli response variables.
+In ANN literature, the most common approach to the estimation of parameters is the loss function minimization approach. In most cases, this approach results in the same estimate as in the maximum likelihood approach because of the way in which loss functions are defined.
+
+As mentioned in chapter \ref{ch:machine_learning}, when the response variable is continuous, squared loss is often used, and it is equivalent to the maximization of a Gaussian likelihood function. In the case of a binary classification problem, binary-entropy loss defined in \eqref{eq:logistic_example_loss_function}, is usually used, and it is equivalent to maximizing the likelihood of independent Bernoulli response variables.
 
 In the case of a multiple classification problem, the cross-entropy loss is extended for more classes using the same maximum likelihood idea. In a $k$ class classification problem, the loss is defined as
 \begin{equation}
@@ -138,9 +140,9 @@ Bayes' theorem is used to update the knowledge about the parameters given the da
 \end{equation}
 
 %In our example, $\prob{\boldsymbol{X} | \boldsymbol{\Theta}} = \normalfunc{\boldsymbol{X}}{\mathrm{MLP}(\boldsymbol{X}, \boldsymbol{\Theta})}{\sigma^2}$ and $\prob{\boldsymbol{\Theta}} = \normalfunc{\boldsymbol{\Theta}}{[]}$
-In the example above, $\prob{\boldsymbol{y} | \boldsymbol{\Theta}, \boldsymbol{X}}$ and $\prob{\boldsymbol{\Theta} | \boldsymbol{X}}$ are the joint density functions of Gaussian random variables with their corresponding parameter values. To make predictions in the Bayesian case, we use the posterior predictive distribution defined in equation \eqref{eq:post_pred_dist}.
+In the example above, $\prob{\boldsymbol{y} | \boldsymbol{\Theta}, \boldsymbol{X}}$ and $\prob{\boldsymbol{\Theta} | \boldsymbol{X}}$ are the joint density functions of Gaussian random variables with their corresponding parameter values. To make predictions, the posterior predictive distribution defined in equation \eqref{eq:post_pred_dist} is used.
 
-In \citeyear{gal2015dropout1}, \citeauthor{gal2015dropout1} proved that dropout, which was mentioned in chapter \ref{ch:machine_learning}, can be seen as a Bayesian approximation to a deep Gaussian process \cite{gal2015dropout}. They show that applying dropout before each weight layer in a neural network with arbitrary depth is mathematically equivalent to a variational approximation that minimized the KL divergence to the posterior distribution to a deep Gaussian process. They later showed that stochastic regularization techniques such as dropout, can be seen as variational approximations to a Bayesian neural network, including convolutional neural networks \cite{gal2015bayesian} \cite{gal2015modern}.
+Dropout, the stochastic regularization technique mentioned in chapter \ref{ch:machine_learning}, can be seen as a Bayesian approximation to a deep Gaussian process \cite{gal2015dropout} \cite{gal2015dropout1}. Applying dropout before each weight layer in a neural network with arbitrary depth is mathematically equivalent to a variational approximation that minimized the KL divergence to the posterior distribution to a deep Gaussian process. It was later showed that stochastic regularization techniques such as dropout, can be seen as variational approximations to a Bayesian neural network, including convolutional neural networks \cite{gal2015bayesian} \cite{gal2015modern}.
 
 
 
@@ -152,17 +154,17 @@ In \citeyear{gal2015dropout1}, \citeauthor{gal2015dropout1} proved that dropout,
 
 \section{Convolutional Neural Networks}
 
-Convolutional Neural Networks (CNNs) are neural networks with a particular architecture and are widely used in computer vision problems, such as image classification or object detection in a video. They were introduced by \citeauthor{lecun1989generalization} in \citeyear{lecun1989generalization} as a way to constrain the number of parameters needed to perform automatic image classification \cite{lecun1989generalization}. The main idea is that in images, pixels close to each other tend to be similar, whereas pixels far away from each other tend to be different. This notion of proximity is used by CNN's architecture, and leverages three concepts: sparse interactions, parameter sharing and equivariant representations \cite[p.~335]{bengio2015deep}.
+Convolutional Neural Networks (CNNs) are neural networks with a particular architecture and are widely used in computer vision problems, such as image classification or object detection in videos. They were introduced by \citeauthor{lecun1989generalization} in \citeyear{lecun1989generalization} as a way to constrain the number of parameters needed to perform automatic image classification \cite{lecun1989generalization}. The main idea is that in images, pixels close to each other tend to be similar, whereas pixels far away from each other tend to be different. This notion of proximity is used by CNN's architecture, and leverages three concepts: sparse interactions, parameter sharing and equivariant representations \cite[p.~335]{bengio2015deep}.
 
 \begin{itemize}
-  \item Sparse interactions: In MLPs, every unit is connected to all other units in the next layer, but in CNNs, only a small number of units is connected to another small number of units. This means fewer parameters and, hence, less memory usage and faster computation.
+  \item Sparse interactions: In MLPs, every unit is connected to all other units in the next layer, but in CNNs, only few units are connected to other few of units. This means fewer parameters and, hence, less memory usage and faster computation.
   \item Parameter sharing: Different units share the same set of parameters. The same convolution is used many times in the image and, thus, the number of parameters is further reduced.
   \item Equivariant representations: The architecture of CNNs provides equivariance in translations, meaning that if the input is changed, the output is changed in the same fashion. For example: in an image, if an object is moved in the input, its representation will be moved in the same way in the output.
 \end{itemize}
 
 \subsection{Convolution operation}
 
-The base of CNNs is the convolution operation, which will be described assuming an image. Assuming a digital image represented as an $m \times n$ matrix $\boldsymbol{I}$, where $I_{i,j}$ represents the pixel in the $i$-th row and $j$-th column as such
+The base of CNNs is the convolution operation. This is a general operation, but for this work, it will be described assuming that the input is a digital image. This image is represented as an $m \times n$ matrix $\boldsymbol{I}$, where $I_{i,j}$ represents the pixel in the $i$-th row and $j$-th column as such
 \begin{equation}
   \boldsymbol{I} =
     \begin{bmatrix}
@@ -173,7 +175,7 @@ The base of CNNs is the convolution operation, which will be described assuming 
     \end{bmatrix}.
 \end{equation}
 
-The convolution operation uses another matrix called a \textbf{filter} or a \textbf{kernel}, with dimensions $p \times r$, where $p < m$ and $r < n$. This means that the kernel matrix must be of a lower dimension than the image $\boldsymbol{I}$. The filter matrix is denoted by $\boldsymbol{K}$ as such
+The convolution operation uses another matrix called a \textbf{filter} or a \textbf{kernel}, with dimensions $p \times r$, where $p < m$ and $r < n$. This means that the kernel matrix must be of a lower dimension than the image $\boldsymbol{I}$. The filter matrix is denoted by $\boldsymbol{K}$ as
 \begin{equation}
   \boldsymbol{K} =
     \begin{bmatrix}
@@ -184,13 +186,13 @@ The convolution operation uses another matrix called a \textbf{filter} or a \tex
     \end{bmatrix}.
 \end{equation}
 
-The convolution operation between $\boldsymbol{I}$ and $\boldsymbol{K}$ is denoted as $\boldsymbol{I} * \boldsymbol{K}$, and its result is another matrix $\boldsymbol{S}$, for which each element is defined as
+The convolution operation between $\boldsymbol{I}$ and $\boldsymbol{K}$ is denoted as $\boldsymbol{I} * \boldsymbol{K}$, and its result is another matrix $\boldsymbol{S}$. Each element of $\boldsymbol{S}$ is defined as
 \begin{equation}
   \label{eq:2d_conv_def}
   S_{i,j} = (\boldsymbol{I} * \boldsymbol{K})_{i,j} = \sum_{k} \sum_{l} I_{i+k-1,j+l-1} K_{k, l}.
 \end{equation}
 
-An example of this is shown in figure \ref{fig:conv_example}, in which $\boldsymbol{I}$ is a $7 \times 7$ image matrix and the kernel $\boldsymbol{K}$ is a $3 \times 3$ matrix. The result is a $5 \times 5$ matrix in which element is computed using equation \eqref{eq:2d_conv_def}. For instance, the element on the first row and fourth column of the result matrix, that is, $S_{1,4}$ is computed as
+An example of this is shown in figure \ref{fig:conv_example}, in which $\boldsymbol{I}$ is a $7 \times 7$ image matrix and the kernel $\boldsymbol{K}$ is a $3 \times 3$ matrix. The result is a $5 \times 5$ matrix in which each element is computed using equation \eqref{eq:2d_conv_def}. For instance, the element on the first row and fourth column of $\boldsymbol{S}$, that is, $S_{1,4}$ is computed as
 \begin{equation}
   \begin{split}
       S_{1,4} & =
@@ -204,6 +206,7 @@ An example of this is shown in figure \ref{fig:conv_example}, in which $\boldsym
       & = 4.
   \end{split}
 \end{equation}
+The rest of the elements are computed in a similar way. It should be noted that the resulting matrix is smaller than the original image matrix.
 
 \begin{figure}[H]
     \centering
@@ -212,14 +215,9 @@ An example of this is shown in figure \ref{fig:conv_example}, in which $\boldsym
     \label{fig:conv_example}
 \end{figure}
 
-The rest of the elements are computed in a similar way. It should be noted that the resulting matrix is smaller than the original image matrix. The convolution kernel in the example only has 9 parameters which are used by the whole image matrix, and these parameters are usually estimated with data.
+The convolution kernel in the example only has 9 parameters which are used by the whole image matrix, and these parameters are usually estimated with data.
 
-An image classification problem could be solved by turning the input image into a long vector, but then this would be fed to a fully connected layer, which would mean that a large number of parameters would have to be fit. This is one of the reason convolutions are used: instead of estimating a large number of parameters, the convolution operation needs a small number of parameters (9 in the case of the example) to be fit. Additionally, the convolution operation takes into account the topology of the image input, which has a very local structure \cite{lecun1998gradient}.
-
-% \begin{equation}
-%   S_{1,4} = \sum_{k=1}^3 \sum_{l=1}^3 I_{1+k-1,4+l-1} K_{k, l} = I_{1,4}K_{1,1} + I_{1,5}K_{1,2} + I_{1,6}K_{1,3} + I_{2,4}K_{2,1} + I_{2,5}K_{2,2} + I_{2,6}K_{2,3} + I_{3,4}K_{3,1} + I_{3,5}K_{3,2} + I_{3,6}K_{3,3}
-% \end{equation}
-
+An image classification problem could be solved by turning the input image into a long vector, but then this would be fed to a fully connected layer, which would mean that a large number of parameters would have to be fitted. This is one of the reasons convolutions are used: instead of estimating a large number of parameters, the convolution operation needs a small number of parameters (9 in the case of the example) to be estimated. Additionally, the convolution operation takes into account the topology of the image input, which has a very local structure \cite{lecun1998gradient}.
 
 \subsection{Pooling}
 
