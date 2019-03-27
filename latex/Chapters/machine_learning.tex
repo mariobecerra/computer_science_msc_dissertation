@@ -26,29 +26,28 @@ It is assumed that there exists a relationship between $\boldsymbol{y}$ and $\bo
 \end{equation}
 where $f$ is a fixed but unknown function and $\boldsymbol{\varepsilon}$ is a zero-mean random error term, independent of $\boldsymbol{X}$ \cite[p.~16]{james2013introduction}.
 The goal is to find the best approximation to the function $f$, which is done with an estimate $\hat{f}$ \cite[p.~17]{james2013introduction}.
-This estimate $\hat{f}$ is chosen from a family of functions $\mathcal{F}$.
+This estimate $\hat{f}$ is chosen from a family of functions $\mathcal{F}$. In machine learning $\mathcal{F}$ is known as the hypothesis set.
 
-For practical convenience, the family $\mathcal{F}$ is assumed to be indexed by a parameter vector $\boldsymbol{\theta}$, thus allowing to think of $\mathcal{F}_{\boldsymbol{\theta}}$ as the family of approximations indexed by a finite set of unknown parameters. This changes the task of finding an approximation in an infinite dimensional space to a problem in a finite dimensional space such as $\mathbb{R}^d$.
-% which is usually assumed to be completely characterized by a single parameter vector $\boldsymbol{\theta}$.
-It is desirable for $\hat{f}$ to keep the generalization error to a minimum, where the generalization error is defined by the error of predicting for an unseen vector $\boldsymbol{x}^*$. In other terms, the error is usually expressed as the cost (loss) of making a wrong prediction. This loss function needs a set of training data $\left\{ (\boldsymbol{x_1}, y_1), ..., (\boldsymbol{x_n}, y_n) \right\}$, where each $y_i$ and $\boldsymbol{x_i}$ denote the $i$-th entry of $\boldsymbol{y}$ and $i$-th row of $\boldsymbol{X}$, respectively, for $i \in \left\{1, \ldots, n \right\}$.
-% The goal is for $\hat{f}$ to have as little generalization error as possible. This is done using an error or loss function that needs to be minimized and a set of training data $\left\{ (\boldsymbol{x_1}, y_1), ..., (\boldsymbol{x_n}, y_n) \right\}$, where each $y_i$ and $\boldsymbol{x_i}$ denote the $i$-th entry of $\boldsymbol{y}$ and $i$-th row of $\boldsymbol{X}$, respectively, for $i \in \left\{1, \ldots, n \right\}$.
-Examples of $\mathcal{F}$ are the linear regression model, the general additive model, the logistic regression model and the neural network.
+For practical convenience, the family $\mathcal{F}$ is assumed to be indexed by a finite dimensional vector $\boldsymbol{\theta}$. Thus allowing to think of $\mathcal{F}_{\boldsymbol{\theta}}$ as a family of approximations indexed by a finite set of unknown parameters. This changes the task of finding a candidate in an infinite dimensional space to a problem in a finite dimensional space such as $\mathbb{R}^d$.
+In general, it is desirable for $\hat{f}$ to keep the generalization error to a minimum, where the generalization error is defined by the error of predicting for any unseen vector $\boldsymbol{x}^*$, with $\boldsymbol{x}^*$ randomly sampled from the probability distribution of features. In other terms, the error is usually expressed as the cost (loss) of making a wrong prediction.
+Of course, the loss function for the generalization error is not known, as it depends on unseen data. However, one minimizes the empirical loss function defined by the set of training data available. That is, the empirical loss function is approximated using the available dataset of $n$ observations $\mathcal{D} = \left\{ (\boldsymbol{X}, \boldsymbol{y}) \right\}$, where $\boldsymbol{X}$ and $\boldsymbol{y}$ have been defined above.
+% This loss function needs a set of training data $\left\{ (\boldsymbol{x_1}, y_1), ..., (\boldsymbol{x_n}, y_n) \right\}$, where each $y_i$ and $\boldsymbol{x_i}$ denote the $i$-th entry of $\boldsymbol{y}$ and $i$-th row of $\boldsymbol{X}$, respectively, for $i \in \left\{1, \ldots, n \right\}$.
+Examples of $\mathcal{F}_{\boldsymbol{\theta}}$ are the linear regression model, the general additive model, the logistic regression model and the neural network.
 
-For example, in the linear regression case, it is common to minimize the squared error function
+% For example, in the linear regression case, it is common to minimize the squared error function
+For example, a linear regression can be assumed. The loss function can be defined as the quadratic error function defined as
 \begin{equation}
   \hat{f} = \argmin_{f \in \mathcal{F}} \frac{1}{n} \sum_{i = 1}^n{ ( y_i - f(\boldsymbol{x_i}) ) ^ 2},
 \end{equation}
-where $\mathcal{F}$ is the family of functions of the form $f_{\boldsymbol{\theta}}(\boldsymbol{X}) = \boldsymbol{X}\boldsymbol{\theta}$ with $\boldsymbol{\theta} \in \mathbb{R}^p$. Thus, the  estimate $\hat{f}$ is $\hat{f}(\boldsymbol{X}) = \boldsymbol{X} \hat{\boldsymbol{\theta}}$, where $\hat{\boldsymbol{\theta}}$ minimizes the error function.
-
-The linear regression model belongs to a type of methods called \textbf{parametric methods}. In these methods, the modeler makes an assumption about the functional form of $f$, which depends on a vector of parameters $\boldsymbol{\theta}$. After this, the modeler proceeds to train the model by choosing the parameters that minimize a previously selected loss function \cite[p.~21]{james2013introduction}. In the case of linear regression, the form of $f$ is assumed to be $f(\boldsymbol{X}) = \boldsymbol{X}\boldsymbol{\theta}$, and the parameters chosen are the elements of the $\hat{\boldsymbol{\theta}}$ vector that minimize the squared error function of the model.
+where $\mathcal{F}_{\boldsymbol{\theta}}$ is the family of functions of the form $f_{\boldsymbol{\theta}}(\boldsymbol{X}) = \boldsymbol{X}\boldsymbol{\theta}$ with $\boldsymbol{\theta} \in \mathbb{R}^p$. Thus, the  estimate $\hat{f}$ is $\hat{f}(\boldsymbol{X}) = \boldsymbol{X} \hat{\boldsymbol{\theta}}$, where $\hat{\boldsymbol{\theta}}$ minimizes the error function.
+In particular, the linear regression model belongs to a type of methods called \textbf{parametric methods}. In these methods, the modeler makes an assumption about the functional form of $f$, which depends on a vector of parameters $\boldsymbol{\theta}$ of fixed dimension. After this, the modeler proceeds to train the model by choosing the vector of parameters that minimizes a previously selected loss function \cite[p.~21]{james2013introduction}.
+% In the case of linear regression, the form of $f$ is assumed to be $f(\boldsymbol{X}) = \boldsymbol{X}\boldsymbol{\theta}$, and the parameters chosen are the elements of the $\hat{\boldsymbol{\theta}}$ vector that minimize the squared error function of the model.
 
 An approach to the estimation of parameters that is different to the concept of error function minimization is the one of \textbf{maximum likelihood estimation}.
-This is a probabilistic approach in which a certain probability distribution for the data is assumed.
-
-In the case of linear regression, it is commonly assumed that the error term in \eqref{eq:general_learning_model} has a Gaussian distribution such that
+This is a probabilistic approach in which a probabilistic model is assumed to the data generating mechanism. In the case of linear regression, it is commonly assumed that the error term in \eqref{eq:general_learning_model} has a Gaussian distribution such that
 $\varepsilon_i \sim \normaldist{0}{\sigma^2}$,
 then $y_i \sim \normaldist{\boldsymbol{x_i}^T \boldsymbol{\theta}}{\sigma^2}$ for $i \in \left\{ 1, \ldots, n \right\}$.
-It is also usually assumed that the observations $y_i$ come from a random sample and are independent of one another. Therefore, the log-likelihood of the sample is
+It is also usually assumed that the observations $(\boldsymbol{X}, \boldsymbol{y})$ come from a random sample and are independent of one another. Therefore, the log-likelihood of the sample is
 \begin{equation}
   \label{eq:gaussian_likelihood}
   L(\boldsymbol{\theta}) = \sum_{i = 1}^n \log \left[ \frac{1}{\sqrt{2 \pi \sigma^2}} \exp \left({- \frac{(y_i - \boldsymbol{x_i}^T \boldsymbol{\theta})^2}{2\sigma^2}}\right) \right].
@@ -62,12 +61,13 @@ Maximum likelihood estimation uses the \textbf{likelihood principle}, which stat
 
 %The \textbf{principle of maximum likelihood} states that the values for $\boldsymbol{\theta}$ should be chosen so that the data of the random sample is most likely, i.e., so that they maximize equation \eqref{eq:gaussian_likelihood} \cite[p.~31]{friedman2001elements} \cite[p.~303]{roussas1973first}. With some algebra, it is fairly easy to see that maximizing equation \eqref{eq:gaussian_likelihood} is equivalent to minimizing the squared error loss.
 
-In the case of a binary classification problem, assuming that $y_i$ follows a Bernoulli distribution, such that the probability of $y_i$ of being 1 is $p_i(\boldsymbol{\theta})$, where $\boldsymbol{\theta}$ is the parameter that indexes the probability, then the likelihood function in this case is $\prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i}$ and thus, the log-likelihood is
+An alternative setting is that of classification. In this case, it is assumed that $y_i$ follows a Bernoulli distribution, such that the probability of $y_i$ of being 1 is $p_i(\boldsymbol{\theta})$, where $\boldsymbol{\theta}$ is the parameter that indexes the probability. Then, the likelihood function in this case is $\prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i}$ and thus, the log-likelihood is
 \begin{equation}
   L(\boldsymbol{\theta}) = \sum_{i = 1}^n \left[ y_i \log\left( p_i(\boldsymbol{\theta}) \right) + (1 - y_i) \log \left( 1 - p_i(\boldsymbol{\theta}) \right) \right].
 \end{equation}
 
-Another approach to the learning problem is the \textbf{Bayesian approach}, in which a prior distribution on the parameters $\boldsymbol{\theta}$ is assumed, and then the knowledge about them is updated with data. That is, the modeler first uses a prior distribution $\prob{\boldsymbol{\theta}}$ to quantify the knowledge that they may have about $\boldsymbol{\theta}$, and then computes the posterior distribution of $\boldsymbol{\theta}$ given $\boldsymbol{X}$ and $\boldsymbol{y}$ using Bayes' theorem as such
+An alternative to maximum likelihood estimation is given by the \textbf{Bayesian approach}. In this setting, the uncertainty about the unknown parameters is stated as a probability distribution.
+First, a prior distribution on the parameters $\boldsymbol{\theta}$ is assumed, and then the knowledge about them is updated with data. That is, the modeler first uses a prior distribution $\prob{\boldsymbol{\theta}}$ to quantify the knowledge that they may have about $\boldsymbol{\theta}$, and then computes the posterior distribution of $\boldsymbol{\theta}$ given $\boldsymbol{X}$ and $\boldsymbol{y}$ using Bayes' theorem as such
 \begin{equation}
   \label{eq:bayes_theorem}
   \prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X} } =
@@ -77,7 +77,9 @@ Another approach to the learning problem is the \textbf{Bayesian approach}, in w
 
 The posterior distribution represents the knowledge about $\boldsymbol{\theta}$ after the data has been observed. It is a compromise between the prior beliefs and the data. Note that the likelihood of the data $\prob{\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{X}}$ is used in the numerator of equation \eqref{eq:bayes_theorem}. In fact, the Bayesian paradigm permits another implementation of the likelihood principle, just like maximum likelihood, but with the added benefit of including decision-related requirements \cite{robert2007bayesian}.
 
-An advantage of the Bayesian approach is that uncertainty can be mathematically described by using probability. In addition, Bayesian inference is logically consistent while dealing with this uncertainty \cite{cox1946probability} \cite{cox1963algebra} \cite{jaynes2003probability} \cite{o2004advanced}. A philosophical difference between the frequentist and the Bayesian approach is that in the latter, the degree of belief of the researcher is represented in the distribution of the parameters and hence, they are treated as random variables. Whereas in the former, they are treated as a fixed but unknown value \cite{o2004advanced}.
+% An advantage of the Bayesian approach is that uncertainty can be mathematically described by using probability.
+An advantage of the Bayesian approach is that it uses the language of probability to mathematically describe the uncertainty on unknown parameters and other components in the modeling process.
+In addition, Bayesian inference is logically consistent while dealing with this uncertainty \cite{cox1946probability} \cite{cox1963algebra} \cite{jaynes2003probability} \cite{o2004advanced}. A philosophical difference between the frequentist and the Bayesian approach is that in the latter, the degree of belief of the researcher is represented in the distribution of the parameters and hence, they are treated as random variables. Whereas in the former, they are treated as a fixed but unknown value \cite{o2004advanced}.
 % The multiplier $\prob{\boldsymbol{y} | \boldsymbol{\theta}, \boldsymbol{X}}$ is called the likelihood, and is the probability of the data given the parameters.
 
 Since the denominator of equation \eqref{eq:bayes_theorem} does not depend on $\boldsymbol{\theta}$, as it is only a normalizing constant, it is just usually described as a proportion
@@ -92,19 +94,26 @@ The posterior distribution is also used to predict the values of unobserved data
   \prob{\boldsymbol{y}^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*} = \int \prob{\boldsymbol{y}^* | \boldsymbol{\theta}, \boldsymbol{x}^*} \prob{\boldsymbol{\theta} | \boldsymbol{X}, \boldsymbol{y}} d\boldsymbol{\theta}.
 \end{equation}
 
-Note that this posterior distribution is, as it name implies, a distribution, i.e., it is not a single prediction but infinitely many predictions, weighted by how probable each value is to be. If the goal is to have a point prediction $\hat{\boldsymbol{y}}^*$ for $\boldsymbol{x}^*$, then the modeler could use Decision Theory to find a point estimate. The idea is to specify a loss function $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*)$ that quantifies the loss of having an estimate $\hat{\boldsymbol{y}}^*$ when the real value is $\boldsymbol{y}^*$, and have the point estimate be the $\hat{\boldsymbol{y}}^*$ that minimizes this loss function. The optimal value for the squared loss $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*) = (\boldsymbol{y}^* - \hat{\boldsymbol{y}}^*)^2$ is the expected value of the posterior predictive distribution, that is,
+Note that this posterior distribution is, as it name implies, a distribution, i.e., it is not a single prediction but infinitely many predictions, weighted by how probable each value is to be.
+If the goal is to have a point prediction $\hat{\boldsymbol{y}}^*$ for $\boldsymbol{x}^*$, then the modeler could use Decision Theory to find a point estimate. The idea is to specify a loss function $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*)$ that quantifies the loss of having an estimate $\hat{\boldsymbol{y}}^*$ when the real value is $\boldsymbol{y}^*$, and have the point estimate be the $\hat{\boldsymbol{y}}^*$ that minimizes this loss function.
+The optimal value for the squared loss $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*) = (\boldsymbol{y}^* - \hat{\boldsymbol{y}}^*)^2$ is the expected value of the posterior predictive distribution, that is,
 \begin{equation}
-  \hat{\boldsymbol{y}}^* = \mathbb{E}_{\boldsymbol{y}^* | \boldsymbol{x}^*, \boldsymbol{y}, \boldsymbol{X}} \left[ \prob{\boldsymbol{y}^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*} \right].
+  \hat{\boldsymbol{y}}^* = \mathbb{E}_{\boldsymbol{y}^* | \boldsymbol{x}^*, \boldsymbol{y}, \boldsymbol{X}} \left[ \boldsymbol{y} \right].
 \end{equation}
+% \begin{equation}
+%   \hat{\boldsymbol{y}}^* = \mathbb{E}_{\boldsymbol{y}^* | \boldsymbol{x}^*, \boldsymbol{y}, \boldsymbol{X}} \left[ \prob{\boldsymbol{y}^* | \boldsymbol{X}, \boldsymbol{y}, \boldsymbol{x}^*} \right].
+% \end{equation}
 
-Another loss function is the absolute loss $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*) = \vert \boldsymbol{y}^* - \hat{\boldsymbol{y}}^* \vert$ which results in using the median of the posterior predictive distribution as a point estimate. One more function is the 0-1 loss function $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*) = \mathbb{I}(\boldsymbol{y}^* \neq \hat{\boldsymbol{y}}^* )$ which results in using the mode of the posterior predictive distribution as a point estimate. This last estimate is also called a maximum a posteriori estimate.
+Another loss function is the absolute loss $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*) = \vert \boldsymbol{y}^* - \hat{\boldsymbol{y}}^* \vert$ which results in using the median of the posterior predictive distribution as a point estimate. Finally, the 0-1 loss function $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*) = \mathbb{I}(\boldsymbol{y}^* \neq \hat{\boldsymbol{y}}^* )$ results in using the mode of the posterior predictive distribution as a point estimate. This last estimate is also called a maximum a posteriori (MAP) estimate. It should be noted that under certain conditions the MAP estimate is equivalent to the MLE.
 
 \subsection{Example}
 
-All these concepts can be illustrated in the context of logistic regression. Suppose that we have $n$ observations of a binary response variable $\boldsymbol{y} \in \left\{0, 1\right\}^n$ and two continuous features $\boldsymbol{x}^{(1)}, \boldsymbol{x}^{(2)} \in \mathbb{R}^n$. The frequentist approach using the maximum likelihood estimate will be studied first, then it will be transformed into a simple learning problem in which the goal is to minimize a loss function, and finally, the Bayesian approach will be examined.
+All these concepts can be illustrated in the context of logistic regression. Suppose that we have $n$ observations of a binary response variable $\boldsymbol{y} \in \left\{0, 1\right\}^n$ and two continuous features $\boldsymbol{x}^{(1)}, \boldsymbol{x}^{(2)} \in \mathbb{R}^n$. The frequentist approach will be studied first.
+Then, it will stated as loss function minimization and eventually as an inference problem in the Bayesian framework.
+% then it will be transformed into a simple learning problem in which the goal is to minimize a loss function, and finally, the Bayesian approach will be examined.
 
 If someone wanted to build a classifier using a linear regression model, then they would run into a problem because a linear model of the form $\mu(\boldsymbol{x_i}) = \theta_0 + \theta_1 x_i^{(1)} + \theta_2 x_i^{(2)}$ is not bounded. In contrast, the response variable $\boldsymbol{y}$ from the data only takes the values $0$ and $1$, hence, it is a better idea to model the probability that a feature vector belongs to each class. This way, $y_i$ is a random variable that follows a Bernoulli distribution with parameter $p_i$, where $p_i$ is the probability of $y_i$ being 1.
-The range of $f$ as a linear model is $\mathbb{R}$, so it must be mapped to the $\left[ 0,1 \right]$ interval in which probabilities live, and it can be done with what is called a \textbf{link function}. The \textbf{logistic sigmoid function} % $\sigma \left( \cdot \right)$
+The range of $f$ as a linear model is $\mathbb{R}$, so it must be mapped to the $\left[ 0,1 \right]$ interval in which probabilities live, and it can be done with what is called a sigmoid function. The \textbf{logistic sigmoid function} % $\sigma \left( \cdot \right)$
 is a widely used link function for this type of problems \cite[p.~114]{christopher2006pattern}. It is defined as
 \begin{equation}
   \sigma(w) = \frac{e^w}{1 + e^w} = \frac{1}{1 + e^{-w}}.
@@ -113,14 +122,14 @@ It is easy to see that $\lim_{w \to -\infty} \sigma(w) = 0$ and $\lim_{w \to \in
 
 %There is more reasoning behind the logistic sigmoid function, and some of it has to be that it belongs to the exponential family of functions. For more details about this, see \cite{christopher2006pattern}.
 
-Another possible link function is the \textbf{probit function}, defined as the inverse of the cumulative distribution function of a Gaussian random variable \cite[p.~296]{friedman2001elements}. That is, $\sigma(w) = \Phi^{-1}\left( x \right)$,
+Another possible sigmoid function is the \textbf{probit function}, defined as the inverse of the cumulative distribution function of a Gaussian random variable \cite[p.~296]{friedman2001elements}. That is, $\sigma(w) = \Phi^{-1}\left( x \right)$,
 where
 \begin{equation}
   %\Phi(w) = \int_{-\infty}^w \frac{1}{\sqrt{2 \pi}} \exp{\left( -\frac{x^2}{2} \right)} dx = \int_{-\infty}^w \normalfunc{x}{0}{1} dx.
   \Phi(w) = \int_{-\infty}^w \frac{1}{\sqrt{2 \pi}} \exp{\left( -\frac{x^2}{2} \right)} dx.
 \end{equation}
 
-There are some differences in the theory and behavior of the logistic and the probit functions, but in practice they hardly make any substantial difference and the choice of one over the other may be a matter of taste or convenience \cite[p.~118]{gelman2006data}. Henceforth, we will use the logistic function as the link function for binary classification problems.
+There are some differences in the theory and behavior of the logistic and the probit functions, but in practice they hardly make any substantial difference and the choice of one over the other may be a matter of taste or convenience \cite[p.~118]{gelman2006data}. Henceforth, we will use the logistic function as the sigmoid function for binary classification problems.
 
 It has been established that $\sigma \left( \cdot \right)$ maps from $\mathbb{R}$ to $\left[ 0,1 \right]$, but it is yet to be explained how to relate this to the original problem which is to build a linear classifier using the vectors $\boldsymbol{x}^{(1)}$ and $\boldsymbol{x}^{(2)}$. Using  $\sigma \left( \cdot \right)$, one can define the probability that $y_i$ belongs to class $1$ given features $x_i^{(1)}$ and $x_i^{(2)}$ as
 \begin{equation}
@@ -152,7 +161,7 @@ The new objective function that needs to be minimized is
   \label{eq:logistic_example_loss_function}
   L(\boldsymbol{\theta}) = - \sum_{i = 1}^n \left[ y_i \log\left( p_i(\boldsymbol{\theta}) \right) + (1 - y_i) \log \left( 1 - p_i(\boldsymbol{\theta}) \right) \right].
 \end{equation}
-This loss function is commonly called in the literature the \textbf{binary entropy} loss.
+This loss function is commonly known in the literature as the \textbf{binary entropy} loss.
 
 Intuitively, this is an error function because if $y_i = 1$, then $1 - y_i = 0$, so the second term in the loss function vanishes and what is left remaining is $\log\left( p_i(\boldsymbol{\theta}) \right)$. Now, when $p_i(\boldsymbol{\theta})$ is big, that is, close to 1, then $\log\left( p_i(\boldsymbol{\theta}) \right) \to 0$. However, if $p_i(\boldsymbol{\theta})$ is small, that is, close to 0, then $\log\left( p_i(\boldsymbol{\theta}) \right) \to -\infty$, and so the overall loss function tends to infinity. This means that when the real value of $y_i$ is 1 and a low probability is assigned to it, then the loss function is large; but if a high probability is assigned to it, then the loss function is small. The same reasoning works for when $y_i = 0$. So, when there is an incorrect classification with very high probability, the loss function takes a large value.
 % The same reasoning works for when $y_i = 0$: if a low probability is assigned, then the loss function is small; but if a high probability is assigned, then the loss function is large.
@@ -202,7 +211,7 @@ It should be noted that the integral in the denominator is a constant with respe
   %\left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right].
 \end{equation}
 
-Unfortunately, for most practical problems the integral in the denominator cannot be solved analytically, therefore numerical methods are used. One class of widely used algorithms is Markov Chain Monte Carlo (MCMC), which includes Metropolis-Hastings and Hamiltonian Monte Carlo. The main goal of MCMC methods is to generate samples from the posterior distribution. Another class of numerical methods is Variational Inference, which is discussed in chapter \ref{ch:variational_inference}.
+Unfortunately, for most practical problems the integral in the denominator cannot be solved analytically, therefore numerical methods are used. One class of widely used algorithms is Markov Chain Monte Carlo (MCMC), which includes Metropolis-Hastings and Hamiltonian Monte Carlo. The main goal of MCMC methods is to generate samples in an attempt to summarize and report posterior inferences on the unknown parameters. Another class of numerical methods is Variational Inference, which is discussed in chapter \ref{ch:variational_inference}.
 
 In general, when training a model for prediction, it is not the main goal to minimize training error, but prediction error. It does not matter whether one chooses to follow the function minimization, frequentist or Bayesian paradigm. That is, one wants to minimize the error of any future observation $(\boldsymbol{x}^*, \boldsymbol{y}^*)$. This is because these models are trained to be used with data that has not been seen before, therefore, it is desirable to have a model that generalizes well to future observations. This means that one wants to minimize the expected prediction error, hence, it is common to divide the data set $(\boldsymbol{X}, \boldsymbol{y})$ in two: the training set and the test set. To do this, from the original data set, a random sample of observations is assigned to be part of the training set and the rest are part of the test set. The idea is that the test set should be used to measure the predictive performance of the model, and this also helps to diagnose an overfitted model, a concept which is discussed later in this chapter. The data is sometimes divided in three different sets. This third set is called the validation set, and it is used to measure the generalization performance when tuning hyper parameters, such as regularization parameter values, discussed further in this document.
 
