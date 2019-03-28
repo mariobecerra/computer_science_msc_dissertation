@@ -11,7 +11,7 @@
 
 % \section{Variational Inference}
 
-As mentioned in chapter \ref{ch:machine_learning}, when doing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$, which is usually intractable, so one must resort to numerical approximations. In this chapter, a brief overview of variational inference (VI) is given, which is one of several such numerical approximations. The idea of VI is to use optimization to approximate the target distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$ with some other approximate distribution $q(\boldsymbol{\theta})$ that minimizes the Kullback-Leibler (KL) divergence to the real posterior \cite{blei2017variational}. The KL divergence is defined as
+As mentioned in Chapter \ref{ch:machine_learning}, when performing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$, which is usually intractable, so one must resort to numerical approximations. In this chapter, a brief overview of variational inference (VI) is given, which is one of several such numerical approximations, such as Markov Chain Monte Carlo (MCMC) or Integrated Nested Laplace Approximations (INLA). The idea of VI is to use optimization to approximate the target distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$ with some distribution $q(\boldsymbol{\theta})$ that is close to the posterior. The Kullback-Leibler (KL) divergence is used in VI as a measure of closeness of the proposed distribution, which is known as the variational approximation, to the true posterior \cite{blei2017variational}. The KL divergence is defined as
 \begin{equation}
   \label{eq:kl_divergence}
   \kl{q}{p} = \mathbb{E}_q \left[ \log \left( \frac{q(\boldsymbol{\theta})}{\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}} \right) \right] = \int_{-\infty}^{\infty} q(\boldsymbol{\theta}) \left[ \log \left( \frac{q(\boldsymbol{\theta})}{\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}} \right) \right] d\boldsymbol{\theta}.
@@ -37,26 +37,26 @@ In subfigures (b) and (c), the zero-avoiding behavior is evident because $q$ avo
 
 In VI, the goal is to minimize the reverse KL divergence $\kl{q}{p}$ instead of the forward KL divergence $\kl{p}{q}$ because the latter requires averaging with respect to $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$, which is what the modeler is trying to approximate in the first place. Methods to deal with forward KL divergence exist, such as expectation propagation, but they are not of concern in this work.
 
-Although the main goal of VI methods is to minimize the reverse KL divergence defined in equation \eqref{eq:kl_divergence}, in practice what is usually done is to maximize a related quantity called the ELBO (Evidence Lower BOund), defined as
+Although the main goal of VI methods is to minimize the reverse KL divergence defined in equation \eqref{eq:kl_divergence}, in practice what is usually done is to maximize a related quantity called the ELBO (Evidence Lower Bound), defined as
 \begin{equation}
   \label{eq:elbo_def}
   \mathcal{L}(q) = \mathbb{E}_q\left[ \log p(\boldsymbol{y}, \boldsymbol{X}, \boldsymbol{\theta}) \right] - \mathbb{E}_q\left[ \log q(\boldsymbol{\theta}) \right].
 \end{equation}
 
-The relationship between ELBO and KL divergence is easy to see. Starting from the KL divergence definition in \eqref{eq:kl_divergence}, using the quotient rule of the logarithm, and using the fact that the expected value is a linear operator, then
+The relationship between the ELBO and KL is shown as follows. Starting from the KL divergence definition in \eqref{eq:kl_divergence}, using the quotient rule of the logarithm, and using the fact that taking expectations is a linear operator, the KL divergence can be written as
 \begin{equation}
     \kl{q}{p} =
     \mathbb{E}_q \left[ \log \left( \frac{q(\boldsymbol{\theta})}{\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}} \right) \right] =
     \mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log {\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}}  \right].
 \end{equation}
 
-Then, using the definition of conditional probability,
+Using the definition of conditional probability yields
 \begin{equation}
     \kl{q}{p} =
     \mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log \frac{p(\boldsymbol{\theta}, \boldsymbol{y} | \boldsymbol{X})}{p(\boldsymbol{y} | \boldsymbol{X})}  \right].
 \end{equation}
 
-Using the definition of conditional probability again leads to
+Using the definition of conditional probability a second time, one obtains
 \begin{equation}
     %\mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log p(\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X})  \right] =
     \kl{q}{p} =
@@ -69,27 +69,27 @@ Using the quotient rule of the logarithm one more time results in
   \mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log p(\boldsymbol{\theta}, \boldsymbol{y}, \boldsymbol{X}) - \log p(\boldsymbol{y} | \boldsymbol{X}) - \log p(\boldsymbol{X})  \right].
 \end{equation}
 
-But since $p(\boldsymbol{X})$ and $p(\boldsymbol{y} | \boldsymbol{X})$ do not depend on $q$, the expected value of each of these two densities is a constant, hence
+But since $p(\boldsymbol{X})$ and $p(\boldsymbol{y} | \boldsymbol{X})$ do not depend on $q$, the expected value of each of these two densities is a constant under taking expectations under $q$, hence
 \begin{equation}
  %\mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log p(\boldsymbol{\theta}, \boldsymbol{y} | \boldsymbol{X}) - \log p(X)  \right] =
  \kl{q}{p} =
  \mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log p(\boldsymbol{\theta}, \boldsymbol{y}, \boldsymbol{X}) \right] + \log p(\boldsymbol{y} | \boldsymbol{X}) + \log p(\boldsymbol{X}).
 \end{equation}
 
-Since the goal is to find the optimal $q$, then $\log p(\boldsymbol{X})$ and $\log p(\boldsymbol{y} | \boldsymbol{X})$ are just constants in the optimization process, hence they can be ignored to just minimize the equation
+Since the goal is to find the optimal $q(\cdot)$, then $\log p(\boldsymbol{X})$ and $\log p(\boldsymbol{y} | \boldsymbol{X})$ are just constants in the optimization process, hence they can be ignored for optimization purposes, and hence, one just needs to minimize the following equation
 \begin{equation}
   \mathbb{E}_q \left[ \log  q(\boldsymbol{\theta}) \right] - \mathbb{E}_q \left[ \log p(\boldsymbol{\theta}, \boldsymbol{y}, \boldsymbol{X}) \right],
 \end{equation}
 which is the negative of the ELBO, defined in equation \eqref{eq:elbo_def}. Therefore, minimizing the KL divergence is equivalent to maximizing the ELBO.
 
-Let $\boldsymbol{\lambda}$ be the parameter vector of the variational distribution $q(\boldsymbol{\theta})$. The objective is to approximate $p(\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X})$ by finding the values of $\boldsymbol{\lambda}$ that maximize equation \eqref{eq:elbo_def}. For this, several techniques could be used, such as coordinate ascent and gradient ascent. In order to perform gradient ascent, it is necessary to compute the gradient of the objective function with respect to the parameters, that is, $\nabla_{\boldsymbol{\lambda}} \mathcal{L}(q, \boldsymbol{\lambda})$. This gradient is
+Let $\boldsymbol{\lambda}$ be the parameter vector of the variational distribution $q(\boldsymbol{\theta})$. The objective is to approximate $p(\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X})$ by finding the values of $\boldsymbol{\lambda}$ that maximize equation \eqref{eq:elbo_def}. For this, several techniques could be used, such as coordinate ascent and gradient ascent. In order to perform gradient ascent, it is necessary to compute the gradient of the objective function with respect to the variational parameters, that is, $\nabla_{\boldsymbol{\lambda}} \mathcal{L}(q, \boldsymbol{\lambda})$. This gradient is computed by
 \begin{equation}
   \label{eq:ELBO_gradient}
   \nabla_{\boldsymbol{\lambda}} \mathcal{L}(q, \boldsymbol{\lambda}) =
   \mathbb{E}_q \left[ \left( \nabla_{\boldsymbol{\lambda}} \log q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right) \left( \log p(\boldsymbol{y}, \boldsymbol{X}, \boldsymbol{\theta}) - \log q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right) \right].
 \end{equation}
 
-In general, this gradient cannot be computed analytically because it may not be possible to analytically take the expectation. It may be possible to take the expectation for some models, but for most cases, some approximation must be made. A good approach is to approximate the expected value with Monte Carlo simulation. Let $\left\{ \boldsymbol{z}_1, ..., \boldsymbol{z}_S \right\}$ be samples taken from $q(\boldsymbol{\theta} | \boldsymbol{\lambda})$, then one can approximate the expected value with an arithmetic mean as such,
+In general, the gradient cannot be computed analytically because it may not be possible to write down an explicit formula for the expectation. It may be possible to take the expectation for some models, but for most cases, some approximation must be made. A good approach is to approximate the expected value with Monte Carlo simulation. Let $\left\{ \boldsymbol{z}_1, ..., \boldsymbol{z}_S \right\}$ be samples taken from $q(\boldsymbol{\theta} | \boldsymbol{\lambda})$, then one can approximate the expected value with an arithmetic mean as such,
 \begin{equation}
   \begin{split}
   \nabla_{\boldsymbol{\lambda}} \mathcal{L}(q, \boldsymbol{\lambda}) &=
@@ -106,8 +106,7 @@ A family that is often used to approximate $p$ is the \textbf{mean-field variati
 \end{equation}
 
 % \section{Example}
-
-Next, a simple example will be studied to illustrate the logic behind Monte-Carlo based gradient ascent using the mean-field variational family. In this example, the goal is to approximate the posterior distribution of a two-class logistic regression. Assume a data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times p}$ and a response vector $\boldsymbol{y}$ with values 1 or 0. Each observation $y_i$ is modeled as a Bernoulli distribution such that
+The following example will help illustrate the logic behind the Monte Carlo approximation for the variational gradient under the mean field variational family. In this example, the goal is to approximate the posterior distribution of a two-class logistic regression. Assume a data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times p}$ and a response vector $\boldsymbol{y}$ with values 1 or 0. Each observation $y_i$ is modeled as a Bernoulli distribution such that
 \begin{equation}
   y_i | \boldsymbol{x_i}, \boldsymbol{\theta} \sim \mathrm{Bern}(\sigma(\boldsymbol{\theta}^T \boldsymbol{x_i}))
 \end{equation}
