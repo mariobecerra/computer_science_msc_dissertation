@@ -11,7 +11,7 @@
 
 % \section{Variational Inference}
 
-As mentioned in Chapter \ref{ch:machine_learning}, when performing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$, which is usually intractable, so one must resort to numerical approximations. In this chapter, a brief overview of variational inference (VI) is given, which is one of several such numerical approximations, such as Markov Chain Monte Carlo (MCMC) or Integrated Nested Laplace Approximations (INLA). The idea of VI is to use optimization to approximate the target distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$ with some distribution $q(\boldsymbol{\theta})$ that is close to the posterior. The Kullback-Leibler (KL) divergence is used in VI as a measure of closeness of the proposed distribution, which is known as the variational approximation, to the true posterior \cite{blei2017variational}. The KL divergence is defined as
+As mentioned in Chapter \ref{ch:machine_learning}, when performing Bayesian inference, it is of interest to compute the posterior distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$, which is usually intractable, so one must resort to numerical approximations. In this chapter, a brief overview of variational inference (VI) is given, which is one of several numerical approximations, such as Markov Chain Monte Carlo (MCMC) or Integrated Nested Laplace Approximations (INLA). The idea of VI is to use optimization to approximate the target distribution $\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}$ with some distribution $q(\boldsymbol{\theta})$ that is close to the posterior. The Kullback-Leibler (KL) divergence is used in VI as a measure of closeness of the proposed distribution, which is known as the variational approximation, to the true posterior \cite{blei2017variational}. The KL divergence is defined as
 \begin{equation}
   \label{eq:kl_divergence}
   \kl{q}{p} = \mathbb{E}_q \left[ \log \left( \frac{q(\boldsymbol{\theta})}{\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}} \right) \right] = \int_{-\infty}^{\infty} q(\boldsymbol{\theta}) \left[ \log \left( \frac{q(\boldsymbol{\theta})}{\prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}}} \right) \right] d\boldsymbol{\theta}.
@@ -152,7 +152,7 @@ The process goes as follows,
 
 To compute the gradient in equation \eqref{eq:ELBO_gradient}, it is necessary to also compute the log-likelihood of the data $p(\boldsymbol{y}, \boldsymbol{X}, \boldsymbol{\theta})$. Using the chain rule of probability, this can be written as $\log p(\boldsymbol{y} | \boldsymbol{X}, \boldsymbol{\theta}) + \log p(\boldsymbol{X} | \boldsymbol{\theta}) + \log p(\boldsymbol{\theta})$.
 
-Note that in order to compute the gradient, $\log p(\boldsymbol{X} | \boldsymbol{\theta})$ is not needed, because of the following
+Note that in order to compute the gradient, $\log p(\boldsymbol{X} | \boldsymbol{\theta})$ is not needed, because in this case, the model is a discriminative model and not a generative one, hence $\boldsymbol{\theta}$ does not affect the distribution of the inputs $\boldsymbol{X}$. Mathematically, this can be seen in the following way
 \begin{equation*}
   \begin{split}
       \nabla_{\boldsymbol{\lambda}} \mathcal{L} &=
@@ -164,13 +164,13 @@ Note that in order to compute the gradient, $\log p(\boldsymbol{X} | \boldsymbol
 \end{equation*}
 In the last line, $\log p(\boldsymbol{X} | \boldsymbol{\theta})$ has been reduced to just a constant $c$.
 
-Furthermore, $\mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] = 0$ because
-\begin{equation}
-  \mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] =
-      \int \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) d\boldsymbol{\theta}.
-\end{equation}
+% Furthermore, $\mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] = 0$ because
+% \begin{equation}
+%   \mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] =
+%       \int \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) d\boldsymbol{\theta}.
+% \end{equation}
 
-Then, using the dominated convergence theorem as was done in \cite{ranganath2014black},
+Furthermore, it can be proven that $\mathbb{E}_q \left[ \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) \right] = 0$ because of the definition of expectation and the dominated convergence theorem as was done in \cite{ranganath2014black},
 \begin{equation}
   \int \nabla_{\boldsymbol{\lambda}} q(\boldsymbol{\theta} | \boldsymbol{\lambda}) d\boldsymbol{\theta} =
     \nabla_{\boldsymbol{\lambda}} \int q(\boldsymbol{\theta} | \boldsymbol{\lambda}) d\boldsymbol{\theta}.
@@ -178,12 +178,15 @@ Then, using the dominated convergence theorem as was done in \cite{ranganath2014
 
 And finally,
 \begin{equation}
-  \begin{split}
-      \nabla_{\boldsymbol{\lambda}} \int q(\boldsymbol{\theta} | \boldsymbol{\lambda}) d\boldsymbol{\theta} &=
-      \nabla_{\boldsymbol{\lambda}} 1 d\boldsymbol{\theta} \\
-      &= 0.
-  \end{split}
+    \nabla_{\boldsymbol{\lambda}} \int q(\boldsymbol{\theta} | \boldsymbol{\lambda}) d\boldsymbol{\theta} = 0.
 \end{equation}
+% \begin{equation}
+%   \begin{split}
+%       \nabla_{\boldsymbol{\lambda}} \int q(\boldsymbol{\theta} | \boldsymbol{\lambda}) d\boldsymbol{\theta} &=
+%       \nabla_{\boldsymbol{\lambda}} 1 d\boldsymbol{\theta} \\
+%       &= 0.
+%   \end{split}
+% \end{equation}
 
 Therefore, the derivative of the ELBO can be written as
 \begin{equation}
@@ -204,23 +207,23 @@ And since $\boldsymbol{\theta}$ was assumed to have Gaussian prior, then
   \log p(\boldsymbol{\theta}) = \log \prod_{j = 1}^p \phi(\theta_j) = \sum_{j = 1}^p \log \phi(\theta_j) = \frac{1}{\sqrt{2 \pi}} e^{\left( -\frac{\theta_j^2}{2} \right)}.
 \end{equation}
 
-With these derivations, a gradient ascent approach can be taken in order to optimize the ELBO. This is the same as gradient descent presented in chapter \ref{ch:machine_learning}, except that instead of taking the negative of the gradient to move in the direction of maximum descent, the gradient is taken as it is so that the algorithm moves in the direction of maximum ascent. Like in gradient descent, the modeler starts with a random initial $\boldsymbol{\lambda}$ vector, and this vector is updated in each iteration using the gradient of the loss function. However, in this case, the gradient must be approximated with Monte Carlo simulation, so in each step $t$ the algorithm takes $S$ samples $\boldsymbol{z}_k$, with $\boldsymbol{z}_k \sim q(\boldsymbol{\theta} | \boldsymbol{\lambda})$ for $k \in \left\{1, \cdots, S \right\}$. This way, the approximate gradient is computed as
+With these derivations, a gradient ascent approach can be taken in order to optimize the ELBO. This is the same as gradient descent presented in Appendix \ref{ch:appendix}, except that instead of taking the negative of the gradient to move in the direction of maximum descent, the gradient is taken as it is so that the algorithm moves in the direction of maximum ascent. Like in gradient descent, the modeler starts with a random initial $\boldsymbol{\lambda}$ vector, and this vector is updated in each iteration using the gradient of the loss function. However, in this case, the gradient must be approximated with Monte Carlo simulation, so in each step $t$ the algorithm takes $S$ samples $\boldsymbol{z}_k$, with $\boldsymbol{z}_k \sim q(\boldsymbol{\theta} | \boldsymbol{\lambda})$ for $k \in \left\{1, \cdots, S \right\}$. This way, the approximate gradient is computed as
 \begin{equation}
   \nabla_{\boldsymbol{\lambda}} \mathcal{L} \approx \Delta_{\boldsymbol{\lambda}} \mathcal{L} = \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\boldsymbol{\lambda}} \log q(\boldsymbol{z}_k | \boldsymbol{\lambda}) \right) \left( \log p(\boldsymbol{y}, \boldsymbol{X}, \boldsymbol{z}_k) - \log q(\boldsymbol{z}_k | \boldsymbol{\lambda}) \right),
 \end{equation}
-and then the $\boldsymbol{\lambda}$ parameter is updated as $\boldsymbol{\lambda}_{t+1} = \boldsymbol{\lambda}_{t} + \eta_t  \Delta_{\boldsymbol{\lambda}_t} \mathcal{L}$ until a certain stopping criteria is met, with each $\eta_t$ chosen accordingly.
+and then the $\boldsymbol{\lambda}$ parameter is updated as $\boldsymbol{\lambda}_{t+1} = \boldsymbol{\lambda}_{t} + \eta_t  \Delta_{\boldsymbol{\lambda}_t} \mathcal{L}$ until a certain stopping criteria is met, with each $\eta_t$ chosen beforehand. The choice of $\eta_t$ depends on the modeler, and can be chosen to be the same for all iterations, or it can change with each iteration like in the AdaGrad method \cite{duchi2011adaptive}.
 
 An implementation of this algorithm was made in the R programming language with a simulated data set of $n = 500$ data points and $p = 1$ feature. The response vector was created with the logistic sigmoid function as $y_i = \sigma(\theta_0 + \theta_1 \boldsymbol{x_i})$, with $\theta_0 = -5$ and $\theta_1 = 5$.
 
 The initial value for $\boldsymbol{\lambda} = \left[ \mu_1, \mu_2, \alpha_1, \alpha_2 \right]^T$ was chosen to be zero, and in each iteration, $S = 50$ Monte Carlo samples are taken to compute the approximate gradient. The step size $\boldsymbol{\eta}_t$ is chosen using the AdaGrad method \cite{duchi2011adaptive} in which
 $\boldsymbol{\eta}_t = \left( \mathrm{diag}(\boldsymbol{G}_t) \right)^{\frac{1}{2}}$, where $\mathrm{diag}(\boldsymbol{G}_t)$
-refers to the diagonal of the matrix $\boldsymbol{G}_t = \left( \Delta_{\boldsymbol{\lambda}_t} \right) \left( \Delta_{\boldsymbol{\lambda}_t} \right)^T$.
+denotes the diagonal of the matrix $\boldsymbol{G}_t = \left( \Delta_{\boldsymbol{\lambda}_t} \right) \left( \Delta_{\boldsymbol{\lambda}_t} \right)^T$.
 In this case $\boldsymbol{\eta}_t$ is a vector, hence the product $\boldsymbol{\eta}_t \Delta_{\boldsymbol{\lambda}_t}$ refers to an element-wise multiplication.
 The stopping criterion was chosen to be
 $\norm{\boldsymbol{\mu}_{t+1} - \boldsymbol{\mu}_{t}} < 0.005$,
-with $\boldsymbol{\mu}_t$ being the vector containing the values of $\mu_1$ and $\mu_2$ in the $t$-th iteration of the algorithm.
+where $\boldsymbol{\mu}_t = \left[ \mu_{1}^{t}, \mu_{2}^{t} \right]^T$.
 
-Figure \ref{fig:BBVI_plots} shows the results of the implementation, and the values estimated by the \texttt{glm} package in R are also shown for comparison. The top-left image shows the value of the objective function, i.e., the ELBO, in each iteration, slowly increasing and with a wiggly line because of the noise of the estimations. The top-right image shows the real values of $\boldsymbol{\theta}$ (-5 and 5) with gray dashed lines, the values of $\boldsymbol{\theta}$ estimated by the \texttt{glm} package with colored dotted lines, and the approximated values of the variational distribution $q(\boldsymbol{\theta} | \boldsymbol{\lambda})$.
+Figure \ref{fig:BBVI_plots} shows the results of the implementation, and the values estimated by the \texttt{glm} package in R are also shown for comparison. The values estimated by the \texttt{glm} package are taken as Gold standard. The top-left image shows the value of the objective function, i.e., the ELBO, in each iteration, slowly increasing in zigzag because of the noise of the estimations. The top-right image shows the real values of $\boldsymbol{\theta}$ (-5 and 5) with gray dashed lines, the values of $\boldsymbol{\theta}$ estimated by the \texttt{glm} package with colored dotted lines, and the approximated values of the variational distribution $q(\boldsymbol{\theta} | \boldsymbol{\lambda})$.
 The bottom-left image shows the values of $\mu_1$ and $\mu_2$ in each iteration, with horizontal colored dotted lines showing the estimated values by the \texttt{glm} package; it can be seen how they slowly approach their real values.
 The bottom-right image shows the values of $\mu_1$ and $\mu_2$ in each iteration in the plane, where the noise of the gradient estimation is seen in the wiggliness of the line; the red dot shows once again the value estimated by the \texttt{glm} package.
 % The results are decent for such a simple algorithm.
@@ -239,3 +242,5 @@ The posterior predictive distribution of $y^*$ for a new vector of features $\bo
   \item Use that value to sample $y_j^* \sim p(y^* | \boldsymbol{\theta}_j, \boldsymbol{x}^*)$
 \end{enumerate}
 Then $\left\{ y_j^* \right\}_{j = 1}^T$ is a set of $T$ independent samples from the posterior predictive distribution $\prob{y^* | \boldsymbol{y}, \boldsymbol{X}, \boldsymbol{x}^*}$.
+
+In this chapter, Variational Inference has been discussed as a way to approximate the posterior predictive distribution. This was posed as an optimization problem in which the Kullback-Leibler divergence is minimized, and it was shown to be equivalent to maximizing the ELBO. In addition, a numerical approximation to the gradient using Monte Carlo simulation was introduced, thus allowing the modeler to perform the optimization process. Finally, an example of VI on a logistic regression problem was presented. In the following chapter, a brief overview of Artificial Neural Network models will be presented to motivate the methodology presented in Chapter \ref{ch:active_learning} and illustrated with numerical experiments in Chapter \ref{ch:results}.
