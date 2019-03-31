@@ -3,13 +3,13 @@
 \chapter{Experimental results}
 \label{ch:results}
 
-In the previous chapters, the theory of different subjects and how they are related was presented. These subjects were machine learning, Bayesian inference, variational inference, ANNs, and active learning. In this chapter, the results of a series of experiments with three different data sets are shown. These datasets are the MNIST dataset \cite{lecun1998gradient}, the CIFAR-10 dataset \cite{krizhevsky2009learning}, and a dataset of cat and dog pictures \cite{elson2007asirra}.
+In the previous chapters, a brief overview of machine learning, Bayesian inference, variational inference, ANNs, and active learning was presented. In this chapter, three experiments are presented in the context of Bayesian active learning. These consist of well known machine learning benchmarks, such as the MNIST dataset \cite{lecun1998gradient}, the CIFAR-10 dataset \cite{krizhevsky2009learning}, and a dataset of cat and dog pictures \cite{elson2007asirra}.
 
-In all the experiments, a deep convolutional network was trained to classify the images in each data set, as was done in \cite{Gal2016Active}. The experiment setup was very similar to the one in chapter \ref{ch:active_learning}, having each model trained with an initial small random set of images to then use an acquisition function to select new images from a pool set of unlabeled data $\mathcal{U}$, so that they would then be added to the training set $\mathcal{L}$ and finally train a new model with this new bigger data set of labeled images.
+In all the experiments, a deep convolutional network was trained to classify the images in each data set, as was done in \cite{Gal2016Active}. The experiment setup was very similar to the one in Chapter \ref{ch:active_learning}, having each model trained with an initial small random set of images. Then, an acquisition function is used to select new images from a pool set of unlabeled data $\mathcal{U}$. This allows to increase the training set $\mathcal{D}$ and finally train a new model with this new bigger data set of labeled images.
 
-Six acquisition functions were used: Bayesian predictive entropy, frequentist predictive entropy, Bayesian variation ratios, frequentist variation ratios, BALD, and random. The Bayesian CNNs were created using the dropout variational approximation mentioned in chapter \ref{ch:ann}.
+As discussed in Chapter \ref{ch:active_learning}, a testbed of acquisition functions is considered. That is, in all experiments the Bayesian predictive entropy, frequentist predictive entropy, Bayesian variation ratios, frequentist variation ratios, BALD, and random acquisition functions are used to choose points to extend the training set. The Bayesian CNNs were trained using the dropout variational approximation mentioned in Chapter \ref{ch:ann}.
 
-All models were trained using Keras\cite{chollet2015keras} with Tensorflow \cite{tensorflow2015-whitepaper} as backend. Most of the code is in R with some Python scripts called from R using the \texttt{reticulate} package \cite{reticulate_package}.
+All models were trained using Keras\cite{chollet2015keras} with Tensorflow \cite{tensorflow2015-whitepaper} as a backend. Most of the code is in R with some Python scripts called from R using the \texttt{reticulate} package \cite{reticulate_package}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -17,7 +17,7 @@ All models were trained using Keras\cite{chollet2015keras} with Tensorflow \cite
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The MNIST dataset is a collection of \numprint{70000} labeled images of size $32 \times 32$ representing handwritten digits in black and white. The dataset has a pre-selected test set consisting of \numprint{10000} images. Figure \ref{fig:MNIST_data_examples} shows 100 randomly chosen digits from the training set.
+The MNIST dataset is a collection of \numprint{70000} labeled images of $32 \times 32$ pixels representing handwritten digits in black and white. The dataset has a pre-selected test set consisting of \numprint{10000} images. Figure \ref{fig:MNIST_data_examples} shows 100 randomly chosen digits from the training set.
 
 \begin{figure}[H]
     \centering
@@ -26,13 +26,13 @@ The MNIST dataset is a collection of \numprint{70000} labeled images of size $32
     \label{fig:MNIST_data_examples}
 \end{figure}
 
-The MNIST dataset was used in the article \cite{Gal2016Active} to compare the performance of Bayesian CNNs with frequentist CNNs in the context of Active Learning. This experiment was replicated in this work by using the same architecture that was explained in the article.
+The MNIST dataset was used in the paper of \citeauthor{Gal2016Active} to compare the performance of Bayesian CNNs with frequentist CNNs in the context of Active Learning. This experiment was replicated in this work by using the same architecture that was explained in \cite{Gal2016Active}.
 
 The experiment consists in starting with a random but balanced sample of 20 images from the MNIST dataset. Next, a CNN is trained with these images, to subsequently take a random sample of 5000 images from the pool set to save computation time. Afterwards, the probability that each of the 5000 images belongs to each of the 10 classes is computed. Finally, the 10 images that maximize the acquisition function are acquired and added to the training set. This process was repeated in 100 acquisition steps for each acquisition function. This whole process is repeated 3 times with different initial images to have the results averaged and reduce the noise inherent in the stochasticity of the process.
 
 The acquisition functions used in the original article are Bayesian predictive entropy, frequentist predictive entropy, Bayesian variation ratios, frequentist variation ratios, BALD, random, and an additional one called ``Mean STD'' which was not implemented in this work because of its bad performance in the original article.
 
-The architecture of the CNN used was convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-softmax, with 32 convolution kernels, $4 \times 4$ kernel size, $2 \times 2$ pooling, dense layer with 128 units, and dropout probabilities $0.25$ and $0.5$. The CNNs were trained for 50 epochs. For the Bayesian acquisition functions, 100 posterior predictive distribution points were sampled by using the dropout trick mentioned in chapter \ref{ch:ann}.
+The architecture of the CNN used was convolution-relu-convolution-relu-max pooling-dropout-dense-relu-dropout-dense-softmax, with 32 convolution kernels, $4 \times 4$ kernel size, $2 \times 2$ pooling, dense layer with 128 units, and dropout probabilities $0.25$ and $0.5$. The CNNs were trained for 50 epochs. For the Bayesian acquisition functions, 100 posterior predictive distribution points were sampled by using the dropout trick mentioned in Chapter \ref{ch:ann}.
 
 The results of the Bayesian and random acquisition functions can be seen in figure \ref{fig:mnist_comparison_active_learning_random}, where the results of our implementation are shown on the left and the original article's results are shown on the right. Our results are very similar with the article's results: apparently, using the variation ratios results in a slightly better performance than BALD or predictive entropy, and more importantly, using the Bayesian acquisition functions results in a much better performance than using a random acquisition function.
 
