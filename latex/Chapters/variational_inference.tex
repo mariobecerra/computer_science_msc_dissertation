@@ -98,15 +98,18 @@ In general, the gradient cannot be computed analytically because it may not be p
   \end{split}
 \end{equation}
 
-This approach gives noisy but unbiased estimates of the expected value. For more details about this see \cite{kucukelbir2017automatic} and \cite{ranganath2014black}.
+This approach gives noisy but unbiased estimates of the expected value. For more details about this see \cite{kucukelbir2017automatic}, \cite{ranganath2017black} and \cite{ranganath2014black}.
 
 A family that is often used to approximate $p$ is the \textbf{mean-field variational family}, where each parameter is independent from on another, such that
 \begin{equation}
   q(\boldsymbol{\theta}) = \prod_{i} q(\theta_i | \lambda_i).
 \end{equation}
 
-% \section{Example}
-The following example will help illustrate the logic behind the Monte Carlo approximation for the variational gradient under the mean field variational family. In this example, the goal is to approximate the posterior distribution of a two-class logistic regression. Assume a data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times p}$ and a response vector $\boldsymbol{y}$ with values 1 or 0. Each observation $y_i$ is modeled as a Bernoulli distribution such that
+Because of how it is defined, the mean-field variational family can capture any marginal distribution of the parameters. However, it cannot recover explicit correlation between the parameters since it assumes that they are independent from one another. In consequence of this, the marginal representation of each parameter may underestimate the variance of the target distribution \cite{blei2017variational}.
+
+The following example will help illustrate the logic behind the Monte Carlo approximation for the variational gradient under the mean field variational family.
+In this example, the goal is to approximate the posterior distribution of a two-class logistic regression.\footnote{The idea of this example comes from Keyon Vafa, posted in \url{http://keyonvafa.com/logistic-regression-bbvi/}.}
+Assume a data matrix $\boldsymbol{X} \in \mathbb{R}^{n \times p}$ and a response vector $\boldsymbol{y}$ with values 1 or 0. Each observation $y_i$ is modeled as a Bernoulli distribution such that
 \begin{equation}
   y_i | \boldsymbol{x_i}, \boldsymbol{\theta} \sim \mathrm{Bern}(\sigma(\boldsymbol{\theta}^T \boldsymbol{x_i}))
 \end{equation}
@@ -133,7 +136,7 @@ The process to compute $\nabla_{\mu_j}$ goes as follows,
   \end{split}
 \end{equation}
 
-The process for $\sigma_j^2$ is similiar, although it is easier to work with the logarithm. Let $\alpha_j = \log \sigma_j^2$, so that instead of computing $\nabla_{\sigma_j^2}$, $\nabla_{\alpha_j}$ will be computed.
+The process for $\sigma_j^2$ is similar, although it is easier to work with the logarithm because of the positivity restriction and because it leads to simpler algebra. Let $\alpha_j = \log \sigma_j^2$, so that instead of computing $\nabla_{\sigma_j^2}$, $\nabla_{\alpha_j}$ will be computed.
 
 The process goes as follows,
 \begin{equation}
