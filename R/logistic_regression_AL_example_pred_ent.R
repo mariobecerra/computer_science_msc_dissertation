@@ -6,7 +6,7 @@ library(ggplot2)
 library(gridExtra)
 
 theme_set(theme_bw(base_size = 14))
-seed = 1958
+seed = 1234
 
 # Functions ---------------------------------------------------------------
 
