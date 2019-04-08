@@ -10,7 +10,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Loss function optimization}
-\label{ch:appendix}
+\label{ch:appendix_loss_func_opt}
 
 As mentioned before, in machine learning the goal is to find the parameters that minimize a loss function such as the one in equation \eqref{eq:logistic_example_loss_function}. In some cases like linear regression, it is possible to use the first and second order conditions to find a closed formula to find the parameters; but in many other cases this cannot be done, like in logistic regression, so we resort to numerical optimization techniques. The general problem of unconstrained optimization \cite{nocedal2006numerical} is
 \begin{equation}
@@ -137,6 +137,50 @@ We implemented mini-batch gradient descent for logistic regression in R and test
     \includegraphics[width=\textwidth]{Mini-batch_GD_plots.png}
     \caption{Example of mini-batch gradient descent for logistic regression comparing mini-batch sizes.}
     \label{fig:Mini-batch_GD_plots}
+\end{figure}
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Highest uncertainty images
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Images with highest uncertainty}
+\label{ch:appendix_loss_func_opt_images_high_uncertainty}
+
+Figures \ref{fig:MNIST_high_uncertainty_examples}, \ref{fig:cats_dogs_high_uncertainty_examples} and \ref{fig:CIFAR10_high_uncertainty_examples} show the most uncertain examples for a Bayesian CNN using the variation ratios acquisition function with the MNIST, cats and dogs, and CIFAR10 datasets, respectively.
+
+In the case of the MNIST and cats and dogs datasets, some unusual examples can be seen. For instance, in the case of the third row and first column of figure \ref{fig:MNIST_high_uncertainty_examples}, it is not clear what number it is. The same happens with the ninth row and second column. In figure \ref{fig:cats_dogs_high_uncertainty_examples}, the element in the second row and second column is a cat on books in a book-shelf, but it is not clear at first glance. And the picture in the fourth row and fourth column is peculiar because it has a star shape. On the contrary to the previous two datasets, in the case of the cats and dogs dataset, figure \ref{fig:CIFAR10_high_uncertainty_examples} does not show any obvious deviation from the rule.
+% Nevertheless, the CIFAR10 is a harder problem to solve than the cats and dogs problem because there are ten classes in which to classify instead of two.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{MNIST_high_uncertainty_examples}
+    \caption{Images with highest uncertainties in the MNIST dataset.}
+    \label{fig:MNIST_high_uncertainty_examples}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{cats_dogs_high_uncertainty_examples}
+    \caption{Images with highest uncertainties in the cats and dogs dataset.}
+    \label{fig:cats_dogs_high_uncertainty_examples}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{CIFAR10_high_uncertainty_examples}
+    \caption{Images with highest uncertainties in the CIFAR10 dataset.}
+    \label{fig:CIFAR10_high_uncertainty_examples}
 \end{figure}
 
 

@@ -3,8 +3,6 @@
 \chapter{Machine learning}
 \label{ch:machine_learning}
 
-\section{Machine learning}
-
 Machine learning is a research field that focuses on learning patterns lurking within a dataset. Such decisions include making predictions about new unseen data, clustering, or have an agent taking actions based on a reward signal \cite{murphy2012machine, sutton1998reinforcement}. Machine learning has seen an increasing interest from the scientific and industry thanks to the advance of computing abilities. Such computing abilities have made possible most modern techniques. Computer power has been increasing exponentially since the 1960s, and this growth is known as Moore's law. It was first stated in 1965 \cite{moore2006cramming, moore1975progress}, claiming that the number of transistors in an integrated computer circuit doubles about every two years for half the cost. Moore's law has helped the development of faster computers, as well as making these computers common in all areas of everyday life. This has led, in turn, to an exponential increase in data availability which has resulted in increased data storage requirements. However, Moore's law is said to be at its limit nowadays. Meaning that it has been increasingly difficult to double the number of transistors in that two year time frame while also being inexpensive. This is mainly due to the physical limitations of heat dissipation and the smallest possible size of an electronic device \cite{kumar2018end}. This has led to different research directions in the field of computer architecture to find new ways in which computing power can be enhanced without sacrificing costs. The limit of Moore's law is an important factor in machine learning. The reason is, that is not enough to harness faster and better computing resources, but also to use them efficiently.
 
 Machine learning is usually divided in supervised learning, unsupervised learning and reinforcement learning. The first involves learning a model that relates a response to a set of possible explanatory features. The second involves learning relationships and the structure of the data. The third involves learning a strategy for a decision maker in order to maximize their reward while interacting with an unknown environment. Reinforcement learning (RL) is similar to supervised learning. Nonetheless, the difference is that in the framework of RL, the learner is continually interacting with its environment. In this setting, the agent receives feedback after every action is taken. Whereas, in supervised learning the agent is expected to  receive a dataset from an oracle which, hopefully, includes all the right answers. That is, in supervised learning there is an oracle that tells the learner the right answer, whereas in RL the oracle only tells it how to perform relative to past actions.
@@ -106,7 +104,7 @@ The optimal value for the squared loss $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}
 
 Another loss function is the absolute loss $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*) = \vert \boldsymbol{y}^* - \hat{\boldsymbol{y}}^* \vert$ which results in using the median of the posterior predictive distribution as a point estimate. Finally, the 0-1 loss function $L(\boldsymbol{y}^*, \hat{\boldsymbol{y}}^*) = \mathbb{I}(\boldsymbol{y}^* \neq \hat{\boldsymbol{y}}^* )$ results in using the mode of the posterior predictive distribution as a point estimate. This last estimate is also called a maximum a posteriori (MAP) estimate. It should be noted that under certain conditions the MAP estimate is equivalent to the MLE.
 
-\subsection{Example}
+\section{Example}
 
 All these concepts can be illustrated in the context of logistic regression. Suppose that we have $n$ observations of a binary response variable $\boldsymbol{y} \in \left\{0, 1\right\}^n$ and two continuous features $\boldsymbol{x}^{(1)}, \boldsymbol{x}^{(2)} \in \mathbb{R}^n$. The frequentist approach will be studied first.
 Then, it will stated as loss function minimization and eventually as an inference problem in the Bayesian framework.
@@ -222,7 +220,7 @@ When training highly flexible models, the separation of data in training and val
 
 
 
-\subsection{Regularization}
+\section{Regularization}
 
 One way to control overfitting is with \textbf{regularization}, in which a penalization term is added to the loss function to prevent the parameters from taking values that are too high. A very simple regularizer is the $L_2$ norm in which the sum of the squared parameters is added to the loss function.
 
@@ -240,3 +238,10 @@ but with the $L_2$ regularizer (also known as ridge regression), equation \eqref
 where $\lambda > 0$ is called the regularization parameter, and controls the relative importance between the two main terms of the sum. The value of this parameter can have a big impact in the loss function: if it is too big, then it will penalize too much and most parameters will be near 0, but if it is too small, then there is little regularization effect and it is as if there were no penalization at all. In practice, it is common to choose several concrete values of $\lambda$ (such as 0.001, 0.01 and 0.1) and select the final value using the validation set previously mentioned, so that the final chosen value of $\lambda$ minimizes the validation set error.
 
 Another type of regularization that is widely used in neural network literature, presented further in this work, is \textbf{dropout} \cite{srivastava2014dropout}. Dropout consists in randomly dropping out, that is temporarily removing, units of the neural network in each feed-forward mini-batch pass, which results in a thinned network. Each unit is removed, along with all its input and output connections, with a certain probability $p$. The original idea of dropout is that by randomly dropping units, the modeler is essentially training different networks, so the end result is the combination of different architectures, which result in less overfitting. At test time, the prediction is usually just the average of the different thinned networks. These concepts will be clearer after Chapter \ref{ch:ann} in which neural networks are discussed.
+
+In this chapter, the concepts of machine learning were introduced, presenting both the frequentist and the Bayesian paradigms for prediction, as well as a brief introduction to regularization.
+In the following chapters, an introduction to Variational Inference (VI) will be given. After that, a brief overview of Artificial Neural Network models will be discussed. Afterwards, the Active Learning methodology will be presented in Chapter \ref{ch:active_learning} and, finally, in Chapter \ref{ch:results} numerical experiments will be shown.
+
+
+
+
