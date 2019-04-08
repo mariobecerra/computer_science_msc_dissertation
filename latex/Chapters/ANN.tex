@@ -20,9 +20,10 @@ The most basic, and perhaps the best known, type of ANN is the feed-forward neur
 To illustrate the multilayer perceptron, consider a simple example: a researcher wants to model a continuous variable $\boldsymbol{y}$ from a single feature $\boldsymbol{x}$. A very simple model would be a linear regression, in which each observation $i$ is modeled as $y_i = \theta_0 + \theta_1 x_i$, with $\theta_0$ and $\theta_1$. ANNs go further and take non-linear transformations of this linear predictor with some function $\sigma(\cdot)$,
 such that $y_i = \theta_0^{[1]} +  \sum_{j = 1}^m \theta_j^{[1]} \sigma \left( \theta_0^{[0]} + \theta_j^{[0]} x_i \right)$,
 where $m$ is a tuning hyperparameter previously chosen.
-Function $\sigma(\cdot)$ is called the \textbf{activation function}, and is very often chosen to be the logistic sigmoid function $\sigma(x) = (1 + e^{-x})^{-1}$
-or the hyperbolic tangent $\sigma(x) = \tanh(x)$.
-%The values of parameters $\theta_k^{[0]}$ and $\theta_k^{[1]}$ for $k \in \left\{ 0, \ldots, m \right\}$ are also chosen to minimize certain error function.
+Function $\sigma(\cdot)$ is called the \textbf{activation function}, and is very often chosen to be the logistic sigmoid function $\sigma(x) = (1 + e^{-x})^{-1}$,
+the hyperbolic tangent $\sigma(x) = \tanh(x)$,
+or the Rectified Linear Unit (ReLU) $\sigma(x) = \mathrm{max}(0, x)$.
+
 
 Figure \ref{fig:theory_ANN_diagram_01} shows these relationships in a graphic way for a model with $m = 3$ and where $a_{k, i}$ is defined as $a_{k, i} = \sigma \left( \theta_0^{[0]} + \theta_k^{[0]} x_i \right)$ for $k \in \left\{ 1, 2, 3 \right\}$.
 For simplicity, this image does not explicitly show the parameters $\theta_0^{[0]}$ and $\theta_0^{[1]}$, which are called the \textbf{bias} parameters.
