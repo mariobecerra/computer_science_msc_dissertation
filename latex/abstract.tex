@@ -1,11 +1,12 @@
 \begin{abstract}{english}
 
-  In this work, a Bayesian approach in Deep Learning is compared with a traditional approach, all within a context of Active Learning. The traditional approach is based on the optimization of a loss function, which results in a single point estimate with no measure of uncertainty in the prediction or the parameters. These traditional methods are the standard in Deep Learning literature.
-  The Bayesian approach, on the other hand, is seldom used, but has the advantage that it gives a joint posterior distribution of the parameters. This full distribution of the parameters results in a posterior predictive distribution of the response variable.
+  In this work, an approximate Bayesian approach for Deep Learning is compared with a conventional approach, all within a context of Active Learning. The conventional approach is based on the optimization of a loss function, which results in a single point estimate with no measure of uncertainty in the prediction or the parameters.
+  These conventional methods are the norm in Deep Learning literature.
+  The Bayesian approach, on the other hand, is seldom used, but has the advantage that it gives a joint posterior distribution of the parameters. This full distribution of the parameters results in a posterior predictive distribution of the response variable. However, an exact implementation is too onerous, hence an approximation to the Bayesian method is made. This approximation allows a feasible simulation of a distribution that is close to the posterior distribution.
 
   Recent work showed that using dropout in neural networks is equivalent to a variational approximation to a Bayesian neural network \cite{gal2015dropout}. Hence offering a scalable approach to sampling from the posterior distribution. This approach can be used with Convolutional Neural Networks, an architecture widely used in computer vision tasks.
 
-  The Bayesian and frequentist CNNs are compared in three image datasets, using the model's information to query the most useful images from a large pool of unlabeled data to add to a set of training data and achieve higher accuracy than a random selection of images. Our results show that using the model is better than randomly choosing images, but they also show that there is no evidence of difference between the frequentist and Bayesian paradigms in this setting.
+  The Bayesian and frequentist CNNs are compared in three image datasets, using the information of a trained model to query the most useful images from a large pool of unlabeled data to add to a set of training data and achieve higher accuracy than a random selection of images. Our results show that using the trained model's uncertainty is better than randomly choosing images, but they also show that there is no evidence in favor of the variational approximation over the frequentist methodology.
 
 \end{abstract}
 
