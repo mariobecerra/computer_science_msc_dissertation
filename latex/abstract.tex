@@ -1,3 +1,20 @@
+\begin{abstract}{spanish}
+
+	En este trabajo, un enfoque de aproximación Bayesiana para aprendizaje profundo es comparado con un enfoque tradicional, todo dentro de un contexto de aprendizaje activo. El enfoque convencional se basa en la optimización de una función de pérdida, lo cual resulta en una sola estimación puntual sin ninguna medida de incertidumbre en la predicción o en los parámetros.
+  Estos métodos convencionales son la norma en la literatura de aprendizaje profundo.
+  Por otro lado, el enfoque Bayesiano casi no es usado, pero tiene la ventaja de que provee una distribución posterior conjunta de los parámetros. Esta distribución de los parámetros resulta en una distribución posterior predictiva de la variable respuesta. Sin embargo, una implementación exacta es muy costosa, por lo que se hace una aproximación al método Bayesiano. Esta aproximación permite una simulación factible de otra distribución que sea cercana a la distribución posterior.
+
+  Trabajo reciente ha mostrado que usando dropout en redes neuronales es equivalente a una aproximación variacional a una red neuronal Bayesiana \cite{gal2015dropout}. Ofreciendo así un enfoque escalable para hacer muestreo de la distribución posterior. Este enfoque puede ser usado con redes neuronales convolucionales, una arquitectura ampliamente utilizada en tareas de visión por computadora.
+
+  Las redes neuronales convolucionales aproximadamente Bayesianas y las frecuentistas son comparadas en tres conjuntos de imágenes, usando la información de un modelo entrenado para obtener las imágenes más útiles de un conjunto de imágenes sin etiqueta, para que estas sean agregadas al conjunto de entrenamiento y obtener una mejor predicción que una selección aleatoria de imágenes. Nuestros resultados muestran que usar la incertidumbre de los modelos entrenados es mejor que escoger imágenes al azar, pero también muestran que no hay evidencia en favor de la aproximación variacional sobre la metodología frecuentista.
+
+\end{abstract}
+
+
+
+
+
+
 \begin{abstract}{english}
 
   In this work, an approximate Bayesian approach for Deep Learning is compared with a conventional approach, all within a context of Active Learning. The conventional approach is based on the optimization of a loss function, which results in a single point estimate with no measure of uncertainty in the prediction or the parameters.
@@ -7,18 +24,5 @@
   Recent work showed that using dropout in neural networks is equivalent to a variational approximation to a Bayesian neural network \cite{gal2015dropout}. Hence offering a scalable approach to sampling from the posterior distribution. This approach can be used with Convolutional Neural Networks, an architecture widely used in computer vision tasks.
 
   The approximate Bayesian and frequentist CNNs are compared in three image datasets, using the information of a trained model to query the most useful images from a large pool of unlabeled data to add to a set of training data and achieve higher accuracy than a random selection of images. Our results show that using the trained model's uncertainty is better than randomly choosing images, but they also show that there is no evidence in favor of the variational approximation over the frequentist methodology.
-
-\end{abstract}
-
-
-
-\begin{abstract}{spanish}
-	En este trabajo, un enfoque de aproximación Bayesiana para aprendizaje profundo es comparado con un enfoque tradicional, todo dentro de un contexto de aprendizaje activo. El enfoque convencional se basa en la optimización de una función de pérdida, lo cual resulta en una sola estimación puntual sin ninguna medida de incertidumbre en la predicción o los parámetros.
-  Estos métodos convencionales son la norma en la literatura de aprendizaje profundo.
-  Por otro lado, el enfoque Bayesiano casi no es usado, pero tiene la ventaja de que provee una distribución posterior conjunta de los parámetros. Esta distribución de los parámetros resulta en una distribución posterior predictiva de la variable respuesta. Sin embargo, una implementación exacta es muy costosa, por lo que se hace una aproximación al método Bayesiano. Esta aproximación permite una simulación factible de otra distribución que sea cercana a la distribución posterior.
-
-  Trabajo reciente ha mostrado que usando dropout en redes neuronales es equivalente a una aproximación variacional a una red neuronal Bayesiana \cite{gal2015dropout}. Ofreciendo así un enfoque escalable para hacer muestreo de la distribución posterior. Este enfoque puede ser usado con redes neuronal convolucionales, una arquitectura ampliamente utilizada en tareas de visión por computadora.
-
-  Las redes neuronales convolucionales aproximadamente Bayesianas y las frecuentistas son comparadas en tres conjuntos de imágenes, usando la información de un modelo entrenado para obtener las imágenes más útiles de un conjunto de imágenes sin etiqueta, para que estas sean agregadas al conjunto de entrenamiento y obtener una mejor predicción que una selección aleatoria de imágenes. Nuestros resultados muestran que usar la incertidumbre de los modelos entrenados es mejor que escoger imágenes al azar, pero también muestran que no hay evidencia en favor de la aproximación variacional sobre la metodología frecuentista.
 
 \end{abstract}
