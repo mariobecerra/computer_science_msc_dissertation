@@ -185,31 +185,30 @@ The likelihood can be written as
   \prob{\boldsymbol{X} | \boldsymbol{\theta}} = \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i},
 \end{equation}
 which follows from the independence assumption in the data-generating mechanism. Moreover, Bayes' theorem in equation \eqref{eq:bayes_theorem_prop} allows one to write the posterior distribution as
-%so, following Bayes' theorem in equation \eqref{eq:bayes_theorem_prop}, the posterior distribution is
 \begin{equation}
   \prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}} =
     \frac
     {
       \left[ \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i} \right]
       \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right]
-      % \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right]
     }{
       \int \left[ \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i} \right]
       \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right] d\boldsymbol{\theta}
-      % \left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} d\theta
     }.
 \end{equation}
 
 It should be noted that the integral in the denominator is a constant with respect to $\boldsymbol{\theta}$, thus, the posterior distribution can be computed up to a normalizing constant as
-%Most of them rely on the fact that the denominator is only a normalizing constant and only use the equation as a proportion
 \begin{equation}
   \prob{\boldsymbol{\theta} | \boldsymbol{y}, \boldsymbol{X}} \propto
   \left[ \prod_{i = 1}^n  p_i(\boldsymbol{\theta})^{y_i}\left(1 - p_i(\boldsymbol{\theta}) \right)^{1 - y_i} \right]
   \left[ \prod_{k = 0}^2 \frac{1}{\sqrt{2 \pi \sigma^2}} e^{- \frac{(\theta_k - \mu_k)^2}{2\sigma^2}} \right].
-  %\left[ \prod_{k = 0}^2 \sqrt{\frac{\tau}{2 \pi}} e^{- \tau \frac{\left( \theta_k - \mu_k \right)^2}{2}} \right].
 \end{equation}
 
 Unfortunately, for most practical problems the integral in the denominator cannot be solved analytically, therefore numerical methods are used. One class of widely used algorithms is Markov Chain Monte Carlo (MCMC), which includes Metropolis-Hastings and Hamiltonian Monte Carlo. The main goal of MCMC methods is to generate samples in an attempt to summarize and report posterior inferences on the unknown parameters. Another class of numerical methods is Variational Inference, which is discussed in Chapter \ref{ch:variational_inference}.
+
+Note how the maximum likelihood and the loss function minimization approaches only provide a point estimate of the parameters and of the predictions. On the other hand, the Bayesian approach provides a posterior distribution of the parameters and a posterior predictive distribution. As mentioned above, these distributions reflect the knowledge about the parameters, and are a compromise between the prior distribution and the data. A prior distribution that has a very low variance may give rise to a posterior distribution that does not deviate too much from the prior. Whereas a prior distribution with a very high variance will be driven more by the data, and hence the posterior distribution may deviate a lot from the prior distribution. The prior distribution should reflect the knowledge that the modeler has about the phenomenon being modeled.
+
+\section{Overfitting}
 
 In general, when training a model for prediction, it is not the main goal to minimize training error, but prediction error. It does not matter whether one chooses to follow the function minimization, frequentist or Bayesian paradigm. That is, one wants to minimize the error of any future observation $(\boldsymbol{x}^*, \boldsymbol{y}^*)$. This is because these models are trained to be used with data that has not been seen before, therefore, it is desirable to have a model that generalizes well to future observations. This means that one wants to minimize the expected prediction error, hence, it is common to divide the data set $(\boldsymbol{X}, \boldsymbol{y})$ in two: the training set and the test set. To do this, from the original data set, a random sample of observations is assigned to be part of the training set and the rest are part of the test set. The idea is that the test set should be used to measure the predictive performance of the model, and this also helps to diagnose an overfitted model, a concept which is discussed later in this chapter. The data is sometimes divided in three different sets. This third set is called the validation set, and it is used to measure the generalization performance when tuning hyperparameters, such as regularization parameter values, discussed further in this document.
 
