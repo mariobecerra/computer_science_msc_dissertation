@@ -214,7 +214,7 @@ With these derivations, a gradient ascent approach can be taken in order to opti
 \begin{equation}
   \nabla_{\boldsymbol{\lambda}} \mathcal{L} \approx \Delta_{\boldsymbol{\lambda}} \mathcal{L} = \frac{1}{S} \sum_{k = 1}^S \left( \nabla_{\boldsymbol{\lambda}} \log q(\boldsymbol{z}_k | \boldsymbol{\lambda}) \right) \left( \log p(\boldsymbol{y}, \boldsymbol{X}, \boldsymbol{z}_k) - \log q(\boldsymbol{z}_k | \boldsymbol{\lambda}) \right),
 \end{equation}
-and then the $\boldsymbol{\lambda}$ parameter is updated as $\boldsymbol{\lambda}_{t+1} = \boldsymbol{\lambda}_{t} + \eta_t  \Delta_{\boldsymbol{\lambda}_t} \mathcal{L}$ until a certain stopping criteria is met, with each $\eta_t$ chosen beforehand. The choice of $\eta_t$ depends on the modeler, and can be chosen to be the same for all iterations, or it can change with each iteration like in the AdaGrad method \cite{duchi2011adaptive}.
+and then the $\boldsymbol{\lambda}$ parameter is updated as $\boldsymbol{\lambda}_{t+1} = \boldsymbol{\lambda}_{t} + \eta_t  \Delta_{\boldsymbol{\lambda}_t} \mathcal{L}$ until a certain stopping criterion is met, with each $\eta_t$ chosen beforehand. The choice of $\eta_t$ depends on the modeler, and can be chosen to be the same for all iterations, or it can change with each iteration like in the AdaGrad method \cite{duchi2011adaptive}.
 
 An implementation of this algorithm was made in the R programming language with a simulated data set of $n = 500$ data points and $p = 1$ feature. The response vector was created with the logistic sigmoid function as $y_i = \sigma(\theta_0 + \theta_1 \boldsymbol{x_i})$, with $\theta_0 = -5$ and $\theta_1 = 5$.
 
