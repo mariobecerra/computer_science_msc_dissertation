@@ -1,4 +1,5 @@
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 library(gridExtra)
 library(scales)
 
@@ -139,4 +140,4 @@ out_plot = arrangeGrob(iter_loss_plot, iter_theta_plot,
 
 # plot(out_plot)
 
-ggsave(out_plot, filename = "GD_plots.pdf", dpi = 250, width = 15, height = 6, units = "cm")
+ggsave(out_plot, filename = "GD_plots.png", dpi = 120, width = 15, height = 6, units = "cm")
