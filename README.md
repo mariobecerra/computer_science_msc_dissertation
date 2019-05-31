@@ -1,6 +1,8 @@
 # Computer Science master thesis
 
-Latex code for my computer science master thesis. Supervised by [Alfredo Garbuno Iñigo](https://github.com/agarbuno).
+Latex code for my computer science master thesis, "A comparison of frequentist methods and Bayesian approximations in the implementation of Convolutional Neural Networks in an Active Learning setting".
+
+Supervised by [Alfredo Garbuno Iñigo](https://github.com/agarbuno).
 
 
 ### To compile document locally
