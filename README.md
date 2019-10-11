@@ -4,6 +4,8 @@ Latex code for my computer science master thesis, "A comparison of frequentist m
 
 Supervised by [Alfredo Garbuno Iñigo](https://github.com/agarbuno).
 
+Code can be found [here](https://github.com/mariobecerra/Active_Learning_CNNs).
+
 
 ### To compile document locally
 
@@ -19,7 +21,7 @@ Must have `latex` and `biber` installed. Follow the following instructions:
 
 Go to https://v2.overleaf.com/read/dscncbsfvjvf and compile. This version may not reflect most recent changes because I have to manually pull changes from the repository and I don't do this with every single commit.
 
-### R scripts
+### Description of R scripts
 
 - File `gradient_descent_example.R` implements gradient descent for logistic regression in simulated data. Generates file `GD_plots.pdf`.
 
