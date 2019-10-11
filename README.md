@@ -6,6 +6,8 @@ Supervised by [Alfredo Garbuno Iñigo](https://github.com/agarbuno).
 
 Code can be found [here](https://github.com/mariobecerra/Active_Learning_CNNs).
 
+And the final PDF file can be found [here](https://mariobecerra.github.io/files/school_projects/msc_thesis_2019-05-11_git.pdf).
+
 
 ### To compile document locally
 
